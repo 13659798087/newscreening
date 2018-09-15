@@ -36,7 +36,9 @@ public class WSUser {
     @RequestMapping(value="/v1/users", method= RequestMethod.GET)
     public List<UserInfo> queryUser(@RequestParam(value="projectCode", required=true) String projectCode)
     {
+
         DBIdentifier.setProjectCode(projectCode);
         return userDao.getUsers();
+
     }
 }
