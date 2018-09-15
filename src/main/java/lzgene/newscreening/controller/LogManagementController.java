@@ -35,7 +35,6 @@ public class LogManagementController {
       return view + "logger";
    }
 
-
    @ResponseBody
    @RequestMapping("/getLogger")
    public Map<String,Object> getLogger(String pageNumber, String rowNumber, String sortName,String sortOrder,
@@ -81,23 +80,24 @@ public class LogManagementController {
       return Paging.ajaxGrid(pageResults);
    }
 
-
  /*  public void recordLog (String loggerName,String type,String userName,String IPAddress,String patients,
                           String hospital,String combine,String barcode,String sid,String phone){
       logManagementServices.recordLog(loggerName,type,userName,IPAddress,patients,hospital,combine,barcode,sid,phone);
    }*/
-
 
     @ResponseBody
     @RequestMapping("/deleteLog")
     public void deleteLog(HttpServletRequest request,String list){
 
         String[] array = list.split(",");
-
         for(String id : array) {
             logManagementServices.deleteLog(id);
         }
 
+        int i = 0;
+        if(i==1){
+            System.out.println("你好");
+        }
     }
 
 
