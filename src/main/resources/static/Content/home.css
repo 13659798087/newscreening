@@ -1,0 +1,94 @@
+﻿
+.bg {
+    background-image: url(images/bg.jpg);
+}
+
+a {
+    text-decoration: none;
+}
+
+.cm-logo {
+    padding: 6px 0px;
+}
+
+.Magnet1 {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 5px;
+    float: left;
+    cursor: pointer;
+    color: #fff;
+}
+
+    .Magnet1 .maintable {
+        width: 100%;
+        height: 100%;
+        font-size: 20px;
+    }
+
+    .Magnet1 .infotable {
+        margin: 10px;
+    }
+
+    .Magnet1 .title {
+        font-size: 16px;
+        margin: 26px 0px;
+    }
+
+        .Magnet1 .title img {
+            margin-left: 23px;
+            margin-right: 24px;
+        }
+
+    .Magnet1 .infotable .text {
+        font-size: 12px;
+    }
+
+.Magnet2 {
+    position: relative;
+    width: 305px;
+    height: 200px;
+    margin: 5px;
+    float: left;
+    cursor: pointer;
+    color: #fff;
+}
+
+    .Magnet2 .maintable {
+        width: 100%;
+        height: 100%;
+        font-size: 20px;
+    }
+
+    .Magnet2 .infotable {
+        margin: 10px;
+    }
+
+    .Magnet2 .title {
+        font-size: 16px;
+        margin: 26px 0px;
+    }
+
+        .Magnet2 .title img {
+            margin-left: 23px;
+            margin-right: 24px;
+        }
+
+    .Magnet2 .infotable .text {
+        font-size: 12px;
+    }
+
+.firstPage {
+    height: 100%;
+}
+
+.shadeStyle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: #808080;
+    Opacity: 0.7;
+    filter: Alpha(Opacity=60);
+}

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+
+<meta name="renderer" content="webkit">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<!--	<APPLET CODE = "HelloSwingApplet.class" archive="SSignedApplet.jar"   WIDTH = 400 HEIGHT = 50 >
+		<PARAM NAME = "REPORT_URL"  VALUE ="servlets/jasperprint">
+	</APPLET>-->
+
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--日期控件 js和css -->
+<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+<link rel="stylesheet" href="../css/iconfont.css" />
+
+<link rel="stylesheet" href="../css/bootstrap-table.css" />
+<script src="../js/bootstrap-table.js"></script>
+<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+<script src="../js/bootstrap-table-zh-CN.js"></script>
+<script src="../js/bootstrap-table-export.js"></script>
+
+<link rel='stylesheet'   href='../css/pagination.css'/>
+<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+
+		.butClass {padding: 6px 10px;margin-left: 3% !important;width: 115px;}
+	</style>
+
+	<style>
+		.fixed-table-body {height: 290px;}
+		.fixed-table-pagination{margin-top: 288px;}
+		.hideQuery{margin-top:1%;display: none;}
+		.menu_ul ul li {
+			height: 20px;
+			line-height: 20px;
+			width: 0px;
+			position: relative;
+		}
+
+		.clearfix{height: 100px;}
+
+		.fixed-table-pagination div.pagination, .fixed-table-pagination .pagination-detail {
+			margin-top: 0px;
+			margin-bottom: 3px;
+		}
+
+		body,td,th {font-family: Verdana, Arial, Helvetica, sans-serif;}
+
+		.creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
+
+		.font::-webkit-scrollbar{width:5px;}
+		.font::-webkit-scrollbar-thumb{background-color:#D4D0C8;}
+
+	</style>
+
+</head>
+<body style="overflow: hidden;">
+
+<div id="mainframe2" style="height:100%"   class="font" >
+
+	<div style="height: 2px;background-color: #ddd;"></div>
+
+	<div class="sumbody" id="app">
+		<table id="tbMain" width="100%" style="height:99%" border="0"  cellpadding="0" cellspacing="0">
+			<tr>
+				<td style="vertical-align: top;width: 350px;" height="99%" >
+			 		<div class="mune_left font" style="width: 400px;background-color: white;overflow-y: scroll;overflow-x:hidden;">
+						<!--<div class="menu_ul" >-->
+
+							<div class="tableDiv">
+
+								<div id="toolbar" class="btn-group">
+									<div  style="margin-top:1.6%;" >
+										<div style="float: left;width:398px;">
+											<div class="myLabel-content queryLeft" style="width: 70px;">报告日期：</div>
+											<div class="myText-content" style="float: left;">
+												<input id="c_a_date1"  type="text" class="style_01" style="width:135px;">
+												<span class="zhi">~</span>
+												<input id="c_a_date2"   type="text" class="style_01" style="width:135px;">
+											</div>
+											<div style="clear: both;"></div>
+											<div class="hideQuery">
+												<div class="myLabel-content queryLeft" style="width: 70px;">姓
+													&nbsp;&nbsp;&nbsp;&nbsp; 名：</div>
+												<div class="myText-content" style="float: left;width: 115px;">
+													<input id="p_name"  type="text"  class="style_01"  style="width: 113px;" >
+												</div>
+												<div class="myLabel-content queryLeft"  style="width: 70px;text-align: right;">条码号：</div>
+												<div class="myText-content" style="float: left;width: 115px;">
+													<input id="c_barcode" stype="text" class="style_01"  style="width: 113px;">
+												</div>
+											</div>
+											<div style="clear: both;"></div>
+											<div class="hideQuery">
+												<div class="myLabel-content queryLeft" style="width: 70px;text-align: right;">打印状态：</div>
+												<div class="myText-content" style="float: left;width: 115px;">
+													<select id="c_rpt_flag" class="style_02" >
+														<option value="">请选择</option>
+														<option value="1">未打印</option>
+														<option value="2">已打印</option>
+													</select>
+												</div>
+
+												<div class="myLabel-content queryLeft" style="width: 70px;text-align: right;">项&nbsp;&nbsp;&nbsp;目：</div>
+												<div class="myText-content" style="float: left;width: 115px;">
+													<select id="c_combine_code" class="style_02" >
+														<option value="">请选择</option>
+														<option v-for="c in listCombine" :value="c.c_code" >{{c.c_code}}</option>
+													</select>
+												</div>
+
+												<div style="clear: both;"></div>
+												<div  class="hideQuery">
+													<div class="myLabel-content queryLeft" style="width: 70px;">送检单位:&nbsp;&nbsp;</div>
+													<div class="myText-content" style="float: left;width: 120px;">
+														<!--<select id="c_hospital" class="style_02" style="width: 305px;">
+															<option value="">请选择</option>
+															<option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+														</select>-->
+
+														<div class="dropdown" style="display: inline-block;">
+															<button class="btn btn-default dropdown-toggle" style="width: 305px;text-align: left;height: 24px;padding: 0 3px;" type="button" id="c_hospital" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+																请选择
+															</button>
+															<ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="max-height: 400px">
+																<li data-stopPropagation="true">
+																	<div class="zTreeDemoBackground" >
+																		<ul id="treeDemo" class="ztree creatZtree_1" ></ul>
+																	</div>
+																</li>
+															</ul>
+														</div>
+
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+
+									<div>
+										<div style="float: left;margin-top: 5px;">
+											<button style="background-color: #3c8dbc;" class="btn btn-default butClass" id="btn_search"  onclick="query()" >
+												<span class="glyphicon glyphicon-search" style="color:white"></span>
+												<span style="color: white;">查询</span>
+											</button>
+											<button style="background-color: #3c8dbc;"  class="btn btn-default butClass" onclick="batchPrint()" id="batchPrint" >
+												<span class="glyphicon glyphicon-print" style="color: white;"></span>
+												<span style="color: white;">打印</span>
+											</button>
+											<button style="background-color: #3c8dbc;"  class="btn btn-default butClass" id="btn_ret" onclick="reset()" >
+												<span class="glyphicon glyphicon-refresh" style="color: white;"></span>
+												<span style="color: white;">重置</span>
+											</button>
+										</div>
+
+										<div style="float: left;margin-top: 5px;margin-left: -350px;margin-top: 45px;margin-bottom: -50px;">
+											<button  class="btn btn-default butClass" id="batchDownLoad" >
+												<span class="glyphicon glyphicon-cloud-download"></span> 下载
+											</button>
+											<span style="width: 0.1px;display: inline-block">&nbsp;</span>
+											<button  class="btn btn-default butClass"  onclick="showQuery()">
+												<span class="glyphicon glyphicon-zoom-in"></span> 高级查询
+											</button>
+										</div>
+									</div>
+
+								</div>
+
+								<table  class="table table-striped" id="table"  ></table>
+							</div>
+
+
+						<!--</div>-->
+					</div>
+				</td>
+				<td style="vertical-align: top;" width="100%;">
+					<div class="content_right">
+						<iframe class="mainbody" id="mainbody2" name="mainbody2" scrolling="no" frameBorder="0" style="width:100%;height:98%;margin: 4px;">
+							<!--src="http://localhost:8090/reportQuery/myprint"-->
+						</iframe>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+	</div>
+</div>
+
+</body>
+
+<script>
+
+    var map={
+        listCombine:[],
+        listHospital:[]
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+    function onClick(e,treeId, treeNode){
+        $("#c_hospital").attr("name",treeNode.id);
+        $("#c_hospital").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        alert(msg);
+    }
+    /*zTree   end */
+
+    $("#c_hospital").click(function(){
+        $.get("/organization/getByOwn",{},function(zNodes){
+            var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            fillter(treeObj);//设置展开前三级
+        })
+    });
+
+    function fillter(treeObj) {
+        //获得树形图对象
+        var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+        for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+            treeObj.expandNode(nodeList[i], true, false, true);
+            /*var nodespan = nodeList[i].children;
+            for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                treeObj.expandNode(nodespan[j], true, false, true);
+            }*/
+        }
+    }
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+    function batchPrint() {
+
+        var allSelect = $("#table").bootstrapTable('getSelections');
+        if (allSelect.length == 0) {
+            var txt=  "请选择要打印的信息！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm); //弹出框
+        } else {
+            var dpArray = [];
+            var wcArray = [];
+            var tsArray = [];
+            var dpjyArray = [];
+
+            $.each(allSelect, function (index, e) {
+				var paper_size;
+				$.each(map.listCombine,function(i,v){
+					if(e.c_combine_code==v.c_code){
+                        paper_size = v.paper_size;
+					}
+				});
+                if (e.c_combine_code=="地贫") {
+                    dpArray.push(e.c_id + ":" + e.c_combine_code+":"+paper_size);
+                }
+                if (e.c_combine_code=="无创") {
+                    wcArray.push(e.c_id + ":" + e.c_combine_code+":"+paper_size);
+                }
+                if (e.c_combine_code=="唐筛") {
+                    tsArray.push(e.c_id + ":" + e.c_combine_code+":"+paper_size);
+                }
+                if (e.c_combine_code=="地贫基因") {
+                    dpjyArray.push(e.c_id + ":" + e.c_combine_code+":"+paper_size);
+                }
+
+
+            });
+
+            var num =0;
+            var str = "";
+            debugger;
+			if(dpArray.length > 0){
+                num ++;
+                str+= '{' +dpArray[0].split(":")[1] + '}';
+            }
+            if(wcArray.length > 0){
+                num ++;
+                str+='{' + wcArray[0].split(":")[1] + '}';
+            }
+            if(tsArray.length > 0){
+                num ++;
+                str+= '{' +tsArray[0].split(":")[1] + '}';
+            }
+            if(dpjyArray.length > 0){
+                num ++;
+                str+='{' + dpjyArray[0].split(":")[1] + '}';
+            }
+
+            var txt= "将打开 "+str+num+" 个窗口";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var authorHospital = parent.window.authorHospital();
+                if (dpArray.length > 0) {
+                    window.open("/reportQuery/dpPrint?list=" + dpArray.toString()+"&authorHospital="+authorHospital);
+                }
+                if (wcArray.length > 0) {
+                    window.open("/reportQuery/dpPrint?list=" + wcArray.toString()+"&authorHospital="+authorHospital);
+                }
+                if (tsArray.length > 0) {
+                    window.open("/reportQuery/dpPrint?list=" + tsArray.toString()+"&authorHospital="+authorHospital);
+                }
+                if (dpjyArray.length > 0) {
+                    window.open("/reportQuery/dpPrint?list=" + dpjyArray.toString()+"&authorHospital="+authorHospital);
+                }
+            },false);
+
+        }
+    }
+
+
+/*    $("#batchPrint").click(function(){
+            $.get("/reportQuery/batchPrint",{"list":array.toString()},function(data){
+               var inputs =  $("#table").find('input:checkbox:checked'); //选中input数组的集合
+               $.each(inputs,function(index,value){
+                    var array = new Array();
+                    array = $(this).parent().siblings();//td的数组
+                    $(array).each(function(v,el){
+                        $(el).css("color","red");
+                        $(el).find(".noPrint").text("已打印");
+                    })
+               })
+            })
+    })*/
+
+    $("#batchDownLoad").click(function(){
+
+        var allSelect= $("#table").bootstrapTable('getSelections');
+        if(allSelect.length==0){
+            window.wxc.xcConfirm("请选择要下载的信息！", window.wxc.xcConfirm.typeEnum.confirm);
+        }else{
+            var array = [];
+            $.each(allSelect,function(index,e){
+                array.push(e.c_id+":"+e.c_combine_code+":"+e.c_sid+":"+e.p_name);
+            });
+            var authorHospital = parent.window.authorHospital();
+            window.open("/reportQuery/downLoadZipFile?list="+array.toString()+"&authorHospital="+authorHospital);
+
+           /* document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var array = new Array();
+                $.each(allSelect,function(index,e){
+                    array.push(e.c_id+":"+e.c_combine_code+":"+e.c_sid+":"+e.p_name);
+                })
+                window.open("/reportQuery/downLoadZipFile?list="+array.toString());
+            },false);*/
+
+        }
+
+    });
+
+
+    var datagrid;
+    var objDialog;
+    $(function () {
+
+        $.get("/applicationStatistics/getListHospital",{},function(data){
+            map.listHospital=data;
+        });
+
+        //取回当前医院的部门
+        $.get("/combine/getCombine",{},function(data){
+            map.listCombine = data;//组别项目
+        });
+
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+
+        datagrid = datagrid.bootstrapTable({
+            url: "/sendApplication/getApplication",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+                debugger;
+                var temp = {
+                    pageNumber: params.pageNumber,                         //页面大小
+                    rowNumber: params.pageSize,    //页码
+                    a_flag: "1",
+                    c_a_date1: $("#c_a_date1").val(),
+                    c_a_date2: $("#c_a_date2").val(),
+                    p_name:    $("#p_name").val(),
+                    c_barcode: $("#c_barcode").val(),
+                    c_hospital:$("#c_hospital").attr("name"),
+                    c_combine_code:  $("#c_combine_code").val(),
+                    c_rpt_flag : $("#c_rpt_flag").val(),
+                };
+                return temp;
+            },
+            onClickRow: function (row, $element, field) {
+				$($element).siblings().each(function(i,e){
+					$(e).css("background-color","");
+                    $(e).css("color","black");
+				});
+
+                $($element).css("background-color","#98FB98");
+                 $($element).css("color","black");
+
+                var c_id = row.c_id;
+                var c_code = row.c_combine_code;
+                var authorHospital = parent.window.authorHospital();
+                $("#mainbody2").attr("src","/reportQuery/printReport?c_id="+c_id+"&c_code="+c_code+"&authorHospital="+authorHospital);
+
+            },
+            onCheck:function(row, $element, field){
+                /*var c_id = row.c_id;
+                var c_code = row.c_combine_code;
+                alert(c_id+"======="+c_code);*/
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    title: "全选",
+                    field: "select",
+                    checkbox: true,
+                    align: "center",//水平
+                    valign: "middle",//垂直
+                    width:  20
+                },
+                {
+                    title: '编号',
+                    field: "编号",
+                    align: "center",//水平
+                    width:  20,
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "条码号",
+                    field: "c_barcode",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width:  30
+                },
+                {
+                    title: "样本编号",
+                    field: "c_sid",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width:  35
+                },
+                {
+                    title: "姓名",
+                    field: "p_name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "项目",
+                    field: "c_combine_code",//域值
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                    /*formatter: function (value, row, index) {
+                        $.each( map.listCombine ,function(index,e){
+                            if(row.c_combine_code==e.c_code){
+                                value = e.c_name;
+                            }
+                        });
+                        return value;
+                    }*/
+                },
+                {
+                    field: "c_rpt_flag",
+                    title: "打印",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+
+                        if(row.c_rpt_flag=='2'){
+                            return '<span class="hasPrint" style="'+'color: red'+'" >已打印</span>';
+                        }if(row.c_rpt_flag=='1'){
+                            return '<span class="'+'noPrint" '+' >未打印</span>';
+                        }/*else{
+                            return '<span class="'+'noPrint" '+' >未打印</span>';
+                        }*/
+
+                    }
+                },
+                {
+                    title: "病历号",
+                    field: "c_in_no",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "报告日期",
+                    field: "c_a_date",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "p_bithday",
+                    title: "出生日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_weigh",
+                    title: "体重",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_ts_bcdate",
+                    title: "B超日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "pregnancy",
+                    title: "评估孕周",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_lmp_date",
+                    title: "末次月经",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_tes",
+                    title: "胎儿数",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_sample_date",
+                    title: "采样日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_hospital",
+                    title: "送检单位",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "母亲姓名",
+                    visible:true
+                },
+                {
+                    field: "c_dept",
+                    title: "送检科室",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_doctor",
+                    title: "送检医生",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "p_tel1",
+                    title: "联系电话",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "p_tel2",
+                    title: "联系电话2",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                },
+                {
+                    field: "c_w_name",
+                    title: "检验者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "c_a_name",
+                    title: "审核者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                }
+            ]
+        });
+
+    });
+
+
+    function showQuery(){
+        if(  $(".hideQuery").css("display")=="none" ){
+            $(".hideQuery").show();
+        }else{
+            $(".hideQuery").hide();
+        }
+    }
+
+    //查询
+    function query() {
+        debugger;
+        var oDate1 = new Date( $("#c_a_date1").val() );
+        var oDate2 = new Date( $("#c_a_date2").val() );
+
+        if(oDate1!="" && oDate2!="" ){
+            if( oDate1.getTime() > oDate2.getTime() ){
+                alert("开始时间不能小于截止时间");
+                return false;
+            }
+        }
+
+        if($("#c_a_date1").val()!="" && $("#c_a_date2").val()=="" || $("#c_a_date1").val()=="" && $("#c_a_date2").val()!=""){
+            alert("请同时输入开始时间和结束时间");
+            return false;
+		}
+
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+        $("#c_combine_code").val("");
+        $("#c_rpt_flag").val("");
+        $("#c_hospital").attr("name","");
+        $("#c_hospital").text("请选择");
+
+    }
+
+    $("#c_a_date1,#c_a_date2").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+
+        }
+    });
+
+    $(function(){
+        setTimeout(waitTime,100);
+    });
+
+    function  waitTime(){
+        var array2 = [];
+        $(".hasPrint").each(function(i,e){
+            array2 = $(e).parent().siblings();
+            $(array2).each(function(n,m){
+                $(m).css("color","red");
+            })
+        })
+    }
+
+
+</script>
+
+</html>

@@ -1,0 +1,178 @@
+﻿
+/*覆盖原有样式*/
+.contentVessel .panel-body {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.cleat-padding-top {
+  padding-top: 0px;
+}
+.calculate .panel-body {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+}
+.calculate .list-group {
+  margin-bottom: 0px;
+}
+/*.calculate .scroll-xauto{
+    margin-bottom:0px;
+}*/
+.clearPadding {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.m_btn {
+  border: none;
+  color: #fff;
+  font-family: 微软雅黑;
+  font-size: 14px;
+  width: 60px;
+  height: 30px;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+.small {
+  width: 50px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+}
+.bigBtn {
+  width: 80px;
+}
+.buttonSize {
+  width: 60px;
+}
+.buttonSize_1 {
+  width: 80px;
+}
+.buttonSize_2 {
+  width: 100px;
+}
+.buttonSize_3 {
+  width: 120px;
+}
+.default {
+  background-color: #0099ff;
+}
+.default:hover {
+  background-color: #22a5fc;
+  color: #fff;
+}
+.default:active {
+  background-color: #0589e1;
+  color: #fff;
+}
+.blud {
+  background-color: #0099ff;
+}
+.blud:hover {
+  background-color: #22a5fc;
+  color: #fff;
+}
+.blud:active {
+  background-color: #0589e1;
+  color: #fff;
+}
+.orange {
+  background-color: #ee802f;
+}
+.orange:hover {
+  background-color: #ff974a;
+  color: #fff;
+}
+.orange:active {
+  background-color: #e07729;
+  color: #fff;
+}
+.green {
+  background-color: #88cb5a;
+}
+.green:hover {
+  background-color: #8dda58;
+  color: #fff;
+}
+.green:active {
+  background-color: #79be4a;
+  color: #fff;
+}
+/*页面头部样式*/
+.pageTitle {
+  font-family: 微软雅黑;
+  font-size: 16px;
+  /*color: #ff525c;*/
+}
+.pageOption {
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 30px;
+}
+.divToSpan {
+  display: inline-block;
+}
+/*表格样式*/
+/*.m_table {
+    width: 100%;            
+}   
+
+    .m_table tr {   
+        height: 35px;
+        line-height: 35px;
+        border: 1px solid #eeeeee;
+    }*/
+/*.table_thead {
+    border: none;
+    font-family: "微软雅黑";
+    font-size: 14px;
+}
+    .table_thead td {
+        background-color: #f6f6f6;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+        border-left: none;
+        border-right: none;
+    }
+     .table_thead th {
+        background-color: #f6f6f6;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+        border-left: none;
+        border-right: none;
+    }
+
+.table_tbody {
+    border: none;
+    font-size: 12px;
+}
+
+    .table_tbody td {
+        height: 40px;
+        line-height: 40px;
+        background-color: #fff;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+.tdDouble td {
+    background-color: #f6f6f6;
+}
+
+.table_mouseOver td {
+    background-color: #dae5f0;
+}*/
+/*分页样式*/
+.paging {
+  margin-top: 10px;
+}
+.treebody {
+  margin: 5px 0px 5px 20px;
+}
+.treeNode_Selected {
+  background-color: #0398ff;
+}

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DEMO</title>
+    <link rel="stylesheet" type="text/css" href="../css/css.css" />
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+    <link href="../Content/jquery.validate.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js">
+    <![endif]-->
+    <script src="../js/jquery-3.2.0.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/moment.js"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+    <!--日期控件 js和css -->
+    <link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+    <script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+    <!--格式化时间-->
+    <script src="../js/until.sdk.format.js"></script>
+
+    <!--弹出框 start-->
+    <link rel="stylesheet"  href="../css/xcConfirm.css"/>
+    <script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+    <style type="text/css">
+        /*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+        .xcConfirm .popBox .ttBox {
+            height: 60px;
+            line-height: 30px;
+            padding: 14px 30px;
+            border-bottom: solid 1px #eef0f1;
+        }
+    </style>
+
+
+    <style>
+        .top8{display: inline-block;width: 10%;min-width:90px;}
+        .top7{margin-left: 1%;margin-top:0.5%;width: 95%;display:inline-block;height: 28px;line-height: 28px;min-width: 400px;}
+        .top1{margin-left: 1%;margin-top:0.5%;width: 31%;display:inline-block;height: 28px;line-height: 28px;min-width: 200px;}
+        .top2{display: inline-block;width: 32%;min-width: 90px;}
+        .top3{display: inline-block;width:52%;min-width: 50px;}
+        .top4{position: relative;}
+
+        .pad24{width: 20%;margin-left: 10%;}
+        select {height: 28px;line-height: 28px;}
+        input,select {border:0;border-bottom:1px solid black;padding: 1px 5px;background-color: white;}
+
+    </style>
+
+
+    <style type="text/css">
+        .div-wrap{
+            position: relative;
+            width: 52%;
+            display: inline-block;
+        }
+        .select-wrap{
+            overflow: hidden;
+            margin-left: 100px;
+            width: 18px;
+        }
+        .deptSelect{
+            margin-left: -100px;
+            border:0;
+            border-bottom:1px solid black;
+            width: 100% !important;
+            height: 28px !important;
+        }
+        .deptInput{
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            border: none;
+            width: 85%;
+            height: 26px;
+        }
+    </style>
+
+    <style>
+        .out-div {
+            color: #FFFFFF;
+            font-size: 16px;
+            line-height: 26px;
+            display: inline-block;
+            height: 26px;
+            width: 120px;
+            text-align: center;
+            border-radius: 5px;
+            margin-left: 32px;
+            vertical-align: top;
+            background-color: maroon;
+        }
+        .arrow {
+            width: 0px;
+            height: 0px;
+            border-top: 5px solid transparent;
+            border-right: 10px solid;
+            border-bottom: 10px solid transparent;
+            position: absolute;
+            margin-left: -8px;
+            margin-top: 5px;
+            border-right-color: maroon;
+        }
+    </style>
+
+</head>
+<body>
+<div id="app" >
+
+    <form action="" id="formApplication" > <!--style="position: relative;"-->
+
+        <input type="hidden" name="a_flag" value="1" />
+        <input type="hidden" name="a_id" v-model="applyinfo.a_id" id="a_id"  />
+
+        <input type="hidden" id="isNewDept" name="isNewDept" value="1" />
+        <input type="hidden" id="isNewDoctor" name="isNewDoctor" value="1" />
+        <input type="hidden" id="isNewLczd" name="isNewLczd" value="1" />
+        <input type="hidden" id="isNewBlycs" name="isNewBlycs" value="1" />
+        <input type="hidden" id="isNewPlace" name="isNewPlace" value="1" />
+
+        <div style="min-width: 610px;">
+
+
+            <div class="top1">
+                <div class="top2">录入日期：</div>
+                <input type="text"  placeholder="yyyymmdd" id="a_lr_date" readonly="readonly" class="hhm-dateInputer top3" name="a_lr_date" />
+            </div>
+
+            <div class="top1 top4" >
+                <div class="top2">送检单位：</div>
+                <input type="text"  class="top3" id="a_hospital" name="a_hospital" readonly="readonly" />
+            </div>
+
+
+            <div class="top1 top4" >
+                <div class="top2">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</div>
+                <input type="text"  class="top3" id="a_flag" name="a_flag" value="录入"  readonly="readonly" />
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>条&nbsp;&nbsp;码&nbsp;&nbsp;号：</span></div>
+                <input type="text"   v-model="applyinfo.a_barcode" class="top3" id="a_barcode" name="a_barcode" />
+            </div>
+
+            <div class="top1 top4" >
+                <div class="top2">套餐项目：</div>
+                <input type="hidden" name="notUpdatedSetmeal" :value="notUpdatedSetmeal" />
+                <select  class="top3" style="display: inline-block;width:52%;min-width: 50px;" id="selectSetmeal" name="a_setmeal_name" v-model="applyinfo.a_setmeal_name">
+                    <option v-for="s in setmealName" :value="s.s_name">{{s.s_name}}</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</div>
+                <input type="text"   v-model="applyinfo.a_name"  class="top3" name="a_name" id="a_name" />
+            </div>
+
+            <div class="top1 top4">
+                <div class="top2">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</div>
+                <select  class="top3"  id="a_sex" name="a_sex" v-model="applyinfo.a_sex">
+                    <option value="男" >男</option>
+                    <option value="女" >女</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</div>
+                <input type="text"  v-model="applyinfo.a_age" id="a_age" class="" name="a_age" style="display: inline-block;width:30%;min-width: 30px;"/>
+                <select  id="a_age_unit" class="" name="a_age_unit"  v-model="applyinfo.a_age_unit" style="display: inline-block;width:20%;min-width: 20px;">
+                    <option>年</option>
+                    <option>月</option>
+                    <option>日</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</div>
+                <input type="text"  v-model="applyinfo.a_stature"  id="a_stature" class="" name="a_stature" style="display: inline-block;width:40%;min-width: 30px;" />
+                <span>cm</span>
+            </div>
+
+            <div class="top1">
+                <div class="top2">体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重：</div>
+                <input type="text" v-model="applyinfo.a_weigh" id="a_weigh" class="" name="a_weigh"   style="display: inline-block;width:40%;min-width: 30px;" />
+                <span>kg</span>
+            </div>
+
+            <div class="top1">
+                <div class="top2">出生日期：</div>
+                <input style="position: relative;" type="text"  onfocus="validFocus(this)"  onblur="valiBlur(this)" id="a_bithday" placeholder="yyyymmdd"
+                       v-model="applyinfo.a_bithday==null?'':timestampFormat1(applyinfo.a_bithday)"  class="hhm-dateInputer top3" name="a_bithday" />
+                <div class="out-div" style="position: absolute;margin-left: 2%;z-index: 3;display: none;">
+                    <div class="arrow" ></div>
+                    <span class="wrongful"  style="font-size: 13px;">日期不合法</span>
+                </div>
+            </div>
+
+            <div class="top1">
+                <div class="top2">联系电话1:</div>
+                <input  type="text"   v-model="applyinfo.a_tel1" id="a_tel1"  class="top3" name="a_tel1" />
+            </div>
+
+            <div class="top1">
+                <div class="top2">联系电话2:</div>
+                <input type="text"   v-model="applyinfo.a_tel2"  id="a_tel2" class="top3" name="a_tel2" />
+            </div>
+
+            <div class="top1">
+                <div class="top2">末次月经：</div>
+                <input style="position: relative;" type="text"  onfocus="validFocus(this)"  onblur="valiBlur(this)" id="a_lmp_date" v-model="applyinfo.a_lmp_date==null?'':timestampFormat1(applyinfo.a_lmp_date)"
+                        placeholder="yyyymmdd" class="hhm-dateInputer top3" name="a_lmp_date" />
+                <div class="out-div" style="position: absolute;margin-left: 2%;z-index: 3;display: none;">
+                    <div class="arrow" ></div>
+                    <span class="wrongful"  style="font-size: 13px;">日期不合法</span>
+                </div>
+            </div>
+
+            <div class="top1">
+                <div class="top2">身份证号：</div>
+                <input type="text"  v-model="applyinfo.a_id_number"  id="a_id_number"  class="top3" name="a_id_number" />
+            </div>
+
+            <div class="top1">
+                <div class="top2">采样日期：</div>
+                <input style="position: relative;"   type="text" onfocus="validFocus(this)"  onblur="valiBlur(this)"
+                       placeholder="yyyymmdd"  class="hhm-dateInputer top3" v-model="applyinfo.a_sample_date==null?'':timestampFormat1(applyinfo.a_sample_date)"  id="a_sample_date" name="a_sample_date" >
+                <div class="out-div" style="position: absolute;margin-left: 2%;z-index: 3;display: none;">
+                    <div class="arrow" ></div>
+                    <span class="wrongful" style="font-size: 13px;">日期不合法</span>
+                </div>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>采&nbsp;&nbsp;样&nbsp;&nbsp;人：</span></div>
+                <input type="text"  v-model="applyinfo.a_sample_name"  id="a_sample_name" class="top3" name="a_sample_name"  />
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>病&nbsp;&nbsp;历&nbsp;&nbsp;号：</span></div>
+                <input  type="text"  v-model="applyinfo.a_in_no" id="a_in_no" class="top3" name="a_in_no" />
+            </div>
+
+            <div class="top1">
+                <div class="top2">送检科室：</div>
+                <div class='div-wrap'>
+                    <span class='select-wrap'>
+                        <select class='deptSelect'  onchange="change1(this)" >
+                            <option>请选择</option>
+                            <option v-for="d in deptMb">{{d.mb_name}}</option>
+                        </select>
+                    </span>
+                    <input type="text" class='deptInput' id="deptInput"  v-model="applyinfo.a_dept"  name="a_dept"   />
+                </div>
+            </div>
+
+            <div class="top1">
+                <div class="top2">送检医生：</div>
+                <div class='div-wrap'>
+                    <span class='select-wrap'>
+                        <select class='deptSelect'  onchange="change2(this)" >
+                            <option>请选择</option>
+                            <option v-for="d in doctorMb">{{d.mb_name}}</option>
+                        </select>
+                    </span>
+                    <input  type="text" class='deptInput' id="doctorInput"  v-model="applyinfo.a_doctor"  name="a_doctor"   />
+                </div>
+            </div>
+
+            <div class="top1">
+                <div class="top2">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</div>
+                <input type="text"  v-model="applyinfo.a_bed_no" class="top3"  id="a_bed_no" name="a_bed_no" />
+            </div>
+
+            <div class="top1 top4">
+                <div class="top2"><span>胎&nbsp;&nbsp;儿&nbsp;&nbsp;数：</span></div>
+                <select class="top3" id="a_tes" name="a_tes" v-model="applyinfo.a_tes">
+                    <option value="1">单胎</option>
+                    <option value="2">双胎</option>
+                    <option value="3">多胎</option>
+                </select>
+            </div>
+
+            <div class="top1 top4">
+                <div class="top2">孕&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</div>
+                <select class="top3" id="a_check_yq" name="a_check_yq" v-model="applyinfo.a_check_yq">
+                    <option value="1" >孕前</option>
+                    <option value="2" >孕中</option>
+                    <option value="3" >孕后</option>
+                </select>
+            </div>
+
+            <div class="top1 top4">
+                <div class="top2">收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</div>
+                <select class="top3" id="a_free_flag" name="a_free_flag" v-model="applyinfo.a_free_flag">
+                    <option value="1">收费</option>
+                    <option value="2">免费</option>
+                    <option value="9">其他</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">户口户籍：</div>
+                <div class='div-wrap'>
+                    <span class='select-wrap'>
+                        <select class='deptSelect'  onchange="change5(this)" >
+                            <option>请选择</option>
+                            <option v-for="d in placeMb">{{d.mb_name}}</option>
+                        </select>
+                    </span>
+                    <input  type="text" class='deptInput' id="placeInput"  v-model="applyinfo.a_place"  name="a_place"   />
+                </div>
+            </div>
+
+
+            <div class="top1 top4">
+                <div class="top2">户口类型：</div>
+                <input type="radio" name="a_hk_city"  value="1" :checked="applyinfo.a_hk_city=='1'"  /><span>城市</span>&nbsp;
+                <input type="radio" name="a_hk_city"  value="2" :checked="applyinfo.a_hk_city=='2'" /><span>农村</span>&nbsp;
+                <input type="radio" name="a_hk_city"  value="3" :checked="applyinfo.a_hk_city=='3'"/><span>未知</span>
+            </div>
+
+            <div class="top1 top4">
+                <input type="radio" name="a_hk_bd"  value="1" :checked="applyinfo.a_hk_bd=='1'" /><span>本市</span>&nbsp;
+                <input type="radio" name="a_hk_bd"  value="2" :checked="applyinfo.a_hk_bd=='2'" /><span>本省</span>&nbsp;
+                <input type="radio" name="a_hk_bd"  value="3" :checked="applyinfo.a_hk_bd=='3'" /><span>外省</span>&nbsp;
+                <input type="radio" name="a_hk_bd"  value="4" :checked="applyinfo.a_hk_bd=='4'" /><span>未知</span>
+            </div>
+
+            <div class="top1" style="width: 62%;">
+                <div class="top2" style="width: 16%;">住&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：</div>
+                <input type="text" style="width: 78.4%;"  v-model="applyinfo.a_address" id="a_address" class="top3" name="a_address" />
+            </div>
+
+            <div class="top1" style="float: right;margin-right: 3%;">
+                <div class="top2"><span>录&nbsp;&nbsp;入&nbsp;&nbsp;人：</span></div>
+                <input readonly="readonly" class="top3" id="a_lr_name" name="a_lr_name" />
+            </div>
+
+            <div class="top7">
+                <div class="top8"><span>临床诊断：</span></div>
+                <div class='div-wrap' style="width: 85%;min-width: 200px;">
+                    <span class='select-wrap'>
+                        <select class='deptSelect'  onchange="change3(this)" >
+                            <option>请选择</option>
+                            <option v-for="d in lczdMb">{{d.mb_name}}</option>
+                        </select>
+                    </span>
+                    <input  type="text" class='deptInput' id="lczdInput" v-model="applyinfo.a_lczd" name="a_lczd" style="width: 95%;min-width:150px;" />
+                </div>
+            </div>
+
+            <div class="top7">
+                <div class="top8"><span>不良孕产史:</span></div>
+                <div class='div-wrap' style="width: 85%;min-width: 200px;">
+                    <span class='select-wrap'>
+                        <select class='deptSelect'  onchange="change4(this)" >
+                            <option>请选择</option>
+                            <option v-for="d in blycsMb">{{d.mb_name}}</option>
+                        </select>
+                    </span>
+                    <input  type="text" class='deptInput' id="blycsInput" v-model="applyinfo.a_blycs" name="a_blycs" style="width: 95%;min-width: 150px;" />
+                </div>
+            </div>
+
+        </div>
+        <div  style="height: 80px;line-height:80px;margin: 2%;">
+            <button class="btn btn-primary pad24" data-toggle="button"  type="button" id="createApplication">保存[F2]</button>
+            <button class="btn btn-primary pad24"  data-toggle="button" type="button" id="addApplication">新增</button>
+            <button class="btn btn-primary pad24" data-toggle="button"  type="button" id="deleteApplication">删除</button>
+        </div>
+    </form>
+
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+    function change1(e){
+        $("#deptInput").val( e.value);
+    }
+    function change2(e){
+        $("#doctorInput").val( e.value);
+    }
+    function change3(e){
+        $("#lczdInput").val( e.value);
+    }
+    function change4(e){
+        $("#blycsInput").val( e.value);
+    }
+    function change5(e){
+        $("#placeInput").val( e.value);
+    }
+
+
+    $(function(){
+
+        //js获取当前时间戳
+        var timestamp = (new Date()).getTime();
+
+        $("#a_barcode").focus();
+
+        //取回当前医院的部门
+        $.get("/applyinfo/getApplyinfoCard",{},function(data){
+           // map.deptcombine = data.deptcombine;
+            map.setmealName = data.setmealName;
+            map.deptMb = data.deptMb;//登录用户对应医院的科室信息
+            map.doctorMb = data.doctorMb;//登录用户对应医院的送检医生信息
+            map.lczdMb = data.lczdMb;//共有的信息，临床诊断
+            map.blycsMb = data.blycsMb;//共有的信息，不良孕产史
+            map.placeMb = data.placeMb,//户籍地点
+            map.organization = data.organization;
+            $("#a_hospital").val(data.organizationName);
+            $("#a_lr_name").val(data.userName);
+        });
+
+         var inputs = $("input[type='text'],input[type='radio'],select");
+         inputs.keydown(function (e) {
+             var k = e.keyCode;
+             //var a = $.inArray(this,inputs);//jquery 获取数组元素的下标
+             var a=inputs.index($(this));//jquery 获取数组元素的下标,两种方法
+             if (k == 13 || k == 39 ) {
+                 inputs[a+1].focus();
+                 return false;
+             } else if (k == 37) {
+                 inputs[a-1].focus();
+                 return false;
+             }
+         })
+
+        /*
+         $('select').focus(function() {
+              this.size = this.length;
+          });
+          $('select').blur(function() {
+              this.size = 1;
+          });
+          $('select').click(function() {
+              this.size = 1
+          });*/
+
+
+    });
+
+    var map={
+        notUpdatedSetmeal:'',
+        teacher:[],
+        courses:[],
+        //deptcombine:[],
+        setmealName:[],
+        organization:[],
+        deptMb:[],
+        doctorMb:[], //定义一个数组，里面有多个对象
+        lczdMb:[],
+        blycsMb:[],
+        placeMb:[],
+        applyinfo:{}, //定义一个对象
+    };
+
+    new Vue({
+        el: '#app',
+        data: map,
+        computed:{
+            province:function(){
+                var array= [
+                    { text: '本地', value: '1' },
+                    { text: '本省', value: '2' },
+                    { text: '外省', value: '3' }
+                ];
+                return array;
+            },
+        }
+    });
+
+    function setObjectValue(data) {
+        map.applyinfo = data;
+        map.notUpdatedSetmeal = map.applyinfo.a_setmeal_name;
+        $("#a_flag").val(data.a_flag);
+        $("#a_hospital").val(data.a_hospital);
+        $("#a_lr_name").val(data.a_lr_name);
+        $("#a_lr_date").val( timestampFormat1( data.a_lr_date) );
+
+        var a = parseInt( data.a_flag );
+        switch (a){
+            case 1:
+                $("#a_flag").val("录入");
+                break;
+            case 2:
+                $("#a_flag").val("送检");
+                break;
+            case 4:
+                $("#a_flag").val("签收");
+                break;
+            case 5:
+                $("#a_flag").val("报告");
+                break;
+        }
+    }
+
+
+    function valiBlur(e){
+        var date = $(e).val();
+        if( date.length ==8  ){
+            var y = date.substring(0,4);
+            var m = date.substring(4,6);
+            var d = date.substring(6,8);
+            if(parseInt(m)>12){
+                $(e).next().show();
+                return false;
+            }
+            if(parseInt(d)>31){
+                $(e).next().show();
+                return false;
+            }
+            $(e).val(y+"-"+m+"-"+d);
+        }else if( date!="" && 1 < date.length < 8  ){
+            var txt= "请输入正确的日期格式yyyyMMdd";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+        }
+    }
+
+    function validFocus(e){
+        $(e).next().hide();
+        var date = $(e).val().replace(/-/g, "");
+        $(e).val( date );
+    }
+
+    // 用于当数字小于 10 是自动在首位填充 0
+    function firstHolder(num){
+        if(num<10){
+            num = '0'+num;
+        }
+        return num;
+    }
+
+    var sampleDateValidation; //校验日期输入
+    var barcodeLen; //校验条码号输入长度
+
+    $(function(){
+
+        $(document).keydown(function(event){
+            if(event.keyCode=="113"){
+                $("#createApplication").click();
+            }
+        });
+
+        //给录入时间赋值
+        var nowdate = new Date();
+        var y = nowdate.getFullYear();
+        var m = firstHolder( nowdate.getMonth()+1 );
+        var d = firstHolder( nowdate.getDate() ) ;
+        var formatnowdate = y+'-'+m+'-'+d;
+        $("#a_lr_date").val( formatnowdate );
+
+        //读取系统配置的条码号的长度
+
+        $.get("/config/barcodeLength",{},function(data){
+            barcodeLen = data.barcodeLength;
+            sampleDateValidation = data.sampleDateValidation;
+        });
+
+        $("#createApplication").click(function(){
+            if( $("#a_barcode").val()=="" ){
+                var txt= "条码号不能为空";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                $("#a_barcode").focus();
+                return false;
+            }
+            else if($("#a_barcode").val().length!=barcodeLen){
+                var txt= "请输入"+barcodeLen+"位条码号";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                $("#a_barcode").focus();
+                return false;
+            }
+
+            else{
+                $.get("/applyinfo/validateBarcode",{"a_barcode":$("#a_barcode").val()},function(data){
+                    if(data=="1" && $("#a_id").val()==''){
+                        var txt= "已存在该条码号";
+                        window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                        $("#a_barcode").focus();
+                        return false;
+                    }else{
+                        if( $("#selectSetmeal").val() =="" || $("#selectSetmeal").val()==null ){
+                            var txt= "检测项目不能为空！";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            return false;
+                        }
+                        if( $("#a_name").val() =="" || $("#a_name").val()==null ){
+                            var txt= "姓名不能为空！";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            $("#a_name").focus();
+                            return false;
+                        }
+                        if( $("#a_sex").val() =="" || $("#a_sex").val()==null ){
+                            var txt= "性别不能为空！";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            return false;
+                        }
+
+
+                        if( $("#a_sample_date").val() =="" || $("#a_sample_date").val()==null ){
+                            var txt= "采样日期不能为空！";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            $("#a_sample_date").focus();
+                            return false;
+                        }
+                        if( $("#a_sample_date").val()!="" && $("#a_sample_date").val()!=null ){
+
+                            var date = new Date();
+                            var hour = firstHolder(date.getHours());
+                            var minute =firstHolder( date.getMinutes());
+                            var second = firstHolder(date.getSeconds());
+                            var time1 = hour+":"+minute+":"+second;
+
+                            var date1 = $("#a_sample_date").val()+" "+time1;
+                            var timestamp1 = new Date(date1).getTime(); //输入日期的时间戳
+                            var timestamp2 = (new Date()).getTime();//当前时间戳
+
+                            if(timestamp1>timestamp2){
+                                var txt= "采样时间不能大于当前时间";
+                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                return false;
+                            }
+                            if( timestamp2-timestamp1 > sampleDateValidation*86400000){
+                                var txt= "输入的时间不能小于系统配置的录入时间";
+                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                return false;
+                            }
+
+                        }
+
+                        if( $("#a_bithday").val().trim()!="" ){
+                            var timestamp1=new Date().getTime();//当前时间
+                            var timestamp2=new Date( $("#a_bithday").val() ).getTime();//录入的出生日期
+                            if(timestamp2>timestamp1){
+                                var txt= "出生日期不能大于当前时间";
+                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                $("#a_bithday").focus();
+                                return false;
+                            }
+                        }
+
+                        if( $("#a_sample_date").val().trim()!="" ){
+                            var timestamp1=new Date().getTime();//当前时间
+                            var timestamp2=new Date( $("#a_sample_date").val() ).getTime();//录入的出生日期
+                            if(timestamp2>timestamp1){
+                                var txt= "采样日期不能大于当前时间";
+                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                $("#a_sample_date").focus();
+                                return false;
+                            }
+                        }
+
+                        if($("#a_tel1").val().trim()!=""){var phone1 =  $("#a_tel1").val();if( phone1[0]!=1 || phone1.length!=11){
+                            var txt= "请输入正确的联系方法电话1";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            $("#a_tel1").focus();
+                            return false;}
+                        }
+                        if($("#a_tel2").val().trim()!=""){var phone2 =  $("#a_tel2").val();if( phone2[0]!=1 || phone2.length!=11){
+                            var txt= "请输入正确的联系方法电话2";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            $("#a_tel2").focus();
+                            return false;
+                        }
+                        }
+
+                        //验证输入的送检科室
+                        var array1=[];
+                        $(map.deptMb).each(function(i,e){ //判断输入的科室是否不存在，如果不存在，则数据库模板表，对应操作用户所属医院
+                            array1 = [];
+                            array1.push(e.mb_name);
+                        });
+                        if(  $.inArray($("#deptInput").val(),array1)==-1 && $("#deptInput").val().trim()!="" ){
+                            $("#isNewDept").val("0");//不包含输入的科室，在数据库新建送检科室模板
+                        }
+
+                        //验证输入的送检医生
+                        var array2=[];
+                        $(map.doctorMb).each(function(i,e){ //判断输入的科室是否不存在，如果不存在，则数据库模板表，对应操作用户所属医院
+                            array2 = [];
+                            array2.push(e.mb_name);
+                        });
+                        if( $.inArray($("#doctorInput").val(),array2)==-1 && $("#doctorInput").val().trim()!=""){
+                            $("#isNewDoctor").val("0");//不包含输入的医生，在数据库新建送检医生模板
+                        }
+
+                        //验证输入的临床诊断
+                        var array3=[];
+                        $(map.LczdMb).each(function(i,e){ //判断输入的临床诊断是否不存在，如果不存在，则数据库模板表，对应类型
+                            array3 = [];
+                            array3.push(e.mb_name);
+                        });
+                        if( $.inArray($("#lczdInput").val(),array3)==-1 && $("#lczdInput").val().trim()!=""){
+                            $("#isNewLczd").val("0");//不包含输入的临床诊断，在数据库新建临床诊断模板
+                        }
+
+                        //验证输入的不良孕产史
+                        var array4=[];
+                        $(map.blycsMb).each(function(i,e){ //判断输入的不良孕产史是否不存在，如果不存在，则数据库模板表，对应类型
+                            array4 = [];
+                            array4.push(e.mb_name);
+                        });
+                        if( $.inArray($("#blycsInput").val(),array4)==-1 && $("#blycsInput").val().trim()!=""){
+                            $("#isNewBlycs").val("0");//不包含输入的不良孕产史，在数据库新建不良孕产史模板
+                        }
+
+                        //验证输入的户籍地点
+                        var array5=[];
+                        $(map.placeMb).each(function(i,e){ //判断输入的不良孕产史是否不存在，如果不存在，则数据库模板表，对应类型
+                            array5 = [];
+                            array5.push(e.mb_name);
+                        });
+                        if( $.inArray($("#placeInput").val(),array5)==-1 && $("#placeInput").val().trim()!=""){
+                            $("#isNewPlace").val("0");//不包含输入的不良孕产史，在数据库新建不良孕产史模板
+                        }
+
+                        for(var i=0;i< $(".wrongful").length;i++){
+
+                            if( $($(".wrongful")[i]).is(':visible') ){
+                                return false;
+                            }
+                            /*if( $($(".wrongful")[i]).is(':hidden') ){
+                                alert("隐藏");
+                            }*/
+                        }
+
+                        var a_id = $("#a_id").val();
+                        if(a_id ==''){
+
+                            var formData = new FormData($( "#formApplication" )[0]);
+                            $.ajax({
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                url:"/applyinfo/createApplication",
+                                data:formData,
+                                async: false,
+                                error: function(request) {
+                                    var txt= "出错了";
+                                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                                },
+                                success: function(data) {
+                                    window.location.reload();
+                                    parent.window.query();//调用父窗口的方法
+                                    var txt= "新增成功";
+                                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+                                }
+                            });
+                        }else{
+                            var formData = new FormData($( "#formApplication" )[0]);
+                            $.ajax({
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                url:"/applyinfo/updateApplication",
+                                data:formData,
+                                async: false,
+                                error: function(request) {
+                                    var txt= "出错了";
+                                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                                },
+                                success: function(data) {
+                                    window.location.reload();
+                                    parent.window.query();//调用父窗口的方法
+                                    var txt= "修改成功";
+                                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                }
+                            });
+                        }
+                    }
+                })
+
+            }
+
+        })
+
+    });
+
+
+    //为录入，2为送检，4为签收，5为报告， 当状态大于2，也就是送检之后，就不可以修改基本信息
+    function processState(){
+        setTimeout(waitOk,10);
+    }
+
+    function  waitOk(){
+        $("form input").removeAttr("disabled");
+        $("form select").removeAttr("disabled");
+        var selet = $("#a_flag").val();
+        if(  selet != '录入'  ){
+            $("form input").attr("disabled","disabled");
+            $("form select").attr("disabled","disabled");
+        }
+    }
+
+    $("#deleteApplication").click(function(){
+        parent.window.deleteSelect();
+    });
+
+    $("#addApplication").click(function(){
+        window.location.reload();
+    });
+
+    function showallselect(id){
+        var select = document.getElementById(id);
+        if(select && select.options && select.options.length >1){
+            select.size = select.options.length;
+        }
+    }
+
+
+    /*]]>*/
+</script>
+
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<!--	<APPLET CODE = "HelloSwingApplet.class" archive="SSignedApplet.jar"   WIDTH = 400 HEIGHT = 50 >
+		<PARAM NAME = "REPORT_URL"  VALUE ="servlets/jasperprint">
+	</APPLET>-->
+
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--日期控件 js和css -->
+<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+<link rel="stylesheet" href="../css/iconfont.css" />
+
+<link rel="stylesheet" href="../css/bootstrap-table.css" />
+<script src="../js/bootstrap-table.js"></script>
+<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+<script src="../js/bootstrap-table-zh-CN.js"></script>
+<script src="../js/bootstrap-table-export.js"></script>
+
+<link rel='stylesheet'   href='../css/pagination.css'/>
+<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+	<style>
+		.fixed-table-body {height: 300px;}
+		.fixed-table-pagination{margin-top: 290px;}
+		.hideQuery{margin-top:1%;display: none;}
+		.menu_ul ul li {
+			height: 20px;
+			line-height: 20px;
+			width: 0px;
+			position: relative;
+		}
+		/*.dropdown-menu { //控制分页10 20 50
+                    min-width: 60px;
+                }*/
+		.footer{
+			height: 35px;
+			width: 30%;
+			/*background-color: #ddd;*/
+			margin-left: 0.5%;
+			position: fixed;
+			bottom: 0;
+			color: red;
+		}
+
+		.creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
+		a {text-decoration:none;}
+		body {
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+		}
+	</style>
+
+
+</head>
+<body>
+
+<div id="mainframe2" style="height:100%;">
+
+	<div class="sumbody" id="app" >
+		<table id="tbMain" width="100%" style="height:99%" border="0"
+			   cellpadding="0" cellspacing="0">
+			<tr>
+				<td style="vertical-align: top;width: 350px;" height="99%" >
+					<div class="mune_left" style="width: 400px;background-color: white;">
+					<!--	<div class="menu_ul" >-->
+							<div class="tableDiv">
+								<div id="toolbar" class="btn-group">
+									<div>
+										<div style="float: left;width: 398px;margin-top: 1%;">
+
+											<div class="panel panel-default" style="margin-bottom: 3px;">
+												<div class="panel-heading">
+													<h3 class="panel-title" style="font-weight: bold;">查询条件</h3>
+												</div>
+											</div>
+											<div class="myLabel-content queryLeft" style="height: 34px;line-height: 34px;">日
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</div>
+											<div class="myText-content" style="float: left;width:70%;height: 34px;line-height: 34px;">
+												<input id="c_a_date1" class="form-control style_01" style="width:135px;" type="text"  />
+												<span class="zhi">至</span>
+												<input id="c_a_date2" class="form-control style_01"  style="width:135px;" type="text"  />
+											</div>
+											<div style="clear: both;"></div>
+											<div style="margin-top: 1%;">
+												<div class="myLabel-content queryLeft" style="height: 34px;line-height: 34px;">送检单位:&nbsp;&nbsp;</div>
+												<div class="myText-content" style="float: left;width: 120px;height: 34px;line-height: 34px;margin-bottom: 4px;">
+													<!--<select id="a_hospital" class="form-control" style="display: inline-block;width:305px;padding: 0 2px;border-radius: 3px;border: 1px solid #DBDBDB;">
+														<option value="">请选择</option>
+														<option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+													</select>-->
+
+													<div class="dropdown" style="display: inline-block;">
+														<button class="btn btn-default dropdown-toggle" style="width: 305px;text-align: left" type="button" id="a_hospital" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+															请选择
+														</button>
+														<ul class="dropdown-menu" aria-labelledby="dropdownMenu2" >
+															<li data-stopPropagation="true">
+																<div class="zTreeDemoBackground" >
+																	<ul id="treeDemo" class="ztree creatZtree_1"  ></ul>
+																</div>
+															</li>
+														</ul>
+													</div>
+
+												</div>
+											</div>
+										</div>
+										<div style="clear: both;"></div>
+
+										<div class="panel panel-default" style="margin-bottom: 3px;">
+											<div class="panel-heading">
+												<h3 class="panel-title" style="font-weight: bold;">请选择报表信息</h3>
+											</div>
+										</div>
+										<div  v-for="s in listStatistics" style="border-bottom: 1px solid  #DBDBDB;height: 28px;line-height: 28px;">
+											<input type="radio" name="radio"  :id="s.id" :value="s.report_url"  onclick="getList(this)"  style="margin-left: 2%;" />
+											<span style="margin-left: 2%;" >{{s.project_name}}</span>
+										</div>
+									</div>
+
+									<div style="float: left;margin-top: 10px;">
+										<button   class="btn btn-default" id="btn_search"  onclick="query()" style="padding: 5px 10px;margin-left: 4%;">
+											<span class="glyphicon glyphicon-search"></span> 查询
+										</button>
+										<button  class="btn btn-default" id="btn_ret" onclick="reset()" style="padding: 5px 10px;margin-left: 3%;">
+											<span class="glyphicon glyphicon-refresh"></span> 重置
+										</button>
+									</div>
+								</div>
+								<br/>
+								<div class="footer">注：查看报告窗口右上角可打印下载报表</div>
+
+								<!--<div style="cursor:pointer;"  onclick="application()">申请单信息统计</div>
+								<div style="cursor:pointer;" onclick="report1()">报告信息统计</div>-->
+							</div>
+						<!--</div>-->
+					</div>
+				</td>
+
+				<td style="vertical-align: top;" width="100%;">
+					<div class="content_right">
+						<iframe class="mainbody" id="mainbody2" name="mainbody2" scrolling="no" frameBorder="0"
+							 style="width:100%;height:98%;margin: 4px;">
+							<!--src="http://localhost:8090/reportQuery/myprint"-->
+						    <!--src="http://localhost:8075/WebReport/ReportServer?reportlet=lesson4.cpt"-->
+						</iframe>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</div>
+
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+
+    function onClick(e,treeId, treeNode){
+        debugger;
+        $("#a_hospital").attr("name",treeNode.id);
+        $("#a_hospital").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        alert(msg);
+    }
+    /*zTree   end */
+
+
+    function fillter(treeObj) {
+        //获得树形图对象
+        var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+        for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+            treeObj.expandNode(nodeList[i], true, false, true);
+            /*var nodespan = nodeList[i].children;
+            for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                treeObj.expandNode(nodespan[j], true, false, true);
+            }*/
+        }
+    }
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+
+    $(function(){
+
+
+        $("#a_hospital").click(function(){
+            $.get("/organization/getByOwn",{},function(zNodes){
+                var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                fillter(treeObj);//设置展开前三级
+
+            })
+        });
+
+
+        $.get("/dataStatistics/getStatisticsMsg",{},function(data){
+            map.listStatistics=data;
+        });
+        $.get("/applicationStatistics/getListHospital",{},function(data){
+            map.listHospital=data;
+        })
+    });
+
+    function application(){$("#mainbody2").attr("src","/reportStatistics/reportForm");}
+    function report1(){$("#mainbody2").attr("src","/applicationStatistics/applicationForm");}
+
+    //定义查询url全局变量
+    var querySrc = "";
+    var reportId = "";
+
+    function getList(e){
+        debugger;
+        querySrc =e.value;
+        reportId = e.id;
+	}
+    //查询
+    function query() {
+        debugger;
+        if(querySrc==""){
+			//alert("请选择要查询的统计信息");
+            var txt= "请选择要查询的统计信息";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+			return false
+		}
+        var oDate1 = new Date( $("#c_a_date1").val() );
+        var oDate2 = new Date( $("#c_a_date2").val() );
+        if(oDate1!="" && oDate2!="" ){
+            if( oDate1.getTime() > oDate2.getTime() ){
+                //alert("开始时间不能小于截止时间");
+                var txt= "开始时间不能小于截止时间";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                return false;
+            }
+        }
+        if( $("#c_a_date1").val().trim()=="" &&  $("#c_a_date2").val().trim()!="" || $("#c_a_date1").val().trim()!="" &&  $("#c_a_date2").val().trim()=="" ){
+            //alert("请输入日期范围");
+            var txt= "请输入日期范围";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+		if(querySrc!=""){
+            $("#mainbody2").attr("src",querySrc+"?a_lr_date1="+$("#c_a_date1").val()+"&a_lr_date2="+$("#c_a_date2").val()+"&a_hospital="+$("#a_hospital").attr("name")+"&id="+reportId);
+		}
+    }
+
+
+
+    var map={
+        listCombine:[],
+        listStatistics:[],
+        listHospital:[],
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+    $(function () {
+
+    });
+
+
+    function showQuery(){
+        if(  $(".hideQuery").css("display")=="none" ){
+            $(".hideQuery").show();
+        }else{
+            $(".hideQuery").hide();
+        }
+    }
+
+
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+
+        $("#a_hospital").attr("name","");
+        $("#a_hospital").text("请选择");
+
+    }
+
+    $("#c_a_date1,#c_a_date2").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+            /*var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#startTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }*/
+        }
+    });
+
+    //修改安全巡查活动截止日期
+    $("#endTime").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+            /*var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){//转换成毫秒数进行比较
+                alert("截止日期不能小于当前时间！");
+                $("#endTime").val($("#egoTime").val());
+            } else {
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }*/
+        },
+        okfun:function (elem,val,date) {
+            var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                //alert("活动开始时间不能小于当前时间！");
+                var txt= "活动开始时间不能小于当前时间！";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                $("#endTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }
+        }
+    });
+
+    $(function(){
+        setTimeout(waitTime,100);
+    });
+
+    function  waitTime(){
+        var array2 = [];
+        $(".hasPrint").each(function(i,e){
+            array2 = $(e).parent().siblings();
+            $(array2).each(function(n,m){
+                $(m).css("color","red");
+            })
+        })
+    }
+
+	/*]]>*/
+</script>
+
+</html>

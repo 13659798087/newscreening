@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+<!--模态框-->
+<link rel="stylesheet" href="../css/jquery.popup.css" />
+<script src="../js/jquery.popup.js"></script>
+<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+	<style>
+	.leftTitle{float: left;width: 19%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+	.inputRight2{width: 18%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.pad1{padding: 4px 10px;font-size: 14px;margin-left: 0.6%;background-color: #337ab7;cursor: pointer;}
+	.roleLeft{margin-left: 12%;}
+	.star1{color: red;float: left;height: 34px;line-height: 34px;width: 2%;}
+
+
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+	<input type="hidden" th:value="${sign}" id="sign" />
+	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增模板字典</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑模板字典</h3>
+
+	<form  action="/config/createConfig"  id="signForm"  method="post">
+
+		<input type="hidden"  th:value="${cf_code}" id="hide_code"  name="hide_code"/>
+		<input type="hidden" name="type"  th:value="${type}"  id="type" />
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >代码：</div>
+				<div class="star1"  th:if="${type=='a'}" >*</div>
+				<div class="star1"  th:if="${type=='e'}" >&nbsp;</div>
+				<input type="text" name="cf_code"  th:if="${type=='e'}"  id="cf_code"  th:value="${cf_code}" readonly="readonly"
+                       class="inputRight" style="background-color: white;border: 0px; outline:none;" />
+                <input type="text" name="cf_code"  th:if="${type=='a'}"  id="cf_code"  class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >是否启用：</div>
+				<div class="star1">&nbsp;</div>
+				<!--<input type="text"  name="cf_flag" id="cf_flag"  th:value="${cf_flag}" class="form-control inputRight" />-->
+				<select  name="cf_flag" id="cf_flag"  th:value="${cf_flag}" class="form-control inputRight">
+					<option>1</option>
+					<option>0</option>
+				</select>
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >值：</div>
+				<div class="star1">*</div>
+				<input type="text"  name="cf_val" id="cf_val"  th:value="${cf_val}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >意义：</div>
+				<div class="star1">&nbsp;</div>
+				<input type="text"  name="cf_explain" id="cf_explain"  th:value="${cf_explain}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/config/listConfig">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+	$(function(){
+
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+	    if( $(".edit").attr("id")=='e' ){
+            $("#password").val(  $("#hidPassword").val() );
+            var roleId = $("#roleId").val();
+            $.get("/role/getMenuByRoleId",{"roleId":roleId},function(data){
+                map.yesMenu = data;
+                var array = [];
+                $(data).each(function(i,e){
+                    array.push(e.menuId);
+                });
+                $("#menus").val( array.toString() );
+            });
+            var organizationId = $("#organizationId").val();
+            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
+                $("#organizationName").text(data.name);
+            })
+        }
+        $.get("/menu/getAllMenu",{},function(data){
+            map.menu = data;
+        })
+
+	});
+
+	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+	var map={
+        yesMenu: [],
+        menu: [],
+      //  organization: {},
+	};
+	new Vue({
+		el: '#app',
+		data: map
+	});
+
+
+    $("#sureAdd").click(function(){
+        debugger;
+        var type = $("#type").val();
+        var cf_code = $("#cf_code").val();
+        var cf_val = $("#cf_val").val();
+        if (cf_code.trim()==""){
+            var txt= "代码不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        if (cf_val.trim()==""){
+            var txt= "值不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        else if('a'==type){
+            //验证此单位是否已录入此用户
+            $.get("/config/validateName",{"cf_code":cf_code},function(data){
+                if(data=='1'){
+                    var txt= "代码已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                }
+                else{
+                    $("#signForm").submit();
+                }
+            })
+        }
+
+        else if('e'==type){
+            $("#signForm").submit();
+        }
+
+    });
+
+    $("#getRole").click(function(){
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+	});
+
+	$("#addMenu").click(function(){
+	    $("#sign1").html('');
+
+	    var array = [];
+
+	    $(".checkInput").each(function(i,e){
+	        if(e.checked==true){
+                var val = $(e).next().text();
+                array.push( $(e).next().attr("id") );
+				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
+			}
+		});
+
+        $("#menus").val( array.toString() );
+
+	});
+
+
+
+	$("#selectPart").click(function(){
+		$.get("/organization/getTree",{},function(zNodes){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#selectAll").bind("click", selectAll);
+		})
+
+
+
+
+	});
+
+
+    //以下是zTree的js代码
+
+    /*zTree   start */
+
+    var setting = {
+
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+			onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+
+        }
+    };
+
+    function onClick(e,treeId, treeNode){
+        debugger;
+        //将选中的单位的id赋给隐藏的input框
+        $("#organizationId").val(treeNode.id);
+        $("#organizationName").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        debugger;
+        alert(msg);
+    }
+    var log, className = "dark";
+
+    function getTime() {
+        var now= new Date(),
+            h=now.getHours(),
+            m=now.getMinutes(),
+            s=now.getSeconds(),
+            ms=now.getMilliseconds();
+        return (h+":"+m+":"+s+ " " +ms);
+    }
+
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+
+    /*zTree   end */
+
+
+
+	/*function checkTo(e){
+	    if( $(e).find("input").get(0).checked==true ){  //js
+            $(e).find("input").attr("checked",false);
+		}else{
+            $(e).find("input").attr("checked",true);
+		}
+	}*/
+
+    function checkTo(e){
+        if( $(e).find("input").is(":checked")==true ){  //jquery
+            $(e).find("input").attr("checked",false);
+        }else{
+            $(e).find("input").attr("checked",true);
+        }
+    }
+
+
+	/*]]>*/
+</script>
+
+</html>

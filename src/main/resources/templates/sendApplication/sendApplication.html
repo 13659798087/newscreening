@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--日期控件 js和css -->
+<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+<link rel="stylesheet" href="../css/iconfont.css" />
+
+<link rel="stylesheet" href="../css/bootstrap-table.css" />
+<script src="../js/bootstrap-table.js"></script>
+<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+<script src="../js/bootstrap-table-zh-CN.js"></script>
+<script src="../js/bootstrap-table-export.js"></script>
+
+<link rel='stylesheet'   href='../css/pagination.css'/>
+<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+
+</head>
+<body>
+
+<div id="mainframe2" style="height:100%">
+
+	<div class="sumbody">
+		<table id="tbMain" width="100%" style="height:99%" border="0"
+			   cellpadding="0" cellspacing="0">
+			<tr>
+				<td style="vertical-align: top;width: 350px;" height="99%" >
+					<div class="mune_left" style="width: 500px;background-color: white;">
+						<div class="menu_ul" >
+
+							<div class="tableDiv">
+								<div id="toolbar" class="btn-group">
+									<div class="" style="margin-top:1.6%;width: 480px;">
+
+										<div style="float: left;width: 85%;">
+											<div class="myLabel-content queryLeft" >录入时间：</div>
+											<div class="myText-content" style="float: left;width: 38%;">
+												<input id="s_code" class="form-control style_01" type="text" style="display: inline-block;width: 45%;">至
+												<input id="s_code1" class="form-control style_01"  type="text" style="display: inline-block;width: 45%;">
+											</div>
+
+											<div class="myLabel-content queryLeft" >孕妇姓名：</div>
+											<div class="myText-content" style="float: left;width: 15%;">
+												<input id="s_code3" class="form-control style_01"  type="text" style="display: inline-block;width: 90%;">
+											</div>
+
+											<br/><br/>
+
+											<div class="myLabel-content queryLeft" >条码号：</div>
+											<div class="myText-content" style="float: left;width: 15%;">
+												<input id="s_name" class="form-control style_01"  type="text" style="display: inline-block;width: 90%;">
+											</div>
+
+											<div class="myLabel-content queryLeft" >病历号：</div>
+											<div class="myText-content" style="float: left;width: 15%;">
+												<input id="s_name4" class="form-control style_01"  type="text" style="display: inline-block;width: 90%;">
+											</div>
+
+											<div class="myLabel-content queryLeft" >条码号：</div>
+											<div class="myText-content" style="float: left;width: 15%;">
+												<input id="s_name1" class="form-control style_01"  type="text" style="display: inline-block;width: 90%;">
+											</div>
+										</div>
+
+										<div style="float: left;margin-top: 2%;width: 13%;">
+											<button class="btn btn-default" id="btn_search"  onclick="query()">
+												<span class="glyphicon glyphicon-search"></span> 查询
+											</button>
+										</div>
+
+									</div>
+
+								</div>
+
+								<table  class="table table-striped" id="table"  ></table>
+
+							</div>
+
+						</div>
+					</div>
+				</td>
+				<td style="vertical-align: top;" width="100%">
+					<div class="content_right">
+						<iframe class="mainbody" id="mainbody2" name="mainbody2" scrolling="no" frameBorder="0"
+								src="/sendApplication/cardEntry"	style="width:100%;height:98%">
+						</iframe>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+
+        datagrid = datagrid.bootstrapTable({
+            url: "/sendApplication/getApplication",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+
+                return null;
+            },
+            onClickRow: function (row, $element, field) {
+                alert();
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    title: "全选",
+                    field: "select",
+                    checkbox: true,
+                    align: "center",//水平
+                    valign: "middle"//垂直
+                },
+                {
+                    title: '编号',
+					field: "编号",
+                    align: "center",//水平
+                    width:  20,
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "条码号",
+                    field: "c_barcode",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "样本编号",
+                    field: "c_sid",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "孕妇姓名",
+                    field: "p_name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "病历号",
+                    field: "c_in_no",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    field: "p_bithday",
+                    title: "出生日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return FormatDate(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_weigh",
+                    title: "体重",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_ts_bcdate",
+                    title: "B超日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return FormatDate(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "pregnancy",
+                    title: "评估孕周",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_lmp_date",
+                    title: "末次月经",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return FormatDate(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_tes",
+                    title: "胎儿数",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_sample_date",
+                    title: "采样日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return FormatDate(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "r_i_code",
+                    title: "项目",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_hospital",
+                    title: "送检单位",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "母亲姓名",
+                    visible:true
+                },
+                {
+                    field: "c_dept",
+                    title: "送检科室",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_doctor",
+                    title: "送检医生",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "p_tel1",
+                    title: "联系电话",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "p_tel2",
+                    title: "联系电话2",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                },
+                {
+                    field: "c_w_name",
+                    title: "检验者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "c_a_name",
+                    title: "审核者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                }
+            ]
+        });
+
+    });
+
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    });
+
+	var map={
+	    message: '',
+	    ret:'',
+	    cc:'',
+	    dd:'',
+	};
+    
+	new Vue({
+	  el: '#app',
+	  data: map
+	});
+
+    $("#startTime").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+            var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#startTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }
+        }
+    });
+
+
+    //修改安全巡查活动截止日期
+    $("#endTime").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+            /*var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){//转换成毫秒数进行比较
+                alert("截止日期不能小于当前时间！");
+                $("#endTime").val($("#egoTime").val());
+            } else {
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }*/
+        },
+        okfun:function (elem,val,date) {
+            var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#endTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }
+        }
+    })
+
+	/*]]>*/
+</script>
+
+</html>

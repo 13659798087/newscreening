@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<link rel="stylesheet" href="../css/iconfont.css" />
+
+	<link rel="stylesheet" href="../css/bootstrap-table.css" />
+	<script src="../js/bootstrap-table.js"></script>
+	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+	<script src="../js/bootstrap-table-zh-CN.js"></script>
+	<script src="../js/bootstrap-table-export.js"></script>
+
+	<link rel='stylesheet'   href='../css/pagination.css'/>
+	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--格式化时间.控制input只能输入金额-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--弹出框 start-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+</head>
+<body>
+<div id="app">
+    <div class="tableDiv">
+			<div id="toolbar" class="btn-group">
+				<div class="queryList" style="margin-top: 2.2%;">
+					<div class="myLabel-content queryText">名称：</div>
+					<div class="myText-content" style="float: left;">
+						<input id="mb_name" type="text" class="form-control" placeholder="输入用户名">
+					</div>
+					<div style="float: left;width: 5%;">&nbsp;</div>
+					<button class="btn btn-default" id="btn_search"  onclick="query()">
+						<span class="glyphicon glyphicon-search"></span> 查询
+					</button>
+					<button   class="btn btn-default" id="btn_ret"  onclick="reset()">
+						<span class="glyphicon glyphicon-refresh"></span> 重置
+					</button>
+					<button class="btn btn-default" id="btn_add"  >
+						<span class="glyphicon glyphicon-plus-sign"></span> 添加
+					</button>
+				</div>
+			</div>
+			<table  class="table table-striped" id="table" ></table>
+	</div>
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+
+    var map={
+        notUpdatedSetmeal:'',
+        listMbType:[], //定义一个数组，里面有多个对象
+        aa:{}, //定义一个对象
+    };
+
+    new Vue({
+        el: '#app',
+        data: map,
+        computed:{
+            province:function(){
+                var array= [
+                    { text: '本地', value: '1' },
+                    { text: '本省', value: '2' },
+                    { text: '外省', value: '3' }
+                ];
+                return array;
+            },
+        }
+    });
+
+	$("#submitSign").click(function(){
+        var formData = new FormData($( "#uploadFile" )[0]);
+        $.ajax({
+            type: "POST",
+            contentType: false,
+            processData: false,
+            url:"/mb/templateTable",
+            data:formData,
+            async: false,
+            error: function(request) {
+                var txt= "出错了";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+            },
+            success: function(data) {
+                $("#image").attr("src","/signpic/Pictureshows?id="+data.id);
+            }
+        });
+	});
+
+
+    //创建用户
+    $("#createUser").click(function(){
+	    var userName = $("#userName").val();
+        var password = $("#password").val();
+
+	    if( userName.trim()=="" || password.trim()=="" ){
+			$("#ProjectHint").show();
+		}else{
+	        $("#signForm").submit();
+		}
+
+	});
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+
+        $("#btn_add").click(function(){
+            location.href="/mb/addTemplate?type=a";
+        });
+
+        $.get("/mbType/getMbType",{},function(data){
+            map.listMbType = data;
+		});
+
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+        datagrid = datagrid.bootstrapTable({
+            url: "/mb/templateTable",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+			toolbar: "#toolbar",
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+           // showToggle:true,//视图切换
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+                var temp = {
+                    pageNumber: params.pageNumber,                         //页面大小
+                    rowNumber: params.pageSize,    //页码
+                    mb_name: $("#mb_name").val(),
+
+                };
+                return temp;
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    //title: '编号',
+                    // field: "编号",
+                    align: "center",//水平
+                    width:  50,
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "代码",
+                    field: "mb_code",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '10%',
+                    valign: "middle",
+                },
+                {
+                    title: "名称",
+                    field: "mb_name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '15%',
+                    visible:true
+                },
+                {
+                    field: 'mb_order_no',
+                    title: '排序',
+                    align: 'center',
+                    width: '8%',
+                    valign: "middle",
+
+                },
+                {
+                    field: 'mb_type',
+                    title: '类型',
+                    align: 'center',
+                    width: '8%',
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+						for(var i=0;i<(map.listMbType).length;i++){
+                            if(value==map.listMbType[i].id){
+                                return map.listMbType[i].name;
+                            }
+						}
+                    }
+                },
+                {
+                    field: 'mb_flag',
+                    title: '启用(0-启用，1-不启用)',
+                    align: 'center',
+                    width: '10%',
+                    valign: "middle",
+                },
+                {
+                    field: 'mb_lb_code',
+                    title: '类别代码',
+                    align: 'center',
+                    valign: "middle",
+                    width: '10%',
+                },
+                {
+                    field: 'mb_lb_name',
+                    title: '类别名称',
+                    valign: "middle",
+                    align: 'center',
+                    width: '15%',
+                },
+                {
+                    field: 'operate',
+                    title: '操作',
+                    align: 'center',
+                    events: operateEvents,
+                    formatter: operateFormatter
+                }
+            ]
+        });
+
+    });
+
+    function query() {
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+    }
+
+    function operateFormatter(value, row, index) {
+        var aa = '';
+        if(row.mb_flag=="1"){
+            return [
+                '<button type="button" class="RoleOfEdit btn btn-default  btn-sm" style="margin-right: 15px;margin-left: 15px;">修改</button>',
+                '<button type="button" class="RoleOfStart btn btn-default  btn-sm" style="margin-right: 15px;background-color: #D3D3D3;" >启用</button>',
+                '<button type="button" class="RoleOfDel btn btn-default  btn-sm" style="margin-right: 15px;">删除</button>'
+            ].join('');
+        }
+        if(row.mb_flag=="0"){
+            return [
+                '<button type="button" class="RoleOfEdit btn btn-default  btn-sm" style="margin-right: 15px;margin-left: 15px;">修改</button>',
+                '<button type="button" class="RoleOfEnd btn btn-default  btn-sm" style="margin-right: 15px;background-color:#32CD32;">停用</button>',
+                '<button type="button" class="RoleOfDel btn btn-default  btn-sm" style="margin-right: 15px;">删除</button>'
+            ].join('');
+        }
+
+     }
+
+    window.operateEvents = {
+        'click .RoleOfDel': function (e, value, row, index) {
+            var mb_name = row.mb_name;
+
+            var txt= "确定删除"+mb_name+"模板吗？";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var mb_id = row.mb_id;
+                $.get("/mb/deleteRow",{"mb_id":mb_id},function(data){
+                    datagrid.bootstrapTable("refresh");
+                    var txt=  "删除成功！";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                })
+            },false);
+
+        },
+        'click .RoleOfEdit': function (e, value, row, index) {
+            location.href="/mb/addTemplate?type=e&mb_id="+row.mb_id+"&mb_code="+row.mb_code+"&mb_name="+row.mb_name
+			+"&mb_order_no="+row.mb_order_no+"&mb_type="+row.mb_type+"&mb_lb_code="+row.mb_lb_code+"&mb_lb_name="
+			+row.mb_lb_name+"&mb_flag="+row.mb_flag;
+        },
+        'click .RoleOfStart': function (e, value, row, index) {
+            var mb_name = row.mb_name;
+
+            var txt= "确定启用"+mb_name+"模板吗？";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var mb_id = row.mb_id;
+                $.get("/mb/changeFlag",{"mb_id":mb_id,"mb_flag":'0'},function(data){
+                    datagrid.bootstrapTable("refresh");
+                })
+            },false);
+        },
+        'click .RoleOfEnd': function (e, value, row, index) {
+            var mb_name = row.mb_name;
+
+            var txt= "确定停用"+mb_name+"模板吗？";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var mb_id = row.mb_id;
+                $.get("/mb/changeFlag",{"mb_id":mb_id,"mb_flag":'1'},function(data){
+                    datagrid.bootstrapTable("refresh");
+                })
+            },false);
+        }
+    };
+
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    });
+
+    var map={
+        message: '',
+        ret:'',
+        cc:'',
+        dd:'',
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+
+    /*]]>*/
+</script>
+
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--格式化时间.控制input只能输入金额-->
+	<script src="../js/until.sdk.format.js"></script>
+
+<!--模态框-->
+<link rel="stylesheet" href="../css/jquery.popup.css" />
+<script src="../js/jquery.popup.js"></script>
+<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+<style>
+	.leftTitle{float: left;width: 19%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+	.inputRight2{width: 30%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.pad1{padding: 4px 10px;font-size: 14px;margin-left: 0.6%;background-color: #337ab7;cursor: pointer;}
+
+	.star1{color: red;float: left;height: 34px;line-height: 34px;width: 2%;}
+
+	a {text-decoration:none;}
+	body {
+		font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 14px;
+	}
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+	<input type="hidden" th:value="${sign}" id="sign" />
+	<h3 style="display: inline;" th:if="${type=='a'}" th:id="${type}" class="add">新增组别</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}" th:id="${type}" class="edit">编辑组别</h3>
+	<form action="/combine/createCombine"  id="signForm" method="post">
+
+		<input type="hidden"  th:value="${c_code}" id="hide_code"  name="hide_code"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >代码：</div>
+				<div class="star1">*</div>
+				<input type="text"  name="c_code" id="c_code" th:value="${c_code}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >组别名称：</div>
+				<div class="star1">*</div>
+				<input type="text"  name="c_name" id="c_name" th:value="${c_name}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >组别价格：</div>
+				<!--此处控制输入金额事件在until.sdk.format.js文件中-->
+				<div class="star1">&nbsp;</div>
+				<input type="text" name="c_price" id="c_price" th:value="${c_price=='null'?'':c_price}"  class="form-control inputRight2" /><span style="float: left;">￥</span>
+			</div>
+
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >序号：</div>
+				<div class="star1">&nbsp;</div>
+				<input onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
+					   th:value="${c_order_no}"  type="text" name="c_order_no" id="c_order_no" class="form-control inputRight" />
+			</div>
+
+		</div>
+
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报告单标题：</div>
+				<div class="star1">&nbsp;</div>
+				<input type="text"  name="c_rpt_title" id="c_rpt_title"  th:value="${c_rpt_title}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报表名称：</div>
+				<div class="star1">*</div>
+				<select class="form-control inputRight"  name="c_rpt" id="c_rpt" v-model="combine.c_rpt">
+					<option v-for="d in listCombine" >
+						<span :value="d.d.c_rpt" >{{d.c_rpt}}</span>
+					</option>
+				</select>
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报告单标注1：</div>
+				<div class="star1">&nbsp;</div>
+				<input th:value="${c_rpt_bz1}"  type="text" name="c_rpt_bz1" id="c_rpt_bz1" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报告单标注2：</div>
+				<div class="star1">&nbsp;</div>
+				<input type="text"  name="c_rpt_bz2" id="c_rpt_bz2" th:value="${c_rpt_bz2}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >纸张类型：</div>
+				<div class="star1">*</div>
+				<select class="form-control inputRight"  name="paper_size" id="paper_size" >
+					<option value="A4"  th:selected="${paper_size=='A4'}">A4</option>
+					<option value="A5"  th:selected="${paper_size=='A5'}">A5</option>
+				</select>
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/combine/listCombine">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+
+    $(function(){
+
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+	    if( $(".edit").attr("id")=='e' ){
+            var c_code = $("#hide_code").val();
+            $.get("/combine/getCombineById",{"c_code":c_code},function(data){
+                debugger;
+                //查出所有的组别
+                map.yesRole = data;
+                var array = [];
+                $(data).each(function(i,e){
+                    debugger;
+					array.push( e.c_code);
+                });
+
+                $("#roles").val( array.toString() );
+            });
+
+            var organizationId = $("#organizationId").val();
+            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
+
+              // $("#organizationId").val(data.id);
+                $("#organizationName").text(data.name);
+            })
+        }
+
+        $.get("/combine/getCombine",{},function(data){
+            map.listCombine = data;
+        });
+
+        $.get("/combine/getCombineByCode",{"c_code":$("#hide_code").val()},function(data){
+            map.combine = data;
+        })
+
+	});
+
+	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+	var map={
+	    yesRole: [],
+        listCombine: [],
+		combine:{},
+      //  organization: {},
+
+
+	};
+	new Vue({
+		el: '#app',
+		data: map
+	});
+
+
+	$("#sureAdd").click(function(){
+	    debugger;
+        var hide_code = $("#hide_code").val();
+	    var c_code = $("#c_code").val();
+        var c_name = $("#c_name").val();
+        var c_price = $("#c_price").val();
+        var c_rpt = $("#c_rpt").val();
+		var c_rpt_title = $("#c_rpt_title").val();
+
+        if (c_code.trim()==""){
+            var txt= "代码不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+		if (c_name.trim()==""){
+            var txt= "组别名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+		}
+
+        if (c_rpt=="" || c_rpt==null){
+            var txt= "报表名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+
+        else if(hide_code==""){//新建
+			//验证此单位是否已录入此用户
+			$.get("/combine/validateCombine",{"c_code":c_code,"type":1},function(data){
+				if(data=='1'){
+                    var txt= "此组别已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+				}
+				else{
+                    $("#signForm").submit();
+				}
+			})
+		}
+
+        else if(hide_code!=""){//编辑
+            $.get("/combine/validateCombine",{"c_code":c_code,"type":2},function(data){
+                if(data=='2'){
+                    var txt= "此组别已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+				}
+                else{
+                    $("#signForm").submit();
+				}
+            })
+        }
+
+	});
+
+    $("#getRole").click(function(){
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+	});
+
+	$("#addRole").click(function(){
+	    $("#sign1").html('');
+
+	    var array = [];
+
+	    $(".checkInput").each(function(i,e){
+	        if(e.checked==true){
+                var val = $(e).next().text();
+                array.push( $(e).next().attr("id") );
+				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
+			}
+		});
+
+        $("#roles").val( array.toString() );
+
+	});
+
+
+
+	$("#selectPart").click(function(){
+		$.get("/organization/getTree",{},function(zNodes){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#selectAll").bind("click", selectAll);
+		})
+
+	});
+
+
+    function checkTo(e){
+        if( $(e).find("input").is(":checked")==true ){  //jquery
+            $(e).find("input").attr("checked",false);
+        }else{
+            $(e).find("input").attr("checked",true);
+        }
+    }
+
+	/*]]>*/
+</script>
+
+</html>

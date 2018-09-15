@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--日期控件 js和css -->
+	<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+	<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+	<link rel="stylesheet" href="../css/iconfont.css" />
+
+	<link rel="stylesheet" href="../css/bootstrap-table.css" />
+	<script src="../js/bootstrap-table.js"></script>
+	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+	<script src="../js/bootstrap-table-zh-CN.js"></script>
+	<script src="../js/bootstrap-table-export.js"></script>
+
+	<link rel='stylesheet'   href='../css/pagination.css'/>
+	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+</head>
+<body>
+
+  <div class="tableDiv">
+	  <div id="toolbar" class="btn-group">
+		  <div class="queryList" style="width: 150%;margin-top: 0.9%;">
+
+			  <div class="myLabel-content queryText" >用户名：</div>
+			  <div class="myText-content" style="float: left;">
+				  <input id="userName" type="text" class="form-control" placeholder="用户名">
+			  </div>
+
+			  <div class="myLabel-content" style="float: left;height:34px;line-height: 34px;margin-left: 2%;font-weight: bold;">所属单位：</div>
+			  <div class="myText-content" style="float: left;">
+				  <input id="organizationName" type="text" class="form-control" placeholder="所属单位">
+			  </div>
+
+			  <div style="float: left;width: 5%;">&nbsp;</div>
+			  <button class="btn btn-default" id="btn_search"  onclick="query()">
+				  <span class="glyphicon glyphicon-search"></span> 查询
+			  </button>
+			  <button   class="btn btn-default" id="btn_ret"  onclick="reset()">
+				  <span class="glyphicon glyphicon-refresh"></span> 重置
+			  </button>
+			  <button class="btn btn-default" id="btn_add"  >
+				  <span class="glyphicon glyphicon-plus-sign"></span> 添加
+			  </button>
+		  </div>
+	  </div>
+	  <table  class="table table-striped" id="table"  ></table>
+  </div>
+
+
+</body>
+
+<script>
+
+    //查询
+    function query() {
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+    }
+
+
+    $("#btn_add").click(function(){
+        location.href="/userPage/addUser?type=a";
+	});
+
+   /* $(document).ready(function(){
+
+        $.get("/organization/getTree",{},function(zNodes){
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $("#selectAll").bind("click", selectAll);
+        })
+
+    });*/
+
+    //以下是zTree的js代码
+    /*zTree   start */
+
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false
+        },
+        edit: {
+            enable: true,
+            editNameSelectAll: true,
+            showRemoveBtn: showRemoveBtn
+            //,
+            //showRenameBtn: showRenameBtn
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            beforeDrag: beforeDrag,
+            beforeEditName: beforeEditName,
+            beforeRemove: beforeRemove,
+            beforeRename: beforeRename,
+            onRemove: onRemove,
+            onRename: onRename
+        }
+    };
+
+    /* var zNodes =[
+        { id:1, pId:0, name:"父节点 1", open:true},
+        { id:11, pId:1, name:"叶子节点 1-1"},
+        { id:12, pId:1, name:"叶子节点 1-2"},
+        { id:13, pId:1, name:"叶子节点 1-3"},
+
+        { id:2, pId:0, name:"父节点 2", open:true},
+        { id:21, pId:2, name:"叶子节点 2-1"},
+        { id:22, pId:2, name:"叶子节点 2-2"},
+        { id:23, pId:2, name:"叶子节点 2-3"},
+
+        { id:3, pId:0, name:"父节点 3", open:true},
+        { id:31, pId:3, name:"叶子节点 3-1"},
+        { id:32, pId:3, name:"叶子节点 3-2"},
+        { id:33, pId:3, name:"叶子节点 3-3"}
+    ]; */
+
+    //var zNodes = "";
+
+    var log, className = "dark";
+    function beforeDrag(treeId, treeNodes) {
+        return false;
+    }
+    function beforeEditName(treeId, treeNode) {
+        className = (className === "dark" ? "":"dark");
+        showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.selectNode(treeNode);
+        setTimeout(function() {
+            if (confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？")) {
+                setTimeout(function() {
+                    zTree.editName(treeNode);
+                }, 0);
+            }
+        }, 0);
+        return false;
+    }
+    function beforeRemove(treeId, treeNode) {
+        className = (className === "dark" ? "":"dark");
+        showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.selectNode(treeNode);
+        return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+    }
+
+    function beforeRename(treeId, treeNode, newName, isCancel) {
+        className = (className === "dark" ? "":"dark");
+        showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+        if (newName.length == 0) {
+            setTimeout(function() {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.cancelEditName();
+                alert("节点名称不能为空.");
+            }, 0);
+            return false;
+        }
+        return true;
+    }
+
+    function onRemove(e, treeId, treeNode) {
+        $.get("/organization/removeNode",{id:treeNode.id},function(data){
+            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        })
+    }
+
+    function onRename(e, treeId, treeNode, isCancel) {
+        $.get("/organization/editName",{id:treeNode.id,name:treeNode.name},function(data){
+            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+        })
+
+    }
+    function showRemoveBtn(treeId, treeNode) {
+        if(treeNode.level==0){   //第一级没有移除
+            return false;
+        }else{
+            return true;
+            //return !treeNode.isFirstNode;
+        }
+
+    }
+    function showRenameBtn(treeId, treeNode) {
+        return !treeNode.isLastNode;
+    }
+    function showLog(str) {
+        if (!log) log = $("#log");
+        log.append("<li class='"+className+"'>"+str+"</li>");
+        if(log.children("li").length > 8) {
+            log.get(0).removeChild(log.children("li")[0]);
+        }
+    }
+    function getTime() {
+        var now= new Date(),
+            h=now.getHours(),
+            m=now.getMinutes(),
+            s=now.getSeconds(),
+            ms=now.getMilliseconds();
+        return (h+":"+m+":"+s+ " " +ms);
+    }
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) { //最后一级没有新增
+        if(treeNode.level==3){
+            return false;
+        }
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+
+            var opt = {};
+            opt.parentId = treeNode.id; //pId
+            opt.name = "new node";
+            opt.level = treeNode.level+1;   //treeNode.level是当前层级，treeNode.level+1就是创建的子层级
+            $.get("/organization/createSon",opt,function(data){
+
+                zTree.addNodes(treeNode, {id:data.id, pId:data.pId, name:"new node" + (newCount++)});
+
+                setTimeout(function() {
+                    zTree.editName(treeNode.children[treeNode.children.length-1]);
+                }, 0);
+
+                return false;
+
+                alert("插入子节点成功");
+            })
+
+
+        });
+    }
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    }
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+
+    /* $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        $("#selectAll").bind("click", selectAll);
+    }); */
+
+    /*zTree   end */
+
+
+    //创建用户
+    $("#createUser").click(function(){
+	    var userName = $("#userName").val();
+        var password = $("#password").val();
+
+	    if( userName.trim()=="" || password.trim()=="" ){
+			$("#ProjectHint").show();
+		}else{
+	        $("#signForm").submit();
+		}
+
+	});
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+        datagrid = datagrid.bootstrapTable({
+            url: "/userPage/getUserRole",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+			toolbar: "#toolbar",
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+           // showToggle:true,//视图切换
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+
+                var temp = {
+                    pageNumber: params.pageNumber,                       //页面大小
+                    rowNumber: params.pageSize,   //页码
+					userName:$("#userName").val(),
+                    organizationName: $("#organizationName").val(),
+                };
+                return temp;
+            },
+            /*onClickRow: function (row, $element, field) {
+                alert();
+            },*/
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    //title: '编号',
+                   // field: "编号",
+                    align: "center",//水平
+                    width:  50,
+                    align: "center",//水平
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "用户名",
+                    field: "userName",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    width: '15%',
+
+                    titleTooltip: "用户名",
+
+                },
+                {
+                    title: "角色",
+                    field: "listRole",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    width: '15%',
+                    titleTooltip: "角色",
+
+                },
+                {
+                    title: "所属单位",
+                    field: "name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    width: '18%',
+                    titleTooltip: "所属单位",
+
+                },
+                {
+                    title: "登录错误次数（天）",
+                    field: "dayLoginError",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    width: '10%',
+                    titleTooltip: "所属单位",
+
+                },
+                {
+                    field: "createTime",
+                    title: "创建时间",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "创建时间",
+                    width: '12%',
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "updateTime",
+                    title: "更新时间",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '12%',
+                    titleTooltip: "更新时间",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "aHospitalQs",
+                    title: "权限",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "权限",
+                    visible:false
+                },
+                {
+                    field: 'operate',
+                    title: '操作',
+                    align: 'center',
+                    events: operateEvents,
+                    formatter: operateFormatter
+                }
+            ]
+        });
+
+    });
+
+    function operateFormatter(value, row, index) {
+           return [
+            '<button type="button" class="RoleOfEdit btn btn-default  btn-sm" style="margin-right:15px;">修改</button>',
+            '<button type="button" class="RoleOfB btn btn-default  btn-sm" style="margin-right:15px;">删除</button>'
+            ].join('');
+     }
+
+    window.operateEvents = {
+        'click .RoleOfB': function (e, value, row, index) {
+
+            var txt= "确定删除用户？";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                $.get("/userPage/deleteUser",{userId:row.userId},function(data){
+                    var txt=  "删除成功！";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success); //弹出框
+                    datagrid.bootstrapTable("refresh");
+                })
+            },false);
+        },
+        'click .RoleOfEdit': function (e, value, row, index) {
+            location.href="/userPage/addUser?type=e&userName="+row.userName+"&password="+row.password
+				+"&organizationId="+row.organizationId+"&userId="+row.userId+"&dayLoginError="+row.dayLoginError;
+        }
+    };
+
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    });
+
+    var map={
+        message: '',
+        ret:'',
+        cc:'',
+        dd:'',
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+
+</script>
+
+</html>

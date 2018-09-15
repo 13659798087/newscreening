@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>用户登录</title>
+    <link rel="stylesheet" type="text/css" href="../css/css.css" />
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+    <link href="../Content/jquery.validate.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-3.2.0.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <!--日期控件 js和css -->
+    <link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+    <script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+    <link rel="stylesheet" href="../css/iconfont.css" />
+
+    <link rel="stylesheet" href="../css/bootstrap-table.css" />
+    <script src="../js/bootstrap-table.js"></script>
+    <!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+    <script src="../js/bootstrap-table-zh-CN.js"></script>
+    <script src="../js/bootstrap-table-export.js"></script>
+
+    <link rel='stylesheet'   href='../css/pagination.css'/>
+    <script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+    <!--登录界面css-->
+    <link rel="stylesheet" href="../css/loginPage.css" />
+
+    <!-- 引入vue.js -->
+    <script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+    <style>
+
+    </style>
+</head>
+<body style="background-color:black;" >
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6">
+            <form class="form-horizontal" style="background-color: #3c8dbc;" action="/login/index" id="formSubmit" method="post">
+                <!-- <span  class="heading" >用户登录</span>-->
+
+                <div style="text-align: center;padding: 35px 0px 10px 0px;font-weight: bold;font-size: 30px;"
+                     th:text="${organizationName}"></div>
+                <div style="text-align: center;font-weight: bold;font-size: 30px;">外送平台</div>
+                <hr/>
+
+                <span style="color: red;display: none;" id="enterUserName">请输入用户名!</span>
+                <span style="color: red;display: none;" id="enterPassword">请输入密码!</span>
+                <span style="color: red;display: none;" id="enterCode">请输入验证码!</span>
+                <span style="color: red;display: none;" id="lockMessage">该账号已被冻结，请联系管理员！</span>
+                <span style="color: red;display: none;" id="hidUserMessage">用户名或密码不正确！</span>
+                <span style="color: red;display: none;" id="hidCore">输入验证码不正确！</span>
+                <div class="form-group">
+                    <input type="text"  class="form-control" id="inputUserName" placeholder="用户名" name="username" tabindex="1" />
+                    <i class="fa fa-user"></i>
+                </div>
+                <div class="form-group help">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="密　码"  name="password" tabindex="2" />
+                    <i class="fa fa-lock"></i>
+                    <a href="#" class="fa fa-question-circle"></a>
+                </div>
+
+                <!--开出来-->
+                <div class="form-group help">
+                    <input type="text" style="width: 70%;display: inline-block;float: left;" class="form-control" id="validCode" placeholder="验证码"  name="validCode" tabindex="3" />
+                    <div style="height: 40px;line-height: 40px;">
+                        <img src="/login/createCode" id="img"  onclick="refresh()"
+                             style="display:inline-block;width:100px;height:34px;line-height:34px;cursor: pointer;">
+                    </div>
+                    <i class="fa fa-lock"></i>
+                    <a href="#" class="fa fa-question-circle"></a>
+                </div>
+
+                <div class="form-group">
+                    <div class="main-checkbox">
+                        <input type="checkbox" value="None" id="checkbox1" name="check" tabindex="-1" />
+                        <label for="checkbox1"></label>
+                    </div>
+                    <span class="text">记住密码</span>
+                    <input type="button" class="btn btn-default" id="loginUp" value="登录" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+    function refresh() {
+        var url = "/login/createCode?number="+Math.random();
+        $("#img").attr("src",url);
+    }
+
+
+    document.onkeydown = function (event) {
+        var e = event || window.event;
+        if (e && e.keyCode == 13) { //回车键的键值为13
+            $("#loginUp").click(); //调用登录按钮的登录事件
+        }
+    };
+
+    $("#inputUserName,#inputPassword,#validCode").focus(function(){
+        $("#hidCore").hide();
+        $("#hidUserMessage").hide();
+        $("#lockMessage").hide();
+        $("#enterUserName").hide();
+        $("#enterPassword").hide();
+        $("#enterCode").hide();
+    });
+
+    $("#loginUp").click(function(){
+        var username = $("#inputUserName").val();
+        var password = $("#inputPassword").val();
+        var validCode = $("#validCode").val();
+
+        if(username.trim()==""){
+            $("#enterUserName").show();
+            return false;
+        }
+        if(password.trim()==""){
+            $("#enterPassword").show();
+            return false;
+        }
+        if(validCode.trim()==""){
+            $("#enterCode").show();
+            return false;
+        }
+
+        $.get("/login/loginValidate",{"username":username,"password":password,"validCode":validCode},function(data){
+            /*开出来*/
+            if(data.errCode=="0"){
+                debugger;
+                $("#hidCore").show();
+                refresh();
+                return false;
+            }
+            if(data.lock=="yes"){
+                $("#lockMessage").show();
+                $("#hidUserMessage").hide();
+                refresh();
+                return false;
+            }
+            if(data.errUser=="0"){
+                $("#hidUserMessage").show();
+                refresh();
+                return false;
+            }
+
+            /*开出来*/
+            else if (data.errCode=="1" && data.errUser=="1"){
+                $("#formSubmit").submit();
+            }
+
+            /*删除*/
+            // $("#formSubmit").submit();
+        })
+    })
+
+    /*
+        传统项目中，登出后应重定向请求，到登录界面或其他指定界面，在前后端分离的项目中，我们应该返回json信息。在上面提到的ShiroConfig中配置了默认登录路由
+    */
+
+    /*]]>*/
+</script>
+
+</html>

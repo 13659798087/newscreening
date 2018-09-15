@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+
+<meta name="renderer" content="webkit">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<!--	<APPLET CODE = "HelloSwingApplet.class" archive="SSignedApplet.jar"   WIDTH = 400 HEIGHT = 50 >
+		<PARAM NAME = "REPORT_URL"  VALUE ="servlets/jasperprint">
+	</APPLET>-->
+
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--日期控件 js和css -->
+<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+<link rel="stylesheet" href="../css/iconfont.css" />
+
+<link rel="stylesheet" href="../css/bootstrap-table.css" />
+<script src="../js/bootstrap-table.js"></script>
+<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+<script src="../js/bootstrap-table-zh-CN.js"></script>
+<script src="../js/bootstrap-table-export.js"></script>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+
+
+	<link rel='stylesheet'   href='../css/pagination.css'/>
+	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 获取ip -->
+	<script type='text/javascript'  src="http://pv.sohu.com/cityjson?ie=utf-8" ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--控制table和分页的高度-->
+	<style>
+		.fixed-table-body {height: 330px;}
+		.fixed-table-pagination{margin-top: 320px;}
+
+		body,td,th {font-family: Verdana, Arial, Helvetica, sans-serif;}
+
+		.creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
+
+	</style>
+
+</head>
+<body >
+
+<div id="app">
+
+<div class="tableDiv" style="height: 400px;">
+	<div id="toolbar" class="btn-group">
+		<div class="queryList" style="width: 150%;margin-top: 0.9%;">
+
+			<div class="myLabel-content" style="float: left;margin-left: 2%; height:34px;line-height: 34px;font-weight: bold;">报告日期：</div>
+			<div class="myText-content" style="float: left;">
+				<input id="c_a_date1" type="text" class="form-control" style="width: 142px;display: inline-block;" />
+				<span >~</span>
+				<input id="c_a_date2" type="text" class="form-control" style="width: 142px;display: inline-block;" />
+			</div>
+
+			<div class="myLabel-content" style="float: left;margin-left: 2%;height:34px;line-height: 34px;font-weight: bold;">姓名：</div>
+			<div class="myText-contenst" style="float: left;">
+				<input id="p_name" type="text" class="form-control" style="width: 100px;" />
+			</div>
+
+			<div class="myLabel-content queryText" >所属单位：</div>
+			<div class="myText-content" style="float: left;">
+				<!--<select id="c_hospital"   class="form-control"  style="width: 146px;" >
+					<option value="">请选择</option>
+					<option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+				</select>-->
+
+				<div class="dropdown" style="display: inline-block;">
+					<button class="btn btn-default dropdown-toggle" style="width: 220px;text-align: left;" type="button" id="c_hospital" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						请选择
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="max-height: 400px">
+						<li data-stopPropagation="true">
+							<div class="zTreeDemoBackground" >
+								<ul id="treeDemo" class="ztree creatZtree_1" ></ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+
+			</div>
+
+			<div style="clear: both;height: 10px;"></div>
+
+			<div class="myLabel-content queryText" >条&nbsp;&nbsp;码&nbsp;&nbsp;号：</div>
+			<div class="myText-content" style="float: left;">
+				<input id="c_barcode" type="text" class="form-control"  style="width: 100px;"  />
+			</div>
+
+			<div class="myLabel-content queryText" >打印状态：</div>
+			<div class="myText-content" style="float: left;">
+				<select id="c_rpt_flag" class="form-control"  style="width: 100px;" >
+					<option value="">请选择</option>
+					<option value="1">未打印</option>
+					<option value="2">已打印</option>
+				</select>
+			</div>
+
+			<div class="myLabel-content queryText" >项目：</div>
+			<div class="myText-content" style="float: left;">
+				<select id="c_combine_code" class="form-control"  style="width: 100px;" >
+					<option value="">请选择</option>
+					<option v-for="c in listCombine" :value="c.c_code" >{{c.c_code}}</option>
+				</select>
+			</div>
+
+			<div style="float: left;width: 2%;">&nbsp;</div>
+			<button   class="btn btn-default" id="btn_search"  onclick="query()" style="padding: 6px 24px;">
+				<span class="glyphicon glyphicon-search"></span> 查询
+			</button>
+			<button  class="btn btn-default" id="btn_ret" onclick="reset()" style="padding: 6px 24px;">
+				<span class="glyphicon glyphicon-refresh"></span> 重置
+			</button>
+
+			<button  class="btn btn-default" id="deleteReport"  style="padding: 6px 23px;">
+				<span class="glyphicon glyphicon-remove"></span> <span>删除</span>
+				<input type="hidden" id="loggerName" value="报告管理" name="日志标题" />
+				<input type="hidden" id="operationType"  value="删除报告" name="操作类型" />
+			</button>
+		</div>
+
+		<div style="clear: both;height: 15px;"></div>
+
+	</div>
+	<table  class="table table-striped" id="table"  ></table>
+</div>
+
+
+</div>
+</body>
+
+<script>
+
+    var map={
+        listCombine:[],
+        listHospital:[]
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+    function onClick(e,treeId, treeNode){
+        $("#c_hospital").attr("name",treeNode.id);
+        $("#c_hospital").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        alert(msg);
+    }
+    /*zTree   end */
+
+
+    function fillter(treeObj) {
+        //获得树形图对象
+        var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+        for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+            treeObj.expandNode(nodeList[i], true, false, true);
+            /*var nodespan = nodeList[i].children;
+            for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                treeObj.expandNode(nodespan[j], true, false, true);
+            }*/
+        }
+    }
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+
+
+        $("#c_hospital").click(function(){
+            $.get("/organization/getByOwn",{},function(zNodes){
+                var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                fillter(treeObj);//设置展开前三级
+            })
+        });
+
+
+        //取回当前医院的部门
+        $.get("/combine/getCombine",{},function(data){
+            map.listCombine = data;//组别项目
+        });
+
+        $.get("/applicationStatistics/getListHospital",{},function(data){
+            map.listHospital=data;
+        });
+
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+
+        datagrid = datagrid.bootstrapTable({
+            url: "/sendApplication/getApplication",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+                var temp = {
+                    pageNumber: params.pageNumber,                         //页面大小
+                    rowNumber: params.pageSize,    //页码
+                    a_flag: "1",
+                    c_a_date1: $("#c_a_date1").val(),
+                    c_a_date2: $("#c_a_date2").val(),
+                    p_name:    $("#p_name").val(),
+                    c_barcode: $("#c_barcode").val(),
+                    //c_hospital:$("#c_hospital").val(),
+                    c_hospital:$("#c_hospital").attr("name"),
+                    c_combine_code:  $("#c_combine_code").val(),
+                    c_rpt_flag : $("#c_rpt_flag").val(),
+                };
+                return temp;
+            },
+            onCheck:function(row, $element, field){
+
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    title: "全选",
+                    field: "select",
+                    checkbox: true,
+                    align: "center",//水平
+                    valign: "middle"//垂直
+                },
+                {
+                    title: '编号',
+                    field: "编号",
+                    align: "center",//水平
+                    width:  20,
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "条码号",
+                    field: "c_barcode",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "样本编号",
+                    field: "c_sid",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "姓名",
+                    field: "p_name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "项目",
+                    field: "c_combine_code",//域值
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    field: "c_rpt_flag",
+                    title: "打印",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(row.c_rpt_flag=='2'){
+                            return '<span class="hasPrint" style="'+'color: red'+'" >已打印</span>';
+                        }if(row.c_rpt_flag=='1'){
+                            return '<span class="'+'noPrint" '+' >未打印</span>';
+                        }
+                    }
+                },
+                {
+                    title: "病历号",
+                    field: "c_in_no",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true
+                },
+                {
+                    title: "报告日期",
+                    field: "c_a_date",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "p_bithday",
+                    title: "出生日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_weigh",
+                    title: "体重",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_ts_bcdate",
+                    title: "B超日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "pregnancy",
+                    title: "评估孕周",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_lmp_date",
+                    title: "末次月经",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_tes",
+                    title: "胎儿数",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_sample_date",
+                    title: "采样日期",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat1(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: "c_hospital",
+                    title: "送检单位",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "母亲姓名",
+                    visible:true
+                },
+                {
+                    field: "c_dept",
+                    title: "送检科室",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "c_doctor",
+                    title: "送检医生",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "p_tel1",
+                    title: "联系电话",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "p_tel2",
+                    title: "联系电话2",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                },
+                {
+                    field: "c_w_name",
+                    title: "检验者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                },
+                {
+                    field: "c_a_name",
+                    title: "审核者",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    titleTooltip: "检查项目",
+                    visible:true
+                }
+            ]
+        });
+
+
+        $("#deleteReport").click(function(){
+
+            var a = $("#table").bootstrapTable("getSelections");
+            if(a.length==0){
+                var txt= "请选择要删除的信息";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+            }else{
+                var txt= "确定删除所选记录吗？";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+
+                document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                    var array = [];
+                    $.each(a,function(index,value){
+                        array.push(value.c_sid+":"+value.c_combine_code+":"+value.p_name+":"+value.c_hospital+":"+value.c_combine_code+":"+value.c_barcode+":"+value.c_sid+":"+value.p_tel1);
+                    });
+                    var ipAddress = returnCitySN.cip;
+                    var type = $("#operationType").val();
+                    var loggerName = $("#loggerName").val();
+                    $.get("/reportQuery/deleteReport",{"list":array.toString(),"ipAddress":ipAddress,"type":type,"loggerName":loggerName},function(data){
+                        datagrid.bootstrapTable("refresh");
+                        var txt= "删除成功！";
+                        window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                    })
+                },false);
+            }
+        })
+
+
+    });
+
+
+    //查询
+    function query() {
+        debugger;
+        var oDate1 = new Date( $("#c_a_date1").val() );
+        var oDate2 = new Date( $("#c_a_date2").val() );
+        if(oDate1!="" && oDate2!="" ){
+            if( oDate1.getTime() > oDate2.getTime() ){
+                var txt= "开始时间不能小于截止时间";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                return false;
+            }
+        }
+        if($("#c_a_date1").val()!="" && $("#c_a_date2").val()=="" || $("#c_a_date1").val()=="" && $("#c_a_date2").val()!=""){
+            var txt= "请同时输入开始时间和结束时间";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+        $("#c_combine_code").val("");
+        $("#c_rpt_flag").val("");
+
+        $("#c_hospital").attr("name","");
+        $("#c_hospital").text("请选择");
+
+    }
+
+
+    $("#c_a_date1,#c_a_date2").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+
+        }
+    })
+
+</script>
+
+</html>

@@ -1,0 +1,75 @@
+﻿
+/*layout的补充样式*/
+.UserInfoMation {
+    font-family: 'Microsoft YaHei';
+    display: inline-block;
+}
+
+    .UserInfoMation span {
+        margin-right: 5px;
+        color: #fff;
+    }
+
+.UserToolsBar {
+    font-family: 'Microsoft YaHei';
+    display: inline-block;
+    float: right;
+}
+
+    .UserToolsBar span {
+        margin-right: 5px;
+        color: #fff;
+    }
+
+.footer_bar_table {
+    width: 100%;
+}
+
+    .footer_bar_table td {
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+        background-color: #f1f6f9;
+        cursor: pointer;
+    }
+
+        .footer_bar_table td:hover {
+            background-color: #dce6ec;
+        }
+
+.footer_bar_table_images {
+    height: 30px;
+    width: auto;
+    vertical-align: middle;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+}
+/*列表的样式文件*/
+.tableValue_left {
+    font-family: 'Microsoft YaHei';
+    color: #888888;
+}
+
+.tableValue_right {
+    text-align: right;
+    font-family: 'Microsoft YaHei';
+    color: #333333;
+}
+/*自定义按钮样式*/
+.buttom_Span {
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    height: 40px;
+    line-height: 36px;
+    cursor: pointer;
+    border: 2px solid #2ad382;
+    background-color: #2ad382;
+    color: #fff;
+}
+
+.buttom_Active {
+    background-color: #fff;
+    color: #2ad382;
+}

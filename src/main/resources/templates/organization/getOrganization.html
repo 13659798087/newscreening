@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<!--<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>-->
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="../js/jquery.ztree.exedit.js"></script>
+
+	<style>
+		.ztree::-webkit-scrollbar{width:4px;}
+		.ztree::-webkit-scrollbar-track{background-color:#bee1eb;}
+		.ztree::-webkit-scrollbar-thumb{background-color:#1ab394;}
+		.ztree::-webkit-scrollbar-thumb:hover {background-color:#9c3}
+		.ztree::-webkit-scrollbar-thumb:active {background-color:#00aff0}
+
+		a {text-decoration:none;}
+		body {
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+		}
+
+	</style>
+</head>
+<body>
+  <div id="app" >
+
+		<div style="float: left;background-color: white;box-shadow: 3px 3px 3px #888888;">
+			<div class="zTreeDemoBackground" style="background-color: white;height:700px;" >
+				<ul id="treeDemo" class="ztree" style="width: 100%;height:100%;border: none;overflow: auto;background:none; "></ul>
+			</div>
+		</div>
+
+	  <a href="#" class="list-group-item" style="background-color: #f0f6e4;float:left;width: 50%;margin-left: 0.5%;margin-top:0.5%;">
+		  回收站
+		  <span class="downAndleft">
+		  	<span class="glyphicon glyphicon-chevron-down down1" style="margin-left: 1%;display: none;"></span>
+		  	<span class="glyphicon glyphicon-chevron-left left1" style="margin-left: 1%;"></span>
+		  </span>
+	  </a>
+	  <ul class="list-group" style="float: left;width: 50%;margin-left: 0.5%;display: none;" >
+		  <li class="list-group-item" v-for="o in deleteOrg" >
+			  <span class="badge restoreOrg" style="cursor:pointer;" :id="o.id" onclick="reduction(this)" >还原</span>
+			  {{o.name}}
+		  </li>
+		 <!-- <li class="list-group-item">图像的数量</li>-->
+	  </ul>
+	<!--  <span class="badge restoreOrg" style="cursor:pointer;" :id="o.id">还原</span>-->
+  </div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+    var map={
+        message: '',
+		deleteOrg:[]
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+    function reduction(e){
+        if( confirm("确定还原该单位吗？") ){
+            $.get("/organization/reduction",{"id":e.id},function(data){
+				$(e).parent().remove();
+               /* $.get("/organization/getTree",{},function(zNodes){
+                    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                    $("#selectAll").bind("click", selectAll);
+                })*/
+            })
+		}
+    }
+
+    $(document).ready(function(){
+
+        $(".downAndleft").click(function(){
+            if( $(".list-group").css("display")=="none" ){
+                $(".list-group").slideDown("slow");
+                $(".down1").show(300);
+                $(".left1").hide(300);
+			}else{
+                $(".list-group").slideUp("slow");
+                $(".down1").hide(300);
+                $(".left1").show(300);
+			}
+        });
+
+        $.get("/organization/getDeleted",{},function(data){
+            map.deleteOrg = data;
+        });
+
+        $.get("/organization/getTree",{},function(zNodes){
+            var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $("#selectAll").bind("click", selectAll);
+            fillter(treeObj);//设置展开前三级
+        });
+
+        function fillter(treeObj) {
+            //获得树形图对象
+            var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+            for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+                treeObj.expandNode(nodeList[i], true, false, true);
+                /*var nodespan = nodeList[i].children;
+                for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                    treeObj.expandNode(nodespan[j], true, false, true);
+                }*/
+            }
+        }
+    });
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        view: {
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false
+        },
+        edit: {
+            enable: true,
+            editNameSelectAll: true,
+            showRemoveBtn: showRemoveBtn
+            //,
+            //showRenameBtn: showRenameBtn
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            beforeDrag: beforeDrag,
+            beforeEditName: beforeEditName,
+            beforeRemove: beforeRemove,
+            beforeRename: beforeRename,
+            onRemove: onRemove,
+            onRename: onRename
+        }
+    };
+
+    /* var zNodes =[
+        { id:1, pId:0, name:"父节点 1", open:true},
+        { id:11, pId:1, name:"叶子节点 1-1"},
+        { id:12, pId:1, name:"叶子节点 1-2"},
+        { id:13, pId:1, name:"叶子节点 1-3"},
+
+        { id:2, pId:0, name:"父节点 2", open:true},
+        { id:21, pId:2, name:"叶子节点 2-1"},
+        { id:22, pId:2, name:"叶子节点 2-2"},
+        { id:23, pId:2, name:"叶子节点 2-3"},
+
+        { id:3, pId:0, name:"父节点 3", open:true},
+        { id:31, pId:3, name:"叶子节点 3-1"},
+        { id:32, pId:3, name:"叶子节点 3-2"},
+        { id:33, pId:3, name:"叶子节点 3-3"}
+    ]; */
+
+    //var zNodes = "";
+
+    var log, className = "dark";
+    function beforeDrag(treeId, treeNodes) {
+        return false;
+    }
+    function beforeEditName(treeId, treeNode) {
+        className = (className === "dark" ? "":"dark");
+        showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.selectNode(treeNode);
+        setTimeout(function() {
+            if (confirm("进入节点 -- " + treeNode.name + " 的编辑状态吗？")) {
+                setTimeout(function() {
+                    zTree.editName(treeNode);
+                }, 0);
+            }
+        }, 0);
+        return false;
+    }
+    function beforeRemove(treeId, treeNode) {
+        className = (className === "dark" ? "":"dark");
+        showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.selectNode(treeNode);
+        return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+    }
+
+    function beforeRename(treeId, treeNode, newName, isCancel) {
+        className = (className === "dark" ? "":"dark");
+        showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+        if (newName.length == 0) {
+            setTimeout(function() {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.cancelEditName();
+                alert("节点名称不能为空.");
+            }, 0);
+            return false;
+        }
+        return true;
+    }
+
+    function onRemove(e, treeId, treeNode) {
+        $.get("/organization/removeNode",{id:treeNode.id},function(data){
+            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
+        })
+    }
+
+    function onRename(e, treeId, treeNode, isCancel) {
+        $.get("/organization/editName",{id:treeNode.id,name:treeNode.name},function(data){
+            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
+        })
+
+    }
+    function showRemoveBtn(treeId, treeNode) {
+        if(treeNode.level==0){   //第一级没有移除
+            return false;
+        }else{
+            return true;
+            //return !treeNode.isFirstNode;
+        }
+
+    }
+    function showRenameBtn(treeId, treeNode) {
+        return !treeNode.isLastNode;
+    }
+    function showLog(str) {
+        if (!log) log = $("#log");
+        log.append("<li class='"+className+"'>"+str+"</li>");
+        if(log.children("li").length > 8) {
+            log.get(0).removeChild(log.children("li")[0]);
+        }
+    }
+    function getTime() {
+        var now= new Date(),
+            h=now.getHours(),
+            m=now.getMinutes(),
+            s=now.getSeconds(),
+            ms=now.getMilliseconds();
+        return (h+":"+m+":"+s+ " " +ms);
+    }
+
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) { //最后一级没有新增
+        if(treeNode.level==3){
+            return false;
+        }
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+
+            var opt = {};
+            opt.parentId = treeNode.id; //pId
+            opt.name = "new node";
+            opt.level = treeNode.level+1;   //treeNode.level是当前层级，treeNode.level+1就是创建的子层级
+
+            $.get("/organization/createSon",opt,function(data){
+
+                zTree.addNodes(treeNode, {id:data.id, pId:data.pId, name:"new node" + (newCount++)});
+
+                setTimeout(function() {
+                    zTree.editName(treeNode.children[treeNode.children.length-1]);
+                }, 0);
+
+                return false;
+
+                alert("插入子节点成功");
+            })
+
+
+        });
+    }
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    }
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+
+    /* $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        $("#selectAll").bind("click", selectAll);
+    }); */
+
+
+    /*zTree   end */
+
+
+    /*]]>*/
+</script>
+
+</html>

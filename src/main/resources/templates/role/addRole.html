@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
+
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+	<style>
+		.leftTitle{float: left;width: 7%;text-align: center;}
+		.inputRight{width: 18%;float: left;}
+
+		.footer{
+			height: 180px;
+			width: 100%;
+			position: fixed;
+			bottom: 0;
+		}
+
+		.pad1{padding: 0px 4px;font-size: 14px;color: white;border-radius: 4px;display: inline-block;
+			margin-left: 0.6%;background-color: #337ab7;cursor: pointer;margin-top: 0.3%;}
+
+		.roleLeft{margin-left: 12%;}
+
+		.roleLeft{margin-left: 4%;}
+
+		/*ztree内容滚动条*/
+		.ztree::-webkit-scrollbar{width:4px;}
+		.ztree::-webkit-scrollbar-track{background-color:#bee1eb;}
+		.ztree::-webkit-scrollbar-thumb{background-color:#1ab394;}
+		.ztree::-webkit-scrollbar-thumb:hover {background-color:#9c3}
+		.ztree::-webkit-scrollbar-thumb:active {background-color:#00aff0}
+
+		a {text-decoration:none;}
+		body {
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+		}
+
+	</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<input type="hidden" th:value="${sign}" id="sign" />
+	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增角色</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑角色</h3>
+
+	<form action="/role/createRole"  id="signForm" method="post">
+
+		<input type="hidden"  th:value="${roleId}" id="roleId"  name="roleId"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div >
+				<div  class="leftTitle" >角色名称：</div>
+				<div  class="inputRight" >
+					<input type="text"  name="roleName" id="roleName" th:value="${roleName}" class="form-control" />
+				</div>
+			</div>
+		</div>
+
+		<div style="clear: both;"></div>
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div >
+				<div class="leftTitle" >角色菜单：</div>
+
+				<div  class="inputRight" >
+					<input type="hidden" id="menus" name="menus" />
+					<div class="dropdown" style="display: inline-block;width: 100%;">
+						<button class="btn btn-default dropdown-toggle" type="button" id="selectPart"
+								style="width: 100%;"	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							选择菜单
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							<li data-stopPropagation="true">
+								<div class="zTreeDemoBackground" >
+									<ul id="treeDemo" class="ztree" style="width: 100%;height:100%;border: none;overflow: auto;background:none; "></ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div style="float: right;width: 73%;display:block;word-break: break-all;word-wrap: break-word;">
+					<span id="sign1">
+						 <span v-for="m in yesMenu" >
+							<span class="pad1 yesSel" :name="m.menuId">{{m.menuName}}</span>
+						 </span>
+					</span>
+				</div>
+
+			</div>
+		</div>
+
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/role/listRole">返回</a>
+		</div>
+	</form>
+
+	<div class="popup effect-fade-scale" id="popup-dialog1" style="width:40%;min-height: 50%;">
+		<div class="popup-content" >
+			<h3 style="display: inline;">用户角色</h3>
+			<form action="/userPage/creatUser"  id="" method="post" style="margin-top: 2%;">
+				<div>
+					<div>经理</div>
+				</div>
+
+				<div style="margin-top: 10%;float: right;">
+					<button type="button" class="btn btn-primary " id="createUser" >提交</button>
+					<button type="button" class="btn btn-default popup-close" data-dismiss="modal" >关闭</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+</div>
+
+</body>
+
+
+<SCRIPT type="text/javascript">
+
+
+
+    $(document).ready(function(){
+
+        $.get("/role/getMenuTree",{},function(zNodes){
+            var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            setCheck();
+            $("#py").bind("change", setCheck);
+            $("#sy").bind("change", setCheck);
+            $("#pn").bind("change", setCheck);
+            $("#sn").bind("change", setCheck);
+
+            fillter(treeObj);//设置展开前三级
+        });
+
+        $("#selectPart").click(function(){
+            // 获取树对象
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            /** 获取所有树节点 */
+            var nodes = treeObj.transformToArray(treeObj.getNodes());
+            // 遍历树节点设置树节点为选中
+            for (var k = 0, length_3 = nodes.length; k < length_3; k++) {
+                $(".yesSel").each(function(i,e1){
+                    if(nodes[k].id==$(e1).attr("name")){
+                        nodes[k].checked = true;
+                        treeObj.updateNode(nodes[k],true);
+                    }
+                })
+            }
+        })
+
+    });
+
+    var setting = {
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback:{
+            onCheck: zTreeOnCheck
+        }
+    };
+
+    /* var zNodes =[
+         { id:1, pId:0, name:"随意勾选 1", open:true},
+         { id:11, pId:1, name:"随意勾选 1-1", open:true},
+         { id:111, pId:11, name:"随意勾选 1-1-1"},
+         { id:112, pId:11, name:"随意勾选 1-1-2"},
+         { id:12, pId:1, name:"随意勾选 1-2", open:true},
+         { id:121, pId:12, name:"随意勾选 1-2-1"},
+         { id:122, pId:12, name:"随意勾选 1-2-2"},
+         { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
+         { id:21, pId:2, name:"随意勾选 2-1"},
+         { id:22, pId:2, name:"随意勾选 2-2", open:true},
+         { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
+         { id:222, pId:22, name:"随意勾选 2-2-2"},
+         { id:23, pId:2, name:"随意勾选 2-3"}
+     ];*/
+
+    function zTreeOnCheck(event, treeId, treeNode) {
+
+        // alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        // var nodes = treeObj.getSelectedNodes();
+        var nodes = treeObj.getCheckedNodes();//获取所有选中的
+        /*  for (var i=0, l=nodes.length; i < l; i++) {
+              treeObj.checkNode(nodes[i], true, true);
+          }*/
+        $("#sign1").html('');
+        var array = [];
+        $.each(nodes, function (index, e) {
+            var val = e.name;
+            array.push( e.id );
+            $("#sign1").append('<span class="pad1" >'+val+'</span>');
+        });
+
+        $("#menus").val( array.toString() );
+
+    }
+    var code;
+    function setCheck() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+            py = $("#py").attr("checked")? "p":"",
+            sy = $("#sy").attr("checked")? "s":"",
+            pn = $("#pn").attr("checked")? "p":"",
+            sn = $("#sn").attr("checked")? "s":"",
+            // type = { "Y":py + sy, "N":pn + sn};
+            type = { "Y" : "ps", "N" : "ps"};
+        zTree.setting.check.chkboxType = type;
+        showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
+
+
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+
+    }
+    function showCode(str) {
+        if (!code) code = $("#code");
+        code.empty();
+        code.append("<li>"+str+"</li>");
+    }
+
+    function fillter(treeObj) {
+        //获得树形图对象
+        var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+        for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+            treeObj.expandNode(nodeList[i], true, false, true);
+            /*var nodespan = nodeList[i].children;
+            for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                treeObj.expandNode(nodespan[j], true, false, true);
+            }*/
+        }
+    }
+
+
+</SCRIPT>
+
+<script>
+    function selectAll_1(e){
+
+        if(e.checked==true){
+            $.each($(".checkInput"),function(index,e){
+                $(e).prop("checked",true);
+            })
+        }else{
+            $.each($(".checkInput"),function(index,e){
+                $(e).prop("checked",false);
+            })
+        }
+
+    }
+
+    $(function(){
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+        if( $(".edit").attr("id")=='e' ){
+
+            $("#password").val(  $("#hidPassword").val() );
+
+            var roleId = $("#roleId").val();
+            $.get("/role/getMenuByRoleId",{"roleId":roleId},function(data){
+                map.yesMenu = data;
+
+                var array = [];
+                $(data).each(function(i,e){
+                    array.push(e.menuId);
+                });
+
+                $("#menus").val( array.toString() );
+
+            });
+
+            var organizationId = $("#organizationId").val();
+            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
+
+                $("#organizationName").text(data.name);
+            })
+        }
+
+        $.get("/menu/getAllMenu",{},function(data){
+            map.menu = data;
+        })
+
+    });
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+    var map={
+        yesMenu: [],
+        menu: [],
+        //  organization: {},
+
+
+    };
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+    $("#sureAdd").click(function(){
+        var roleName = $("#roleName").val();
+        var roleMune = $("#sign1").text();
+        if (roleName.trim()==""){
+            var txt= "角色名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        if (roleMune == ""){
+            var txt= "角色菜单不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+
+
+        // else if(userId==""){
+        //     alert("userId为空")
+        // 	//验证此单位是否已录入此用户
+        // 	var organizationId = $("#organizationId").val();
+        // 	$.get("/userPage/validateUser",{"organizationId":organizationId,"userName":userName},function(data){
+        // 		console.log(data);
+        // 		if(data=='1')
+        // 			alert("此用户已存在");
+        // 		else
+        //            $("#signForm").submit();
+        // 	})
+        // }
+
+        // else if(userId!=""){
+        //     $("#signForm").submit();
+        // }
+
+        $("#signForm").submit();
+
+    });
+
+
+
+    function checkTo(e){
+        if( $(e).find("input").is(":checked")==true ){  //jquery
+            $(e).find("input").prop("checked",false);
+        }else{
+            $(e).find("input").prop("checked",true);
+        }
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="../js/jquery.ztree.exedit.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+<!--模态框-->
+<link rel="stylesheet" href="../css/jquery.popup.css" />
+<script src="../js/jquery.popup.js"></script>
+<script src="../js/jquery.popup.dialog.js"></script>
+
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+<style>
+	.leftTitle{float: left;width: 24%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+	.inputRight2{width: 30%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.pad1{padding: 0px 4px;font-size: 14px;color: white;border-radius: 4px;display: inline-block;
+		margin-left: 0.6%;background-color: #337ab7;cursor: pointer;margin-top: 0.3%;}
+
+	.roleLeft{margin-left: 12%;}
+
+
+	a {text-decoration:none;}
+	body {
+		font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 14px;
+	}
+
+	.resetError{border-radius: 3px;padding: 6px 12px;font-size: 14px;margin-left: 1%;
+		background-color: #337ab7;cursor: pointer;color: white;}
+	.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
+	.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
+
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<input type="hidden" th:value="${sign}" id="sign" />
+
+	<h3 style="display: inline;" th:if="${type=='a'}" th:id="${type}" class="add">新增用户</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}" th:id="${type}" class="edit">编辑用户</h3>
+
+	<form action="/userPage/createUser"  id="signForm" method="post">
+		<input type="hidden"  th:value="${password}" id="hidPassword"  />
+		<input type="hidden"  th:value="${userId}" id="userId"  name="userId"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >用户名：</div>
+				<input type="text"  name="userName" id="userName" th:value="${userName}" class="form-control inputRight" />
+			</div>
+
+			<div style="float: left;width: 45%;" th:if="${type=='e'}">
+				<div  class="leftTitle" >登录错误次数(天)：</div>
+				<input type="text"  name="dayLoginError"  id="dayLoginError"   class="form-control inputRight2"
+					   th:value="${dayLoginError}=='null'?0:${dayLoginError}"  />
+				<span class="resetError" th:if="${dayLoginError!='0'}" >重置</span>
+			</div>
+
+			<div style="float: left;width: 45%;"  th:if="${type=='a'}">
+				<div class="leftTitle" >密码：</div>
+				<input type="text" name="password" id="password" value="123456" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >用户角色：</div>
+				<div class="dropdown" style="display: inline-block;">
+					<button class="btn btn-default dropdown-toggle" type="button" id="getRole" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						选择角色
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						<!--<li style="text-align: center;" id="addRole"><a style="font-weight: bold;font-size: 16px;">确定</a></li>
+						<li role="separator" class="divider"></li>-->
+
+						<li v-for="r in role">
+							<a data-stopPropagation="true" href="#" >
+								<input type="checkbox" class="checkInput"  onclick="checkTo(this)"/>
+								<span class="roleLeft" :id="r.roleId">{{r.roleName}}</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<span id="sign1">
+                     <span v-for="r in yesRole" >
+                        <span class="pad1 yesSel" :name="r.roleId">{{r.roleName}}</span>
+                     </span>
+                </span>
+
+				<input type="hidden" id="roles" name="roles" />
+
+			</div>
+			<div style="float: left;width: 45%;"  th:if="${userId!='1'}"  >
+				<div  class="leftTitle" >所属医院：</div>
+				<span id="organizationName"></span>
+				<input type="hidden" name="organizationId" id="organizationId" th:value="${organizationId}" />
+				<div class="dropdown" style="display: inline-block;">
+					<button class="btn btn-default dropdown-toggle" type="button" id="selectPart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						选择
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						<li data-stopPropagation="true">
+							<div class="zTreeDemoBackground" >
+								<ul id="treeDemo" class="ztree" style="width: 100%;height:100%;border: none;overflow: auto;background:none; "></ul>
+							</div>
+						</li>
+						<!--<li role="separator" class="divider"></li>-->
+						<!--<li style="text-align: center;"><a id="eee" >确定</a></li>-->
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/userPage/getUserInfo">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+	$(function(){
+
+		var sign = $("#sign").val();
+		if("edit"==sign){
+		    $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+		}else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+		}
+
+        $(".resetError").click(function(){
+            $("#dayLoginError").val("0");
+        });
+
+	    if( $(".edit").attr("id")=='e' ){
+            $("#password").val(  $("#hidPassword").val() );
+            var userId = $("#userId").val();
+            $.get("/userPage/getRoleByUserId",{"userId":userId},function(data){
+                map.yesRole = data;
+                var array = [];
+                $(data).each(function(i,e){
+					array.push( e.roleId);
+                });
+
+                $("#roles").val( array.toString() );
+            });
+
+            var organizationId = $("#organizationId").val();
+            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
+
+              // $("#organizationId").val(data.id);
+                $("#organizationName").text(data.name);
+            })
+        }
+
+        $.get("/role/getAllRole",{},function(data){
+            map.role = data;
+        })
+
+	});
+
+	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+	var map={
+	    yesRole: [],
+        role: [],
+      //  organization: {},
+
+
+	};
+	new Vue({
+		el: '#app',
+		data: map
+	});
+
+
+	$("#sureAdd").click(function(){
+	    var userName = $("#userName").val();
+        var password = $("#password").val();
+        var userRole = $("#sign1").text();
+        var organizationName = $("#organizationName").text();
+
+        var userId = $("#userId").val();
+
+		if (userName.trim()==""){
+            var txt= "用户名不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+		}
+        if (password.trim()==""){
+            var txt= "用户名密码不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+		}
+        if (userRole == ""){
+            var txt= "用户角色不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+		}
+        if (organizationName=="" ){
+		    if( $("#userId").val()=="1" || userId!=""){
+                $("#signForm").submit();
+			}else{
+                var txt= "所属机构不能为空！";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                return false;
+			}
+		}
+
+        else if(userId==""){
+			//验证此单位是否已录入此用户
+			var organizationId = $("#organizationId").val();
+			$.get("/userPage/validateUser",{"organizationId":organizationId,"userName":userName},function(data){
+				if(data=='1'){
+                    var txt= "此用户已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+				}
+				else{
+                    $("#signForm").submit();
+				}
+			})
+		}
+
+        else if(userId!=""){
+            $("#signForm").submit();
+        }
+
+	});
+
+    $("#getRole").click(function(){
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+	});
+
+
+
+
+	$("#selectPart").click(function(){
+		$.get("/organization/getTree",{},function(zNodes){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#selectAll").bind("click", selectAll);
+		})
+
+
+
+
+	});
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+			onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+    function onClick(e,treeId, treeNode){
+
+        //将选中的单位的id赋给隐藏的input框
+        $("#organizationId").val(treeNode.id);
+        $("#organizationName").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+
+        alert(msg);
+    }
+    var log, className = "dark";
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+    /*zTree   end */
+
+    function checkTo(e){
+        var array = [];
+        if( $(e).is(":checked")==true ){  //jquery
+            $("#sign1").html('');
+            $(".checkInput").each(function(i,e){
+                if(e.checked==true){
+                    var val = $(e).next().text();
+                    array.push( $(e).next().attr("id") );
+                    $("#sign1").append('<span class="pad1" >'+val+'</span>');
+                }
+            })
+        }else{
+            $("#sign1").html('');
+            $(".checkInput").each(function(i,e){
+                if(e.checked==true){
+                    var val = $(e).next().text();
+                    array.push( $(e).next().attr("id") );
+                    $("#sign1").append('<span class="pad1" >'+val+'</span>');
+                }
+            })
+        }
+
+        $("#roles").val( array.toString() );
+    }
+
+
+</script>
+
+</html>

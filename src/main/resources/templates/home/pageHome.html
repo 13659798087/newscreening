@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DEMO</title>
+    <link rel="stylesheet" type="text/css" href="../css/css.css" />
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+    <link href="../Content/jquery.validate.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-3.2.0.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+
+    <!--ztree的css、js -->
+    <link rel="stylesheet" href="../css/demo.css" type="text/css" />
+    <link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+    <script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+
+
+    <!-- 引入vue.js -->
+    <script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--日期控件 js和css -->
+    <link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+    <script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+    <script src="../js/echarts/echarts.js"></script>
+
+    <script>
+
+        //获取当前年月日
+        var year;
+        var month;
+        var monthDay;
+        var date = new Date();
+        year = date.getFullYear();
+        month = date.getMonth()+1;
+        var d = new Date(year, month, 0);
+        monthDay = d.getDate(); //获取当月的天数
+
+    </script>
+
+    <style>
+        .divTop {height: 34px;line-height: 34px;margin-top: 0.5%;width: 1000px;}
+        .top_01 {border: 3px solid #DBDBDB;border-radius: 8px;}
+        .top_02 {display: inline-block;float: left;}
+        .inputLeg {display: inline-block;width: 200px;}
+        .noData{position: absolute;margin-left: 450px;top: 220px;font-size: 20px;}
+
+        .creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
+
+        a {text-decoration:none;}
+        body {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="app">
+
+
+    <div class="top_01" ><!--报告信息按年份统计-->
+        <center>
+            <div class="divTop" >
+                <div class="top_02">
+                    <span>年份：</span>
+                    <input type="text"  id="yearDate_03"  class="form-control inputLeg" />
+                </div>
+                <div class="top_02" style="margin-left: 3%;">
+                    <span>单位：</span>
+                    <!-- <select  id="hospital_03"  class="form-control inputLeg" >
+                         <option value="">请选择</option>
+                         <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+                     </select>-->
+
+                    <div class="dropdown" style="display: inline-block;">
+                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            请选择
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li data-stopPropagation="true">
+                                <div class="zTreeDemoBackground" >
+                                    <ul id="treeDemo3" class="ztree creatZtree_1" ></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <button  class="btn btn-default"  onclick="reset_03()"  style="float: right;">
+                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                </button>
+                <button   class="btn btn-default"  onclick="query_03()" style="float: right;margin-right: 1%;">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                </button>
+            </div>
+            <br/>
+            <div id="reportYear" style="width: 1000px;height:400px;position: relative;" ></div>
+        </center>
+    </div>
+
+    <div class="top_01" ><!--报告信息按组别统计-->
+        <center>
+            <div class="divTop" >
+                <div class="top_02">
+                    <span>日期：</span>
+                    <input type="text"  id="yearDate_041"  class="form-control inputLeg"   />
+                    ~
+                    <input type="text"  id="yearDate_042"  class="form-control inputLeg"   />
+                </div>
+                <div  class="top_02"  style="margin-left: 3%;">
+                    <span>单位：</span>
+                    <!--<select  id="hospital_04"  class="form-control inputLeg" >
+                        <option value="">请选择</option>
+                        <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+                    </select>-->
+
+                    <div class="dropdown" style="display: inline-block;">
+                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            请选择
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li data-stopPropagation="true">
+                                <div class="zTreeDemoBackground" >
+                                    <ul id="treeDemo4" class="ztree creatZtree_1" ></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <button  class="btn btn-default"  onclick="reset_04()"  style="float: right;">
+                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                </button>
+                <button   class="btn btn-default"  onclick="query_04()" style="float: right;margin-right: 1%;">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                </button>
+            </div>
+            <br/>
+            <div id="reportCombine" style="width: 1000px;height:400px;"></div>
+        </center>
+    </div>
+
+
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div class="top_01" >  <!--申请信息按年份统计-->
+        <center>
+            <div class="divTop" >
+                <div class="top_02">
+                    <span>年份：</span>
+                    <input type="text"  id="yearDate_01"  class="form-control inputLeg" />
+                </div>
+                <div class="top_02" style="margin-left: 3%;">
+                    <span>单位：</span>
+                    <!--<select  id="hospital_01"  class="form-control inputLeg" >
+                        <option value="">请选择</option>
+                        <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+                    </select>-->
+
+                    <div class="dropdown" style="display: inline-block;">
+                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            请选择
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li data-stopPropagation="true">
+                                <div class="zTreeDemoBackground" >
+                                    <ul id="treeDemo1" class="ztree creatZtree_1" ></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
+                <button  class="btn btn-default"  onclick="reset_01()"  style="float: right;">
+                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                </button>
+                <button   class="btn btn-default"  onclick="query_01()" style="float: right;margin-right: 1%;">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                </button>
+            </div>
+            <br/>
+            <div id="mainYear" style="width: 1000px;height:400px;position: relative;"></div>
+        </center>
+    </div>
+
+    <div class="top_01" ><!--申请信息按项目统计-->
+        <center>
+            <div class="divTop" >
+                <div class="top_02">
+                    <span>日期：</span>
+                    <input type="text"  id="yearDate_021"  class="form-control inputLeg"   />
+                    ~
+                    <input type="text"  id="yearDate_022"  class="form-control inputLeg"   />
+                </div>
+                <div  class="top_02"  style="margin-left: 3%;">
+                    <span>单位：</span>
+                    <!-- <select  id="hospital_02"  class="form-control inputLeg" >
+                         <option value="">请选择</option>
+                         <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+                     </select>-->
+
+                    <div class="dropdown" style="display: inline-block;">
+                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            请选择
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li data-stopPropagation="true">
+                                <div class="zTreeDemoBackground" >
+                                    <ul id="treeDemo2" class="ztree creatZtree_1" ></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <button  class="btn btn-default"  onclick="reset_02()"  style="float: right;">
+                    <span class="glyphicon glyphicon-refresh"></span> 重置
+                </button>
+                <button   class="btn btn-default"  onclick="query_02()" style="float: right;margin-right: 1%;">
+                    <span class="glyphicon glyphicon-search"></span> 查询
+                </button>
+            </div>
+            <br/>
+            <div id="mainSetmeal" style="width: 1000px;height:400px;"></div>
+        </center>
+    </div>
+
+
+</div>
+</body>
+
+<script type="text/javascript">
+
+    var map={
+        message: '',
+        ret:'',
+        cc:'',
+        dd:'',
+        applyinfo:{},
+        listHospital:[]
+    };
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+    function onClick(e,treeId, treeNode){
+
+        switch (hop){
+            case 1:
+                $("#hospital_01").attr("name",treeNode.id);
+                $("#hospital_01").text(treeNode.name);
+                break;
+            case 2:
+               // $("#hospital_02").val(treeNode.name);
+                $("#hospital_02").attr("name",treeNode.id);
+                $("#hospital_02").text(treeNode.name);
+                break;
+            case 3:
+               // $("#hospital_03").val(treeNode.name);
+                $("#hospital_03").attr("name",treeNode.id);
+                $("#hospital_03").text(treeNode.name);
+                break;
+            case 4:
+                //$("#hospital_04").val(treeNode.name);
+                $("#hospital_04").attr("name",treeNode.id);
+                $("#hospital_04").text(treeNode.name);
+                break;
+        }
+
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        alert(msg);
+    }
+    /*zTree   end */
+
+
+    var hop = 0;
+    $(function(){
+        $("#hospital_01,#hospital_02,#hospital_03,#hospital_04").click(function(event){
+            // alert(event.type); // "click"事件
+            switch (this.id){
+                case 'hospital_01':
+                    hop=1;
+                    break;
+                case 'hospital_02':
+                    hop=2;
+                    break;
+                case 'hospital_03':
+                    hop=3;
+                    break;
+                case 'hospital_04':
+                    hop=4;
+                    break;
+            }
+        });
+
+        $.get("/applicationStatistics/getListHospital",{},function(data){
+            map.listHospital=data;
+        });
+
+        $(".inputLeg").each(function(){
+            $(this).attr("readonly","readonly");
+            $(this).css("background-color","white");
+        })
+
+    });
+
+    $("#hospital_01,#hospital_02,#hospital_03,#hospital_04").click(function(){
+        $.get("/organization/getByOwn",{},function(zNodes){
+            switch (hop){
+                case 1:
+                    var treeObj1 = $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
+                    fillter(treeObj1);//设置展开前三级
+                    break;
+                case 2:
+                    var treeObj2 = $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
+                    fillter(treeObj2);//设置展开前三级
+                    break;
+                case 3:
+                    var treeObj3 = $.fn.zTree.init($("#treeDemo3"), setting, zNodes);
+                    fillter(treeObj3);//设置展开前三级
+                    break;
+                case 4:
+                    var treeObj4 = $.fn.zTree.init($("#treeDemo4"), setting, zNodes);
+                    fillter(treeObj4);//设置展开前三级
+                    break;
+            }
+        })
+    });
+
+    function fillter(treeObj) {
+        //获得树形图对象
+        var nodeList = treeObj.getNodes();　　　　　　 //展开第一个根节点
+        for(var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
+            treeObj.expandNode(nodeList[i], true, false, true);
+            /*var nodespan = nodeList[i].children;
+            for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
+                treeObj.expandNode(nodespan[j], true, false, true);
+            }*/
+        }
+    }
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+
+    $("#yearDate_01,#yearDate_03").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {},
+        okfun:function (elem,val,date) {}
+    });
+
+    $("#yearDate_021,#yearDate_022,#yearDate_041,#yearDate_042").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) { },
+        okfun:function (elem,val,date) { }
+    });
+
+
+
+    /* 年份申请单信息统计   start*/
+    var myChart1 = echarts.init(document.getElementById('mainYear'));
+    // 显示标题，图例和空的坐标轴
+    var year1 = year;
+    myChart1.setOption({
+        title : {
+            text: year1+'年申请单信息统计',
+            subtext: '1-12月份',
+            x:'center'
+        },
+        color: ['#95CACA'],
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                //magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                //restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data:['销量']
+        },
+        xAxis: {
+            data: []
+        },
+        yAxis: {},
+        series: [{
+            name: '数量',
+            type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            barWidth : 30,//柱图宽度
+            data: []
+        }]
+    });
+
+    myChart1.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    var names=[];    //类别数组（实际用来盛放X轴坐标值）
+    var nums=[];    //销量数组（实际用来盛放Y坐标值）
+
+    $.ajax({
+        type : "post",
+        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/home/getYearApplicationData",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",        //返回数据形式为json
+        success : function(result) {
+            //请求成功时执行该函数内容，result即为服务器返回的json对象
+            if (result) {
+
+                $("#noDataDiv1").remove();
+
+                if(result.length==0){
+                    var $li = "<div id='noDataDiv1' class='noData' >暂无数据</div>";
+                    $('#mainYear').append($li);
+                }
+
+                var array1 = [];
+                for (var i = 0; i < result.length; i++) {
+                    array1.push(result[i].month.substring(5,7)+'月');  //挨个取出类别并填入类别数组
+                }
+                for(var i=0;i<array1.length;i++){
+                    if( array1[i].substring(0,1)=='0' ){
+                        array1[i].replace('0',"");
+                        array1.splice(i,1,array1[i].replace('0',""));
+                    }
+                }
+                names = array1;
+
+                for (var i = 0; i < result.length; i++) {
+                    nums.push(result[i].count);    //挨个取出销量并填入销量数组
+                }
+
+                myChart1.hideLoading();    //隐藏加载动画
+                myChart1.setOption({        //加载数据图表
+
+                    xAxis: {
+                        data: names
+                    },
+                    series: [{
+                        data: nums // 根据名字对应到相应的系列
+                    }]
+                });
+
+            }
+
+        },
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart1.hideLoading();
+        }
+    });
+
+
+    function query_01() {
+        $.get("/home/getYearApplicationData",{"year":$("#yearDate_01").val(),"organizationId":$("#hospital_01").attr("name")},function(data){
+
+            $("#noDataDiv1").remove();
+
+            names=[];    //类别数组（实际用来盛放X轴坐标值）
+            nums=[];
+            var array1 = [];
+            for (var i = 0; i < data.length; i++) {
+                array1.push(data[i].month.substring(5,7)+'月');  //挨个取出类别并填入类别数组
+            }
+            for(var i=0;i<array1.length;i++){
+                if( array1[i].substring(0,1)=='0' ){
+                    array1[i].replace('0',"");
+                    array1.splice(i,1,array1[i].replace('0',""));
+                }
+            }
+            names = array1;
+            for (var i = 0; i < data.length; i++) {
+                nums.push(data[i].count);    //挨个取出销量并填入销量数组
+            }
+
+            var y = $("#yearDate_01").val();  //获取年份
+            if(y==""){
+                year1 = year;
+            }else{
+                year1 = $("#yearDate_01").val();
+            }
+
+            myChart1.hideLoading();    //隐藏加载动画
+
+            myChart1.setOption({        //加载数据图表
+                title : {
+                    text: year1+'年申请单信息统计'
+                },
+                xAxis: {
+                    data: names
+                },
+                series: [{
+                    data: nums // 根据名字对应到相应的系列
+                }]
+            });
+
+            if(data.length==0){
+                var $li = "<div id='noDataDiv1' class='noData' >暂无数据</div>";
+                $('#mainYear').append($li);
+            }
+
+        })
+    }
+    /* 年份申请单信息统计   end*/
+
+
+    // 基于准备好的dom，初始化echarts实例
+    /* 申请单按项目信息统计   start*/
+    var setmealChart = echarts.init(document.getElementById('mainSetmeal'));
+    // 指定图表的配置项和数据
+    var option = {
+        title : {
+            text: year+'年申请单项目统计',
+            subtext: '项目筛查',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            data:[]
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                /*magicType : {
+                    show: true,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'left',
+                            max: 1548
+                        }
+                    }
+                },*/
+                //restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'访问来源',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[]
+                /*data:[
+                    {value:335, name:'直接访问'},
+                    {value:310, name:'邮件营销'},
+                    {value:234, name:'联盟广告'},
+                    {value:135, name:'视频广告'},
+                    {value:1548, name:'搜索引擎'}
+                ]*/
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    setmealChart.setOption(option);
+
+    setmealChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    //var data=[];    //类别数组（实际用来盛放X轴坐标值）
+    //var nums=[];    //销量数组（实际用来盛放Y坐标值）
+
+    $.ajax({
+        type : "post",
+        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/home/getBySemealData",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",        //返回数据形式为json
+        success : function(result) {
+            //请求成功时执行该函数内容，result即为服务器返回的json对象
+            if (result) {
+
+                $("#noDataDiv2").remove();
+
+                if(result.length==0){
+                    var $li = "<div id='noDataDiv2' class='noData' >暂无数据</div>";
+                    $('#mainSetmeal').append($li);
+                }
+
+                var array = [];
+                for (var i = 0; i < result.length; i++) {
+                    array.push(result[i].name);  //挨个取出类别并填入类别数组
+                }
+
+                setmealChart.hideLoading();    //隐藏加载动画
+                setmealChart.setOption({        //加载数据图表
+                    series: [{
+                        data: result // 根据名字对应到相应的系列
+                    }],
+                    legend: {
+                        orient : 'vertical',
+                        x : 'left',
+                        data:array
+                    }
+                });
+
+            }
+
+        },
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            setmealChart.hideLoading();
+        }
+    });
+
+
+    function query_02() {
+        var data1 = $("#yearDate_021").val();
+        var data2 = $("#yearDate_022").val();
+
+        var oDate1 = new Date(data1); //获取当前时间
+        var oDate2 = new Date(data2);//控件选中的时间
+
+        if(oDate1.getTime() > oDate2.getTime()){
+            alert("请选择正确的时间范围！");
+
+        }else{
+
+            $.get("/home/getBySemealData",{"a_lr_date1":data1,"a_lr_date2":data2,"organizationId":$("#hospital_02").attr("name")},function(result){
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+
+                    $("#noDataDiv2").remove();
+
+                    var array = [];
+                    for (var i = 0; i < result.length; i++) {
+                        array.push(result[i].name);  //挨个取出类别并填入类别数组
+                    }
+
+                    setmealChart.hideLoading();    //隐藏加载动画
+                    setmealChart.setOption({        //加载数据图表
+                        series: [{
+                            data: result // 根据名字对应到相应的系列
+                        }],
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:array
+                        }
+                    });
+
+                    if(result.length==0){
+                        var $li = "<div id='noDataDiv2' class='noData' >暂无数据</div>";
+                        $('#mainSetmeal').append($li);
+                    }
+
+                }
+            })
+        }
+    }
+
+    /* 申请单按项目信息统计   end*/
+
+
+    /*报告信息按年份统计  start*/
+    var reportYearChart = echarts.init(document.getElementById('reportYear'));
+    // 显示标题，图例和空的坐标轴
+    var year2 = year;
+    reportYearChart.setOption({
+        title : {
+            text: year2+'年报告统计',
+            subtext: '1-12月份',
+            x:'center'
+        },
+        color: ['#C85151'],
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                //magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                //restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        legend: {
+            data:['销量']
+        },
+        xAxis: {
+            data: []
+        },
+        yAxis: {},
+        series: [{
+            name: '数量',
+            type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top'
+                }
+            },
+            barWidth : 30,//柱图宽度
+            data: []
+        }]
+    });
+
+    reportYearChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+    var names=[];    //类别数组（实际用来盛放X轴坐标值）
+    var nums=[];    //销量数组（实际用来盛放Y坐标值）
+
+    $.ajax({
+        type : "post",
+        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/home/getYearReportData",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",        //返回数据形式为json
+        success : function(result) {
+            //请求成功时执行该函数内容，result即为服务器返回的json对象
+            if (result) {
+
+                $("#noDataDiv3").remove();
+
+                if(result.length==0){
+                    var $li = "<div id='noDataDiv3' class='noData' style='position: absolute;top: 160px;' >暂无数据</div>";
+                    $('#reportYear').append($li);
+                }
+
+                var array1 = [];
+                for (var i = 0; i < result.length; i++) {
+                    array1.push(result[i].month.substring(5,7)+'月');  //挨个取出类别并填入类别数组
+                }
+                for(var i=0;i<array1.length;i++){
+                    if( array1[i].substring(0,1)=='0' ){
+                        array1[i].replace('0',"");
+                        array1.splice(i,1,array1[i].replace('0',""));
+                    }
+                }
+                names = array1;
+                for (var i = 0; i < result.length; i++) {
+                    nums.push(result[i].count);    //挨个取出销量并填入销量数组
+                }
+
+                reportYearChart.hideLoading();    //隐藏加载动画
+                reportYearChart.setOption({        //加载数据图表
+
+                    xAxis: {
+                        data: names
+                    },
+                    series: [{
+                        data: nums // 根据名字对应到相应的系列
+                    }]
+                });
+            }
+        },
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            reportYearChart.hideLoading();
+        }
+    });
+
+
+    function query_03() {
+        $.get("/home/getYearReportData",{"year":$("#yearDate_03").val(),"organizationId":$("#hospital_03").attr("name")},function(result){
+
+            $("#noDataDiv3").remove();
+
+            names=[];    //类别数组（实际用来盛放X轴坐标值）
+            nums=[];
+            var array1 = [];
+            for (var i = 0; i < result.length; i++) {
+                array1.push(result[i].month.substring(5,7)+'月');  //挨个取出类别并填入类别数组
+            }
+            for(var i=0;i<array1.length;i++){
+                if( array1[i].substring(0,1)=='0' ){
+                    array1[i].replace('0',"");
+                    array1.splice(i,1,array1[i].replace('0',""));
+                }
+            }
+            names = array1;
+            for (var i = 0; i < result.length; i++) {
+                nums.push(result[i].count);    //挨个取出销量并填入销量数组
+            }
+
+            var y = $("#yearDate_03").val();  //获取年份
+            if(y==""){
+                year2 = year;
+            }else{
+                year2 = $("#yearDate_03").val();
+            }
+
+            reportYearChart.hideLoading();    //隐藏加载动画
+            reportYearChart.setOption({        //加载数据图表
+                title : {
+                    text: year2+'年报告单统计'
+                },
+                xAxis: {
+                    data: names
+                },
+                series: [{
+                    data: nums // 根据名字对应到相应的系列
+                }]
+            });
+
+            if(result.length==0){
+                var $li = "<div id='noDataDiv3' class='noData' style='position: absolute;top: 160px;' >暂无数据</div>";
+                $('#reportYear').append($li);
+            }
+
+
+        })
+    }
+    /*报告信息按年份统计  end*/
+
+
+
+    /* 报告信息按组别信息统计   start*/
+    var reportCombineChart = echarts.init(document.getElementById('reportCombine'));
+    // 指定图表的配置项和数据
+    var option = {
+        title : {
+            text: year+'年报告统计',
+            subtext: '项目筛查',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            data:[]
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                /*magicType : {
+                    show: true,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'left',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},*/
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        series : [
+            {
+                name:'访问来源',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[]
+                /*data:[
+                    {value:335, name:'直接访问'},
+                    {value:310, name:'邮件营销'},
+                    {value:234, name:'联盟广告'},
+                    {value:135, name:'视频广告'},
+                    {value:1548, name:'搜索引擎'}
+                ]*/
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    reportCombineChart.setOption(option);
+
+    reportCombineChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
+
+    $.ajax({
+        type : "post",
+        async : false,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+        url : "/home/getByCombinelData",    //请求发送到TestServlet处
+        data : {},
+        dataType : "json",        //返回数据形式为json
+        success : function(result) {
+            //请求成功时执行该函数内容，result即为服务器返回的json对象
+            if (result) {
+
+                $("#noDataDiv4").remove();
+
+                if(result.length==0){
+                    var $li = "<div id='noDataDiv4' class='noData' >暂无数据</div>";
+                    $('#reportCombine').append($li);
+                }
+
+                var array = [];
+                for (var i = 0; i < result.length; i++) {
+                    array.push(result[i].name);  //挨个取出类别并填入类别数组
+                }
+
+                reportCombineChart.hideLoading();    //隐藏加载动画
+                reportCombineChart.setOption({        //加载数据图表
+                    series: [{
+                        data: result // 根据名字对应到相应的系列
+                    }],
+                    legend: {
+                        orient : 'vertical',
+                        x : 'left',
+                        data:array
+                    }
+                });
+
+            }
+
+        },
+        error : function(errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            reportCombineChart.hideLoading();
+        }
+    });
+
+
+    function query_04() {
+        var data1 = $("#yearDate_041").val();
+        var data2 = $("#yearDate_042").val();
+
+        var oDate1 = new Date(data1); //获取当前时间
+        var oDate2 = new Date(data2);//控件选中的时间
+
+        if(oDate1.getTime() > oDate2.getTime()){
+            alert("请选择正确的时间范围！");
+
+        }else{
+
+            $.get("/home/getByCombinelData",{"c_a_date1":data1,"c_a_date2":data2,"organizationId":$("#hospital_04").attr("name")},function(result){
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+
+                    $("#noDataDiv4").remove();
+
+                    var array = [];
+                    for (var i = 0; i < result.length; i++) {
+                        array.push(result[i].name);  //挨个取出类别并填入类别数组
+                    }
+
+                    reportCombineChart.hideLoading();    //隐藏加载动画
+                    reportCombineChart.setOption({        //加载数据图表
+                        series: [{
+                            data: result // 根据名字对应到相应的系列
+                        }],
+                        legend: {
+                            orient : 'vertical',
+                            x : 'left',
+                            data:array
+                        }
+                    });
+
+                    if(result.length==0){
+                        var $li = "<div id='noDataDiv4' class='noData' >暂无数据</div>";
+                        $('#reportCombine').append($li);
+                    }
+
+                }
+            })
+        }
+    }
+    /* 报告信息按组别信息统计   end*/
+
+
+    function reset_01(){
+        $("#yearDate_01").val("");
+        $("#hospital_01").attr("name","");
+        $("#hospital_01").text("");
+        $("#hospital_01").text("请选择");
+        query_01();
+    }
+    function reset_02(){
+        $("#yearDate_021").val("");
+        $("#yearDate_022").val("");
+        $("#hospital_02").attr("name","");
+        $("#hospital_02").text("");
+        $("#hospital_02").text("请选择");
+        query_02();
+    }
+    function reset_03(){
+        $("#yearDate_03").val("");
+        $("#hospital_03").text("");
+        $("#hospital_03").attr("name","");
+        $("#hospital_03").text("请选择");
+        query_03();
+    }
+    function reset_04(){
+        $("#yearDate_041").val("");
+        $("#yearDate_042").val("");
+        $("#hospital_04").attr("name","");
+        $("#hospital_04").text("");
+        $("#hospital_04").text("请选择");
+        query_04();
+    }
+
+</script>
+
+
+</html>

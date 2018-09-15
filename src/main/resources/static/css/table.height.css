@@ -1,0 +1,23 @@
+
+.fixed-table-body {height: 430px;}
+.fixed-table-pagination{margin-top: 420px;}
+
+
+td{white-space:nowrap;}
+.menu_ul ul li:hover {background: #ddd;}
+.menu_ul ul li a {color: #A4A4A4;}
+/*.tableDiv{float: left;margin:0.5%;box-shadow: #666 0px 0px 10px;border-radius: 4px;width: 98%;}*/
+.queryList{margin-top: 1.7%;width:250%;}
+.queryText{float: left;height:34px;line-height: 34px;margin-left: 2%;font-weight: bold;}
+.leftText{float: left;height:34px;line-height: 34px;margin-left: 2%;font-weight: bold;}
+
+.fixed-table-container thead th .sortable {
+    background-image:none!important;
+    background-position: right;
+    padding-right: 0px;
+}
+
+.queryLeft{float: left;margin-left: 2%;}
+.style_01{display: inline-block;padding: 0 2px;border-radius: 3px;border: 1px solid #DBDBDB;}
+.style_02{height: 24px;display: inline-block;width:113px;padding: 0 2px;border-radius: 3px;border: 1px solid #DBDBDB;}
+.zhi{display: inline-block;width:9%;text-align: center;}

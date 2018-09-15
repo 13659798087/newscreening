@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<link rel="stylesheet" href="../css/iconfont.css" />
+
+	<link rel="stylesheet" href="../css/bootstrap-table.css" />
+	<script src="../js/bootstrap-table.js"></script>
+	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+	<script src="../js/bootstrap-table-zh-CN.js"></script>
+	<script src="../js/bootstrap-table-export.js"></script>
+
+	<link rel='stylesheet'   href='../css/pagination.css'/>
+	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--格式化时间.控制input只能输入金额-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+</head>
+<body>
+
+    <div class="tableDiv">
+			<div id="toolbar" class="btn-group">
+				<div class="queryList" style="margin-top: 2.2%;">
+					<div class="myLabel-content queryText">用户名：</div>
+					<div class="myText-content" style="float: left;">
+						<input id="sp_name" type="text" class="form-control" placeholder="输入用户名">
+					</div>
+					<div style="float: left;width: 5%;">&nbsp;</div>
+					<button class="btn btn-default" id="btn_search"  onclick="query()">
+						<span class="glyphicon glyphicon-search"></span> 查询
+					</button>
+					<button   class="btn btn-default" id="btn_ret"  onclick="reset()">
+						<span class="glyphicon glyphicon-refresh"></span> 重置
+					</button>
+					<button class="btn btn-default" id="btn_add"  >
+						<span class="glyphicon glyphicon-plus-sign"></span> 添加
+					</button>
+				</div>
+			</div>
+			<table  class="table table-striped" id="table" ></table>
+	</div>
+
+</body>
+
+<script>
+    /*<![CDATA[*/
+    $("#btn_add").click(function(){
+       location.href="/signpic/addSignpic?type=a";
+    });
+
+	$("#submitSign").click(function(){
+        var formData = new FormData($( "#uploadFile" )[0]);
+        $.ajax({
+            type: "POST",
+            contentType: false,
+            processData: false,
+            url:"/signpic/uploadPicture",
+            data:formData,
+            async: false,
+            error: function(request) {
+                var txt= "出错了";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+            },
+            success: function(data) {
+                $("#image").attr("src","/signpic/Pictureshows?id="+data);
+            }
+        });
+	});
+
+
+    //创建用户
+    $("#createUser").click(function(){
+	    var userName = $("#userName").val();
+        var password = $("#password").val();
+
+	    if( userName.trim()=="" || password.trim()=="" ){
+			$("#ProjectHint").show();
+		}else{
+	        $("#signForm").submit();
+		}
+
+	});
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+        datagrid = datagrid.bootstrapTable({
+            url: "/signpic/getSignpic",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+			toolbar: "#toolbar",
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+           // showToggle:true,//视图切换
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+                var temp = {
+                    pageNumber: params.pageNumber,                         //页面大小
+                    rowNumber: params.pageSize,    //页码
+                    sp_name: $("#sp_name").val(),
+
+                };
+                return temp;
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    align: "center",//水平
+                    width: '3%',
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //return index+1; //序号正序排序从1开始
+                        var pageSize=$('#table').bootstrapTable('getOptions').pageSize;//通过表的#id 可以得到每页多少条
+                        var pageNumber=$('#table').bootstrapTable('getOptions').pageNumber;//通过表的#id 可以得到当前第几页
+                        return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                        //$('#table').bootstrapTable("getOptions"); //返回各项的object
+                    }
+                },
+                {
+                    title: "用户名",
+                    field: "sp_name",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '20%',
+                    visible:true
+                },
+                {
+                    field: 'sp_pic',
+                    title: '签名',
+                    align: 'center',
+                    width: '20%',
+                    formatter: function(value,row,index){
+                        return '<img  src="/signpic/Pictureshows?id='+row.id+'" >';
+                        // class="img-rounded"
+                    }
+                },
+                {
+                    title: "创建时间",
+                    field: "create_time",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '20%',
+                    visible:true,
+                    formatter: function(value,row,index){
+                        if(value!="" && value!=null){
+                            return timestampFormat(value);
+                        }else{
+                            return"-";
+                        }
+                    }
+                },
+                {
+                    field: 'operate',
+                    title: '操作',
+                    align: 'center',
+                    valign: "middle",
+                    events: operateEvents,
+                    formatter: operateFormatter
+                }
+            ]
+        });
+
+    });
+
+    function query() {
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+    //重置
+    function reset(){
+        $("#toolbar input").val("");
+    }
+
+    function operateFormatter(value, row, index) {
+           return [
+            '<button type="button" class="RoleOfEdit btn btn-default  btn-sm" style="margin-right:15px;">修改</button>',
+            '<button type="button" class="RoleOfB btn btn-default  btn-sm" style="margin-right:15px;">删除</button>'
+            ].join('');
+     }
+
+    window.operateEvents = {
+        'click .RoleOfB': function (e, value, row, index) {
+            var sp_name = row.sp_name;
+            var txt= "确定删除"+sp_name+"的电子签名吗？";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                var id = row.id;
+                $.get("/signpic/deleteSignpic",{"id":id},function(data){
+                    datagrid.bootstrapTable("refresh");
+                    var txt= "删除成功！";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success); //弹出框
+                })
+            },false);
+        },
+        'click .RoleOfEdit': function (e, value, row, index) {
+            debugger;
+            location.href="/signpic/addSignpic?type=e&id="+row.id+"&sp_name="+row.sp_name+"&sp_pic="+row.sp_pic;
+        }
+    };
+
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    });
+
+    var map={
+        message: '',
+        ret:'',
+        cc:'',
+        dd:'',
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+
+    /*]]>*/
+</script>
+
+</html>

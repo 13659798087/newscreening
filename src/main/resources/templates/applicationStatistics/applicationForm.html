@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<link rel="stylesheet" href="../css/iconfont.css" />
+
+	<link rel="stylesheet" href="../css/bootstrap-table.css" />
+	<script src="../js/bootstrap-table.js"></script>
+	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+	<script src="../js/bootstrap-table-zh-CN.js"></script>
+	<script src="../js/bootstrap-table-export.js"></script>
+
+	<link rel='stylesheet'   href='../css/pagination.css'/>
+	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+
+	<!--日期控件 js和css -->
+	<link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+	<script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
+
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
+	<!--<style>
+		.bootstrap-table{width:90%;}
+	</style>-->
+</head>
+<body>
+
+<div id="app">
+
+	<div class="tableDiv">
+		<div id="toolbar" class="btn-group">
+			<div class="queryList" style="margin-top:1.2%;width:150%;">
+
+				<div class="myLabel-content queryText" >录入日期：</div>
+				<div class="myText-content" style="float: left;">
+					<input id="a_lr_date1" type="text" class="form-control" placeholder="名称" style="float: left;width: 150px;" />
+					<span style="float: left;height: 32px;line-height: 32px;">&nbsp; 至 &nbsp;</span>
+					<input id="a_lr_date2" type="text" class="form-control" placeholder="名称" style="float: left;width: 150px;"/>
+				</div>
+				<div class="myLabel-content queryText" >送检单位：</div>
+				<div class="myText-content" style="float: left;">
+					<select id="a_hospital" type="text" class="form-control" placeholder="名称" style="width:220px;">
+						<option value="">请选择</option>
+						<option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
+					</select>
+				</div>
+
+				<div style="float: left;width: 5%;">&nbsp;</div>
+				<button class="btn btn-default" id="btn_search"  onclick="query()">
+					<span class="glyphicon glyphicon-search"></span> 查询
+				</button>
+				<button   class="btn btn-default" id="btn_ret"  onclick="reset()">
+					<span class="glyphicon glyphicon-refresh"></span> 重置
+				</button>
+				<!--<button class="btn btn-default" id="btn_add"  >
+					<span class="glyphicon glyphicon-plus-sign"></span> 添加
+				</button>-->
+			</div>
+		</div>
+		<table  class="table table-striped" id="table"  ></table>
+	</div>
+
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+ /*   $('input[type=checkbox]:checked')*/
+
+
+    var map={
+        message: '',
+        applyinfo:{},
+        listHospital:[]
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+    $(function(){
+        $.get("/applicationStatistics/getListHospital",{},function(data){
+            map.listHospital=data;
+        })
+    });
+
+
+    var datagrid;
+    var objDialog;
+
+    $(function () {
+        var heights=window.innerHeight;
+        //数据列表
+        datagrid = $('#table');
+
+        datagrid = datagrid.bootstrapTable({
+            url: "/applicationStatistics/getStatisticsApplyinfo",//数据源
+            dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
+            height:heights-374,//高度调整
+            search: false,//是否搜索
+            pagination: true,//是否分页
+            pageSize: 10,//单页记录数
+            pageNumber:1, //当前第几页
+            pageList: [5, 10, 20, 50],//分页步进值
+            sidePagination: "server",//服务端分页
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",//请求数据内容格式 默认是 application/json 自己根据格式自行服务端处理
+            dataType: "json",//期待返回数据类型
+            method: "post",//请求方式
+            searchAlign: "right",//查询框对齐方式
+            queryParamsType: "undefined",//查询参数组织方式
+            sortOrder:"asc",
+
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            queryParams: function getParams(params) {
+                var temp = {
+                    pageNumber: params.pageNumber,                         //页面大小
+                    rowNumber: params.pageSize,    //页码
+                    a_lr_date1: $("#a_lr_date1").val(),
+                    a_lr_date2: $("#a_lr_date2").val(),
+                    a_hospital: $("#a_hospital").val(),
+
+                };
+                return temp;
+            },
+
+            onClickRow: function (row, $element, field) {
+
+                $($element).siblings().each(function(i,e){
+                    $(e).css("background-color","");
+                    $(e).css("color","black");
+				});
+
+                $($element).css("background-color","#98FB98");
+                $($element).css("color","black");
+
+                var a_id = row.a_id;
+                $.get("/applyinfo/getRowById",{"a_id":a_id},function(data){
+                    document.getElementById("mainbody2").contentWindow.setObjectValue(data);
+                });
+
+                document.getElementById("mainbody2").contentWindow.processState();
+
+            },
+            onCheck:function(row, $element, field){
+
+            },
+            exportOptions:{
+                ignoreColumn: [0,1],  //忽略某一列的索引
+                fileName: '设施台帐报表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '设施台帐报表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+            },
+            searchOnEnterKey: false,//回车搜索
+            showRefresh: true,//刷新按钮
+            showColumns: true,//列选择按钮
+            showExport: false,    //是否显示导出
+            exportDataType: "selected",//basic', 'all', 'selected'.
+            buttonsAlign: "right",//按钮对齐方式
+            toolbar: "#toolbar",//指定工具栏
+            toolbarAlign: "left",//工具栏对齐方式/
+            columns: [
+                {
+                    title: "套餐项目",
+                    field: "setmealName",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '15%'
+                },
+                {
+                    title: "总数",
+                    field: "setmealTotal",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '15%'
+                },
+                {
+                    title: "录入",
+                    field: "entryCount",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '15%'
+                },
+                {
+                    title: "送检",
+                    field: "inspection",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '15%'
+                },
+                {
+                    title: "签收",
+                    field: "signInCount",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    visible:true,
+                    width: '15%'
+                },
+                {
+                    title: "报告",
+                    field: "reportCount",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true,
+                    width: '15%'
+                }
+            ]
+        });
+
+    });
+
+
+    function showQuery(){
+        if(  $(".hideQuery").css("display")=="none" ){
+            $(".hideQuery").show();
+        }else{
+            $(".hideQuery").hide();
+        }
+    }
+
+
+    //查询
+    function query() {
+        var oDate1 = new Date( $("#a_lr_date1").val() );
+        var oDate2 = new Date( $("#a_lr_date2").val() );
+        if(oDate1!="" && oDate2!="" ){
+			if( oDate1.getTime() > oDate2.getTime() ){
+				alert("开始时间不能小于截止时间");
+				return;
+			}
+		}
+        datagrid.bootstrapTable("refresh",{pageNumber:1});
+    }
+
+
+	//重置
+    function reset(){
+        $("#toolbar input").val("");
+        $("#toolbar select").val("");
+    }
+
+
+	//删除选中的行
+    function deleteSelect(){
+        var a= $("#table").bootstrapTable('getSelections');
+        if(a.length==0){
+            alert("请选择要删除的信息！");
+        }else{
+            if( confirm("确定删除勾选的录入信息吗？") ){
+                $(a).each(function(i,e){
+                    if( e.a_flag == "1"){
+                        var a_id = e.a_id;
+                        $.get("/applyinfo/deleteRowById",{"a_id":a_id},function(data){ })
+					}
+                });
+                datagrid.bootstrapTable("refresh");
+            }
+        }
+    }
+
+
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            seen: true
+        }
+    });
+
+    $("#a_lr_date1,#a_lr_date2").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+            /*var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#startTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }*/
+        }
+    })
+
+/*
+    //修改安全巡查活动截止日期
+    $("#endTime").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+            /!*var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){//转换成毫秒数进行比较
+                alert("截止日期不能小于当前时间！");
+                $("#endTime").val($("#egoTime").val());
+            } else {
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }*!/
+        },
+        okfun:function (elem,val,date) {
+            var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#endTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }
+        }
+    })*/
+
+    /*]]>*/
+</script>
+
+</html>

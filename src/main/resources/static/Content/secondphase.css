@@ -1,0 +1,80 @@
+﻿
+/*第二期样式*/
+.uline {
+  border-bottom: 2px #ddd solid;
+  padding-bottom:5px;
+  font-size:1.3em;
+}
+.zdcxlist tr td {
+  border-bottom: 1px #ddd solid;
+  padding: 8px;
+  line-height: 1.42857143;
+  color:#333;
+}
+.optionnav {
+  width: 70%;
+  height: 42px;
+  border-radius: 5px;
+  border: 2px #3d9cfe solid;
+  margin: 0 auto;
+}
+.navbar-form .optionnav > li {
+  width: 50%;
+}
+.navbar-form .optionnav > li > a{
+    height: 40px;
+    color: #3d9cfe;
+    border: none;
+    background: none;
+    text-align: center;
+    display: block;
+    margin-right: 0px;
+    font-size: 0.9em;
+}
+ .navbar-form .optionnav > li > a:hover, .navbar-form .optionnav .active >a {
+    background: #3d9cfe;   
+    color: #fff;
+    border: none;
+    border-radius: 0px; 
+    display: block;
+ }
+.panel {
+   border: none;  
+   box-shadow: none;
+}
+.Value_left {
+  width:90%;
+}
+.Value_right {
+  width:10%;
+  text-align: right;
+}
+.backbtn {
+  background:#3d9cfe;
+  color:#fff;
+  border:none;
+  padding:5px 15px;
+  border-radius:3px;
+}
+.ywxxlist tr th {
+  text-align: center;
+}
+.table tr {
+  border-bottom: 1px #ddd solid;
+  height: 40px;  
+}
+.tcpreview {
+  padding: 5px 15px;
+  display: block;
+  background:#3d9cfe;
+  text-align:center;
+  height: 30px;
+  color: #fff;
+  float: right;
+}
+.ltctable tr td {
+  padding: 0 10px;
+}
+.pypxy {
+  padding: 0px;
+}

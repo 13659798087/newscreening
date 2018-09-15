@@ -1,0 +1,108 @@
+﻿@colon-default: " :";
+
+.row-header {
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 5px;
+
+    &:after {
+        content: @colon-default;
+    }
+}
+
+.control-label {
+    &:after {
+        content: @colon-default;
+    }
+}
+
+.no-colon.control-label {
+    &:after {
+        content: "";
+    }
+}
+
+/*日期输入框在IE下文本垂直不居中*/
+input[type="date"] {
+    line-height: 1.42857143;
+}
+
+a.icon:hover,
+a.icon:focus,
+a.fa:hover,
+a.fa:focus,
+a.glyphicon:hover,
+a.glyphicon:focus {
+    text-decoration: none;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.scroll-xauto {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scroll-yauto {
+    height: 100%;    
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* styles for validation */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Globalization */
+html:lang(en-US) {
+    .control-label:after,
+    .row-header:after {
+        content: @colon-default;
+    }
+
+    .no-colon.control-label {
+        &:after {
+            content: "";
+        }
+    }
+}
+
+html:lang(zh-CN) {
+    .control-label:after,
+    .row-header:after {
+        content: "： ";
+    }
+
+    .no-colon.control-label {
+        &:after {
+            content: "";
+        }
+    }
+}

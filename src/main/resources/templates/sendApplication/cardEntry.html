@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DEMO</title>
+    <link rel="stylesheet" type="text/css" href="../css/css.css" />
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+    <link href="../Content/jquery.validate.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-3.2.0.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <!-- 引入vue.js -->
+    <script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+    <!--日期控件 js和css -->
+    <link type="text/css" rel="stylesheet" href="../css/jedate.css" />
+    <script type="text/javascript" src="../js/jquery.jedate.min.js"></script>
+
+<style>
+    .top1{margin-left: 1%;margin-top:0.5%;width: 31%;display:inline-block;}
+    .top2{display: inline-block;width: 32%;}
+    .top3{display: inline-block;width:64%;}
+   /*  input[type="text"] {height: 20px;line-height: 20px;}*/
+    .pad24{width: 15%;margin-left: 3%;}
+</style>
+
+</head>
+<body>
+<div id="app" >
+
+    <form action="/sendApplication/saveApplication" id="formApplication">
+        <div>
+        <div  style="display: inline-block;width: 48%;margin-left: 1%;margin-top:0.5%;">
+            <div  style="display: inline-block;width:20%;">送检单位：</div>
+            <input class="form-control" name="a_hospital"  :value="cityDq.dqName" style="display: inline-block;width:48%;" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            <input class="form-control" name="a_dept" :value="dept.dHospital" style="display: inline-block;width:28%;" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+        </div>
+
+        <!--<div style="display: inline-block;width: 48%">
+            <div  style="display: inline-block;width:20%;">录入类型：</div>
+            <input type="radio" name="radio" style="margin-left: 1%;" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            <span>同意筛查</span>
+            <input type="radio" name="radio" style="margin-left: 1%;" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            <span>拒绝筛查</span>
+            <input type="radio" name="radio" style="margin-left: 1%;" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            <span>转院筛查</span>
+        </div>-->
+
+        <div style="clear: both;"></div>
+
+            <div class="top1">
+                <div class="top2"><span>条&nbsp;&nbsp;码&nbsp;&nbsp;号：</span></div>
+                <input class="form-control top3" name="a_barcode" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</div>
+                <select class="form-control top3">
+                    <option value="1">录入</option>
+                    <option value="2">送检</option>
+                    <option value="3">签收</option>
+                    <option value="4">报告</option>
+                </select>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2">床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</div>
+                <input class="form-control top3" name="a_bed_no" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>录&nbsp;&nbsp;入&nbsp;&nbsp;人：</span></div>
+                <input class="form-control top3" name="a_lr_name"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">录入日期：</div>
+                <input class="form-control top3" id="1332" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">身份证号：</div>
+                <input class="form-control top3" name="a_id_number"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2">母亲姓名：</div>
+                <input class="form-control top3" name="a_name" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">出生日期：</div>
+                <input class="form-control top3" id=" " onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</div>
+                <select class="form-control top3">
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">身&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;高：</div>
+                <input class="form-control top3" id="birthday" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">体&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重：</div>
+                <input class="form-control top3" id="" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</div>
+                <input class="form-control top3" id="" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">年龄单位：</div>
+                <select class="form-control top3">
+                    <option value="1">年</option>
+                    <option value="2">月</option>
+                    <option value="3">日</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">孕&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期：</div>
+                <select class="form-control top3">
+                    <option value="1">孕前</option>
+                    <option value="2">孕中</option>
+                    <option value="3">孕后</option>
+                </select>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2">收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</div>
+                <select class="form-control top3">
+                    <option value="1">收费</option>
+                    <option value="2">免费</option>
+                    <option value="3">其他</option>
+                </select>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2">所选套餐：</div>
+                <select class="form-control top3">
+                    <option v-for="s in setmealName" >
+                        <span>{{s.s_name}}</span>
+                    </option>
+                </select>
+            </div>
+
+         <!--   <div class="top1">
+                <div class="top2">检查项目：</div>
+                <select class="form-control top3">
+                    <option v-for="d in deptcombine" >
+                        <span>{{d.c_name}}</span>
+                    </option>
+                </select>
+            </div>-->
+
+            <div class="top1">
+                <div class="top2">录入版本：</div>
+                <select class="form-control top3">
+                    <!-- <option v-for="d in deptcombine" >
+                         <span>{{d.c_name}}</span>
+                     </option>-->
+                    <option value="1">版本1</option>
+                    <option value="2">版本2</option>
+                </select>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2"><span>病&nbsp;&nbsp;历&nbsp;&nbsp;号：</span></div>
+                <input class="form-control top3"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2"> <span>床&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</div>
+                <input class="form-control top3"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+        <div class="top1">
+            <div class="top2">录入日期：</div>
+            <input class="form-control top3" id="EntryTime" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+        </div>
+
+            <div class="top1">
+                <div class="top2">联系电话1:</div>
+                <input class="form-control top3" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">联系电话2:</div>
+                <input class="form-control top3"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">户籍地点：</div>
+                <input class="form-control top3"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">户口类型：</div>
+                <select class="form-control top3">
+                    <option value="1">城市</option>
+                    <option value="2">农村</option>
+                </select>
+            </div>
+
+            <div class="top1">
+                <div class="top2">所属省份：</div>
+                <select class="form-control top3">
+                    <option value="1">本地</option>
+                    <option value="2">本省</option>
+                    <option value="3">省外</option>
+                </select>
+            </div>
+
+
+            <div class="top1">
+                <div class="top2">住&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;址：</div>
+                <input class="form-control top3"  onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>胎&nbsp;&nbsp;儿&nbsp;&nbsp;数：</span></div>
+                <select class="form-control top3">
+                    <option value="1">单胎</option>
+                    <option value="2">双胎</option>
+                    <option value="3">多胎</option>
+                </select>
+            </div>
+
+
+
+            <div class="top1">
+                <div class="top2">末次月经：</div>
+                <input class="form-control top3" id="222" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2">采样日期：</div>
+                <input class="form-control top3" id="111" onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>采&nbsp;&nbsp;样&nbsp;&nbsp;人：</span></div>
+                <input class="form-control top3"   onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>临床诊断：</span></div>
+                <input class="form-control top3"   onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+            <div class="top1">
+                <div class="top2"><span>不良孕育使:</span></div>
+                <input class="form-control top3"   onkeypress="if(event.keyCode==13) focusNextInput(this);"/>
+            </div>
+
+        </div>
+        <div  style="height: 80px;line-height:80px;margin: 2%;">
+            <button class="btn btn-primary pad24" data-toggle="button" id="saveApplication">保存</button>
+            <button class="btn btn-primary pad24"  data-toggle="button">新增</button>
+            <button class="btn btn-primary pad24" data-toggle="button">修改</button>
+            <button class="btn btn-primary pad24" data-toggle="button">删除</button>
+            <button class="btn btn-primary pad24" data-toggle="button">刷新</button>
+        </div>
+    </form>
+
+
+</div>
+</body>
+<style>
+
+    .buttonStyle{width: 15%;margin-left: 3%;}
+</style>
+
+<script>
+    /*<![CDATA[*/
+
+    $(function(){
+
+        $("#saveApplication").click(function(){
+           $("#formApplication").submit();
+        })
+
+    });
+
+
+    var map={
+        message: '',
+        ret:'',
+        teacher:[],
+        courses:[],
+        deptcombine:[],
+        setmealName:[],
+        dept:{},
+        cityDq:{},
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+
+    $(function(){
+        $.get("/applyinfo/getApplyinfoCard",{},function(data){
+            debugger;
+            map.deptcombine = data.deptcombine;
+            map.setmealName = data.setmealName;
+            map.dept = data.dept;
+            map.cityDq = data.cityDq;
+        })
+
+
+
+    });
+
+    //jQuery实现在一个输入框按回车键后光标跳到下一个输入框
+    function focusNextInput(thisInput)
+    {
+        var inputs = document.getElementsByTagName("input");
+        for(var i = 0;i<inputs.length;i++){
+            // 如果是最后一个，则焦点回到第一个
+            if(i==(inputs.length-1)){
+                inputs[0].focus(); break;
+            }else if(thisInput == inputs[i]){
+                inputs[i+1].focus(); break;
+            }
+        }
+    }
+
+
+    $("#EntryTime").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+            var oDate1 = new Date(); //获取当前时间
+            var oDate2 = new Date(date);//控件选中的时间
+            if(oDate1.getTime() > oDate2.getTime()){
+                alert("活动开始时间不能小于当前时间！");
+                $("#startTime").val($("#egoTime").val());
+            }else{
+                $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })
+            }
+        }
+    });
+
+    $("#birthday").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD hh:mm",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+
+        }
+    });
+
+    $("#drawBlood").jeDate({
+        skinCell:"jedateblue", //日期风格样式，默认蓝色
+        isinitVal:false,
+        //festival:true,
+        ishmsVal:false,
+        minDate:"1900-01-01 00:00:00",
+        maxDate:"3000-12-31 23:59:59",
+        format:"YYYY-MM-DD hh:mm",
+        zIndex:3000,
+        choosefun:function (elem,val,date) {
+
+        },
+        okfun:function (elem,val,date) {
+
+        }
+    })
+
+    /*]]>*/
+</script>
+
+</html>

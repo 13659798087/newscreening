@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>首页</title>
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+
+
+	<link rel="stylesheet" href="../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../Content/Framework/AdminLTE.min.css">
+	<link rel="stylesheet" href="../Content/Framework/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="../Content/Framework/BitAdmin.css" />
+
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<!-- 基础引用 -->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/modernizr-2.8.3.js"></script>
+	<script src="../js/respond.min.js"></script>
+
+	<!-- 组件引用 -->
+	<script type="text/javascript" src="../js/Frameowrk/adminlte.min.js"></script>
+	<script type="text/javascript" src="../js/Frameowrk/BitAdmin.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<style>
+		.content-wrapper .content {
+			padding: 2px 0px 0px 0px;
+		}
+
+		.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+			/*border-bottom-color:#ddd;*/
+			border-bottom:2px solid #3c8dbc;
+			font-weight: bold;
+			/*color: white;*/
+			/*background-color: #3c8dbc;*/
+		}
+
+		.main-sidebar{overflow-y:auto !important}
+
+
+		/*.main-footer {
+			background-color: green;
+			padding: 5px !important;
+		}
+		.fixed .content-wrapper{
+			padding-top: 80px;
+			padding-bottom:-50px;
+		}*/
+
+
+		/*bootstrap怎么设置下拉菜单不点击，改成鼠标悬停直接显示下拉菜单*/
+		.nav > li:hover .dropdown-menu {display: block;}
+	</style>
+
+</head>
+<body  class="hold-transition skin-blue fixed sidebar-mini">
+<input  type="hidden" th:value="${userName}" id="userName"/>
+<input  type="hidden" th:value="${password}" id="password"/>
+<input  type="hidden" th:value="${firstPassword}" id="firstPassword"/>
+
+<!-- Site wrapper -->
+<div class="wrapper" style="margin-top:0px;" id="app">
+	<header class="main-header">
+		<span class="logo">
+			<span class="logo-lg"><b>联兆产前外送系统</b></span>
+		</span>
+		<nav class="navbar navbar-static-top">
+			<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+
+			<div class="navbar-custom-menu" style="display: inline-block;float: right;">
+				<ul class="nav navbar-nav">
+					<li class="dropdown user user-menu">
+						<a href="#" class="dropdown-toggle" > <!--data-toggle="dropdown"-->
+							<img src="../img/user.png" class="user-image" alt="User Image">
+							<span class="hidden-xs" id="logo_UserCode"></span>
+							欢迎您：<span th:text="${userName}"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li class="user-header" >
+								<img src="../img/user.png" class="img-circle" alt="User Image">
+								<p>
+									<span th:text="${userName}"></span>
+									<!--<span id="logo_UserName"></span><span>-</span><span id="logo_DepartmentName"></span>
+									<small id="logo_IDCard"></small>-->
+								</p>
+							</li>
+							<li class="user-body">
+								<div class="row">
+									<div class="col-xs-12 text-right">
+										<small id="logo_Mobile"></small>
+									</div>
+									<div class="col-xs-12 text-right">
+										<small id="logo_Email"></small>
+									</div>
+								</div>
+							</li>
+							<li class="user-footer">
+								<div class="pull-left">
+									<a id="updatePassword" onclick="updatePassword(1)" class="btn btn-default btn-flat">修改密码</a>
+								</div>
+								<div class="pull-right">
+									<a onclick="logOut()" class="btn btn-default btn-flat">退出登录</a>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<!-- Control Sidebar Toggle Button -->
+				</ul>
+			</div>
+
+			<div style="display: inline-block;float: right;height: 50px;line-height: 50px;
+			text-align: right;color: white;margin-right: 3%;">
+				<span>授权单位：</span><span th:text="${AuthorizeName}" id="author_hospital"></span>
+			</div>
+
+		</nav>
+	</header>
+
+
+	<div id="noClick">
+		<aside class="main-sidebar" style="overflow-y: scroll;">
+		<section class="sidebar">
+			<ul class="sidebar-menu tree" data-widget="tree">
+				<li class="treeview" v-for="(u,key) in userRoleMenu">
+					<a href="javascript:void(0);"  @click="addTab1(u)" >
+					<i  :class="u.icons"></i><!--class="fa fa-cog"-->
+						<span v-text="u.menuName"></span>
+						<span class="pull-right-container">
+							<i  v-if ="u.children!=null" class="fa fa-angle-left pull-right  glyphicon glyphicon-chevron-left" ></i>
+						</span>
+					</a>
+					<!--v:if="u.children!=null"-->
+					<ul class="treeview-menu"  v-if="u.children" >
+						<template v-for="(u2,key2) in u.children">
+							<li @click="addTab(u2,u)">
+								<a href="javascript:void(0);">
+									<i  :class="u2.icons"></i>{{u2.menuName}}<!--class="fa fa-anchor"-->
+								</a>
+							</li>
+						</template>
+					</ul>
+				</li>
+				<!--<li class="treeview"><a href="javascript:void(0);"><i class="fa fa-code"></i><span>开发管理</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right glyphicon glyphicon-chevron-left"></i></span></a>
+					<ul class="treeview-menu"><li><a href="javascript:void(0);"><i class="fa fa-reorder"></i>系统菜单</a></li>
+						<li><a href="javascript:void(0);"><i class="fa fa-edit"></i>页面操作</a></li>
+						<li><a href="javascript:void(0);"><i class="fa fa-book"></i>数据字典</a></li>
+					</ul>
+				</li>-->
+			</ul>
+		</section>
+	</aside>
+	</div>
+	<div class="content-wrapper" mode="tab">
+
+		<section class="content">
+			<div class="tab-title" style="position: relative; border-bottom: 1px solid #ddd; padding:0px 5px;">
+				<div>
+					<span id="Up" class="glyphicon glyphicon-chevron-left" style="float:left;margin-top:7px;"></span>
+					<span id="Down" class="glyphicon glyphicon-chevron-right" style="float:right;margin-top:7px;"></span>
+				</div>
+				<ul class="nav nav-tabs" id="page-tabs" style="border-bottom: none;">
+					<li class=""><a href="#home" data-toggle="tab" aria-expanded="false">首页</a></li>
+				</ul>
+			</div>
+			<div class="tab-content" id="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="home">
+					<iframe id="iframe_page_home" style="width: 100%;" src="/home/pageHome" frameborder="0" border="0" marginwidth="0" marginheight="0" scrolling="auto" allowtransparency="true"></iframe>
+				</div>
+			</div>
+		</section>
+	</div>
+	<footer class="main-footer">
+		<div class="pull-right hidden-xs">
+			<b>Version</b> 1.0.0
+		</div>
+
+		<div class="pull-right hidden-xs" style="width: 100%;text-align: center;margin-top: -20px;">
+			<strong>广州市联兆基因科技有限公司</strong>
+		</div>
+
+		<strong>使用单位：</strong><strong th:text="${organizationName}"></strong>
+	</footer>
+</div>
+</body>
+
+
+<script>
+
+
+
+    var map={
+        userRoleMenu: [],
+        ret:'',
+
+    };
+
+    new Vue({
+        el: '#app',
+        data: map,
+	    methods:{
+          addTab:function(menu,u){
+              BitAdmin.addTab({
+                  tabMainName: "page-tabs",
+                  tabName: "page_" + menu.menuId,
+                  tabSign: 'Log',
+                  tabTitle: menu.menuName,
+                  tabUrl: menu.url,
+                  tabContentMainName: "tab-content",
+                  title: u.menuName+ menu.menuName
+              });
+          },
+
+          addTab1:function(u){
+              BitAdmin.addTab({
+                  tabMainName: "page-tabs",
+                  tabName: "page_" + u.menuId,
+                  tabSign: 'Log',
+                  tabTitle: u.menuName,
+                  tabUrl: u.url,
+                  tabContentMainName: "tab-content",
+                  title: u.menuName
+              });
+          }
+
+      }
+    });
+
+
+	function logOut() {
+		location.href="/login/logOut"
+    }
+
+
+	function updatePassword(x){
+
+        BitAdmin.addTab({
+            tabMainName: "page-tabs",
+            tabName: "page_" + "999",
+            tabSign: 'Log',
+            tabTitle: "修改密码",
+            tabUrl: "/userPage/updatePassword?x="+x,
+            tabContentMainName: "tab-content",
+            title: "修改密码"
+        });
+	}
+
+	/*$("#logout").click(function(){
+	    if(confirm("确定退出登录吗？")){
+	        window.location.href="/logout";
+		}
+	})*/
+
+	function authorHospital(){
+	    return $("#author_hospital").text();
+	}
+
+    $(function(){
+        var userName = $("#userName").val();
+        var password = $("#password").val();
+
+        $.get("/login/getLoginMessage",{"userName":userName,"password":password},function(data){
+            map.userRoleMenu=data.userRoleMenu;
+
+        })
+    });
+
+	function forbidEvents(){
+        $('#noClick').css("pointer-events","none")
+	}
+
+ /*   $("li").click(function () {
+        if (menu.Url != undefined && menu.Url != null && menu.Url != "") {
+            BitAdmin.Pages[menu.PageSign] = {
+                ModuleName: menu.ModuleName,
+                PageName: menu.Name,
+                Description: menu.Description
+            };
+            if (BitAdmin.mode == "tab") {
+                BitAdmin.addTab({
+                    tabMainName: "page-tabs",
+                    tabName: "page_" + menu.ID,
+                    tabSign: menu.PageSign,
+                    tabTitle: menu.Name,
+                    tabUrl: menu.Url,
+                    tabContentMainName: "tab-content",
+                    title: title + menu.Name
+                });
+            } else if (BitAdmin.mode == "iframe") {
+                $("[mode=" + BitAdmin.mode + "] iframe").attr("src", menu.Url);
+            } else if (BitAdmin.mode == "load") {
+                $("[mode=" + BitAdmin.mode + "]").load(menu.Url);
+            }
+        }
+    });*/
+
+    if (BitAdmin.mode == "iframe") {
+        $("[mode=" + BitAdmin.mode + "] iframe").on("load", function () {
+            $(this).height(BitAdmin.getIframeHeight());
+        });
+    }
+    else if (BitAdmin.mode == "tab") {
+        $("[mode=" + BitAdmin.mode + "] iframe").on("load", function () {
+            $(this).height(BitAdmin.getIframeHeight());
+        });
+    }
+
+/*
+    BitAdmin.IsLogin(function () {
+        $(".user").GetUserInfo();
+        $(".sidebar-menu").GetMenus();
+    });
+*/
+
+    $(function () {
+        $(window).resize(function () {
+            var _iframe = $("[mode=" + BitAdmin.mode + "] iframe");
+            if (BitAdmin.mode == "iframe") {
+                _iframe.height(BitAdmin.getIframeHeight());
+            }
+            else if (BitAdmin.mode == "tab") {
+                _iframe.height(BitAdmin.getIframeHeight());
+            }
+        });
+    });
+
+
+
+    $(function(){
+
+        if( $("#firstPassword").val()=='first' ){
+            updatePassword(0);
+        }
+    })
+
+
+</script>
+
+</html>

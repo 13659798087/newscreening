@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+<!--模态框-->
+<link rel="stylesheet" href="../css/jquery.popup.css" />
+<script src="../js/jquery.popup.js"></script>
+<script src="../js/jquery.popup.dialog.js"></script>
+
+<!--ztree的css、js -->
+<link rel="stylesheet" href="../css/demo.css" type="text/css" />
+<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
+<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="../js/jquery.ztree.exedit.js"></script>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
+	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+<style>
+	.leftTitle{float: left;width: 7%;text-align: center;}
+	.inputRight{width: 20%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.pad1{padding: 4px 10px;font-size: 14px;margin-left: 0.6%;background-color: #337ab7;cursor: pointer;}
+	.roleLeft{margin-left: 12%;}
+
+	.ztree::-webkit-scrollbar{width:4px;}
+	.ztree::-webkit-scrollbar-track{background-color:#bee1eb;}
+	.ztree::-webkit-scrollbar-thumb{background-color:#1ab394;}
+	.ztree::-webkit-scrollbar-thumb:hover {background-color:#9c3}
+	.ztree::-webkit-scrollbar-thumb:active {background-color:#00aff0}
+
+
+	a {text-decoration:none;}
+	body {
+		font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 14px;
+	}
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增签名</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑签名</h3>
+
+	<form  id="uploadFile" method="post">
+
+		<input type="hidden"  th:value="${id}" id="id"  name="id"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div>
+				<div  class="leftTitle" >签名名称：</div>
+				<input type="text"  name="sp_name" id="sp_name" th:value="${sp_name}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="clear: both;"></div>
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div>
+				<div class="leftTitle" >电子签名：</div>
+				<input  type="file" name="file" multiple="multiple"  id="sp_pic" />
+				<div style="margin-top: 2%;margin-left: 7%;" >
+					<img id="image" th:src="@{/signpic/Pictureshows(id=${id})}" />
+				</div>
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/signpic/signpic">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+    $(function(){
+		debugger;
+        if( $("#id").val()=="" ){
+           $("#image").attr("src","");
+		}
+
+	});
+
+	var map={
+        yesMenu: [],
+        menu: [],
+      //  organization: {},
+	};
+
+	new Vue({
+		el: '#app',
+		data: map
+	});
+
+
+    $("#sureAdd").click(function(){
+        debugger;
+        var id = $("#id").val();
+        var sp_name = $("#sp_name").val();
+        var sp_pic = $("#sp_pic").val();
+
+        if (sp_name.trim()==""){
+            var txt= "签名名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        if (sp_pic.trim()==""){
+            var txt= "电子签名不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+
+        else if(id==""){
+            //验证此单位是否已录入此用户
+            $.get("/signpic/validateSign",{"sp_name":sp_name},function(data){
+                if(data=='1'){
+                    var txt= "签名已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                }
+                else{
+                    var formData = new FormData($( "#uploadFile" )[0]);
+                    $.ajax({
+						type: "POST",
+						contentType: false,
+						processData: false,
+						url:"/signpic/uploadPicture",
+						data:formData,
+						async: false,
+						error: function(request) {
+                            var txt= "出错了";
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+						},
+						success: function(data) {
+							$("#image").attr("src","/signpic/Pictureshows?id="+data.id);
+
+                            var sign = data.sign;
+                            if("edit"==sign){
+                                $(".centerEdit").show();
+                                $(".centerEdit").fadeOut(3000);
+                            }
+                            if("add"==sign){
+                                $(".centerAdd").show();
+                                $(".centerAdd").fadeOut(3000);
+                            }
+
+						}
+                    });
+                }
+            })
+        }
+
+        else if(id!=""){
+            var formData = new FormData($( "#uploadFile" )[0]);
+            $.ajax({
+                type: "POST",
+                contentType: false,
+                processData: false,
+                url:"/signpic/uploadPicture",
+                data:formData,
+                async: false,
+                error: function(request) {
+                    var txt= "出错了";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                },
+                success: function(data) {
+                    $("#image").attr("src","/signpic/Pictureshows?id="+data.id);
+
+                    var sign = data.sign;
+                    if("edit"==sign){
+                        $(".centerEdit").show();
+                        $(".centerEdit").fadeOut(3000);
+                    }
+                    if("add"==sign){
+                        $(".centerAdd").show();
+                        $(".centerAdd").fadeOut(3000);
+                    }
+
+                }
+            });
+        }
+
+    });
+
+    $("#getRole").click(function(){
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+	});
+
+	$("#addMenu").click(function(){
+	    $("#sign1").html('');
+
+	    var array = [];
+
+	    $(".checkInput").each(function(i,e){
+	        if(e.checked==true){
+                var val = $(e).next().text();
+                array.push( $(e).next().attr("id") );
+				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
+			}
+		});
+
+        $("#menus").val( array.toString() );
+
+	});
+
+
+
+	$("#selectPart").click(function(){
+		$.get("/organization/getTree",{},function(zNodes){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#selectAll").bind("click", selectAll);
+		})
+
+
+
+
+	});
+
+
+    //以下是zTree的js代码
+
+    /*zTree   start */
+
+    var setting = {
+
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+			onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+
+        }
+    };
+
+    function onClick(e,treeId, treeNode){
+        debugger;
+        //将选中的单位的id赋给隐藏的input框
+        $("#organizationId").val(treeNode.id);
+        $("#organizationName").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        debugger;
+        alert(msg);
+    }
+    var log, className = "dark";
+
+    function getTime() {
+        var now= new Date(),
+            h=now.getHours(),
+            m=now.getMinutes(),
+            s=now.getSeconds(),
+            ms=now.getMilliseconds();
+        return (h+":"+m+":"+s+ " " +ms);
+    }
+
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+
+    /*zTree   end */
+
+
+
+	/*function checkTo(e){
+	    if( $(e).find("input").get(0).checked==true ){  //js
+            $(e).find("input").attr("checked",false);
+		}else{
+            $(e).find("input").attr("checked",true);
+		}
+	}*/
+
+    function checkTo(e){
+        if( $(e).find("input").is(":checked")==true ){  //jquery
+            $(e).find("input").attr("checked",false);
+        }else{
+            $(e).find("input").attr("checked",true);
+        }
+    }
+
+
+	/*]]>*/
+</script>
+
+</html>
