@@ -2,6 +2,13 @@
 .fixed-table-body {height: 430px;}
 .fixed-table-pagination{margin-top: 420px;}
 
+/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+.xcConfirm .popBox .ttBox {
+    height: 60px;
+    line-height: 30px;
+    padding: 14px 30px;
+    border-bottom: solid 1px #eef0f1;
+}
 
 td{white-space:nowrap;}
 .menu_ul ul li:hover {background: #ddd;}

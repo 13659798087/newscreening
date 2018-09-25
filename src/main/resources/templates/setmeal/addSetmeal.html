@@ -20,26 +20,17 @@
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
 
-	<!--格式化时间.控制input只能输入金额-->
+	<!--封装的方法-->
 	<script src="../js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
 
 <!--模态框-->
 <link rel="stylesheet" href="../css/jquery.popup.css" />
 <script src="../js/jquery.popup.js"></script>
 <script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
 
 <style>
 	.leftTitle{float: left;width: 19%;text-align: right;}
@@ -226,18 +217,15 @@
         var roles = $("#roles").val();
 
         if (s_code.trim()==""){
-            var txt= "代码不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("代码不能为空！");
             return false;
         }
 		if (s_name.trim()==""){
-            var txt= "套餐名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("套餐名称不能为空！");
             return false;
 		}
         if (roles == ""){
-            var txt= "套餐组别不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("套餐组别不能为空！");
             return false;
 		}
 
@@ -245,8 +233,7 @@
 			//验证此单位是否已录入此用户
 			$.get("/setmeal/validateSetmeal",{"s_code":s_code,"type":1},function(data){
 				if(data=='1'){
-                    var txt= "此套餐已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("此套餐已存在");
 				}
 				else{
                     $("#signForm").submit();
@@ -258,8 +245,7 @@
             $.get("/combine/validateCombine",{"s_code":s_code,"type":2},function(data){
                 debugger;
                 if(data=='2'){
-                    var txt= "此套餐已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("此套餐已存在");
 				}
                 else{
                     $("#signForm").submit();

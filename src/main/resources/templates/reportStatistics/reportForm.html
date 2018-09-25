@@ -40,15 +40,11 @@
 	<script src="../js/jquery.popup.js"></script>
 	<script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--格式化时间-->
+	<!--封装的方法-->
 	<script src="../js/until.sdk.format.js"></script>
-
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
 
-	<!--<style>
-		.bootstrap-table{width:90%;}
-	</style>-->
 </head>
 <body>
 
@@ -244,8 +240,8 @@
         var oDate2 = new Date( $("#a_lr_date2").val() );
         if(oDate1!="" && oDate2!="" ){
 			if( oDate1.getTime() > oDate2.getTime() ){
-				alert("开始时间不能小于截止时间");
-				return;
+                windowPoint("开始时间不能小于截止时间");
+				return false;
 			}
 		}
         datagrid.bootstrapTable("refresh",{pageNumber:1});
@@ -263,17 +259,19 @@
     function deleteSelect(){
         var a= $("#table").bootstrapTable('getSelections');
         if(a.length==0){
-            alert("请选择要删除的信息！");
+            windowPoint("请选择要删除的信息！");
         }else{
-            if( confirm("确定删除勾选的录入信息吗？") ){
+            windowPoint("确定删除勾选的录入信息吗？");
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 $(a).each(function(i,e){
                     if( e.a_flag == "1"){
                         var a_id = e.a_id;
                         $.get("/applyinfo/deleteRowById",{"a_id":a_id},function(data){ })
-					}
+                    }
                 });
                 datagrid.bootstrapTable("refresh");
-            }
+            },false);
+
         }
     }
 

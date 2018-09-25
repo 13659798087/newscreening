@@ -50,15 +50,28 @@ public class LoginController {
     /**
      * shiro
      */
+    //宜春登录地址：http://localhost:8092
+    //赣州登录地址：http://localhost:8092/login/login?code=gzfy
+    //赣州登录地址：http://localhost:8092?code=gzfy
     @RequestMapping("/login")
     public String login(String code,HttpServletRequest request,Model model) {
-        request.getSession().setAttribute("projectCode",code);
-
+        if(code==null){ //为了解决宜春正在用的系统不用更改访问地址为进行的判断
+            request.getSession().setAttribute("projectCode","ycfy");
+        }else{
+            request.getSession().setAttribute("projectCode",code);
+        }
+        //request.getSession().setAttribute("projectCode",code);//到时宜春的登录地址还会更改，这个就开出来，前面的if else就注释掉
         model.addAttribute("organizationName",organizationServices.organizationName());//筛查中心名称
 
         return view+"login";//返回登录页面
-
     }
+
+    /*@RequestMapping("/login")
+    public String login(String code,HttpServletRequest request,Model model) {
+        request.getSession().setAttribute("projectCode",code);//到时宜春的登录地址还会更改，这个就开出来，前面的if else就注释掉
+        model.addAttribute("organizationName",organizationServices.organizationName());//筛查中心名称
+        return view+"login";//返回登录页面
+    }*/
 
     @RequestMapping("/index")
     public String loginUser(Model model, String username,String password,HttpServletRequest request) {
@@ -156,48 +169,47 @@ public class LoginController {
         ImageIO.write(util.getImage(), "jpg", response.getOutputStream());
     }
 
-
     @ResponseBody
     @RequestMapping("/loginValidate")
-    public Map loginValidate(HttpSession session,String username,String password,String validCode) {
+    public Map loginValidate(HttpServletRequest request,String username,String password,String validCode) {
+
+        HttpSession session = request.getSession();
         Map map = new HashMap();
         int errorCount = 0;
         UserInfo us = userServices.userloginMessage(username);
-        if(us!=null){
-            errorCount = us.getDayLoginError();//每天登录错误次数
+        String codeSession = (String) session.getAttribute("code");
+
+        if(!validCode.equalsIgnoreCase(codeSession)){
+            map.put("msg",3);//验证码错误
         }
-        if(errorCount >= errorFreezing){// errorCount>3就冻结账号
-            map.put("lock","yes");
-        }else{
-            //EncryptUtil des = new EncryptUtil(secretKey, "utf-8");
-            //password = des.encode(password);//加密再和数据库对比
+        else if(us==null){
+            map.put("msg",1); //用户名不存在
+        }
+        else if(us!=null){
+            //用户存在，判断该账号是否被锁定
+            errorCount = us.getDayLoginError();
+            if(errorCount >= errorFreezing){//每天登录错误次数与设定的10次对比
+                map.put("msg",2);//账号被锁定
+            }else{
+                //EncryptUtil des = new EncryptUtil(secretKey, "utf-8");
+                //password = des.encode(password);//加密再和数据库对比
+                int i = userServices.loginValidate(username,password);
+                if(i==0){//i=0,不存在此用户名密码，即用户名或密码不正确
 
-            int i = userServices.loginValidate(username,password);
-            if(i==1){//如果用户密码正确，再看验证码是否正确
-                map.put("errUser","1");
-                String codeSession = (String) session.getAttribute("code");
-                if(!StringUtils.isEmpty(validCode)){
-                    if(!validCode.equalsIgnoreCase(codeSession)){
-                        map.put("errCode","0");//验证码错误
-                    }else{
-                        map.put("errCode","1");//验证码正确
+                    UserInfo userlogin = userServices.userloginMessage(username);
+                    if(null != userlogin){
+                        userServices.addOneCount(username); //增加登录错误+1
+                        int c = userServices.userloginMessage(username).getDayLoginError();//每天登录错误次数
+                        if(c<=4){
+                            map.put("msg",4);//用户名存在，密码输入不对，登录错误次数少于5，页面提示用户名或密码错误
+                        }else if(c>4 && c<errorFreezing){
+                            map.put("msg",5);//提示登录错误已c次，超过10次该账号将被锁定
+                            map.put("errCount",c);
+                        }
                     }
-                }
-            }else{ //用户名和密码不同时正确
-                map.put("errUser","0");
-            }
 
-            if( i==0 ){ //说明输入的用户名和密码不正确
-                UserInfo userlogin = userServices.userloginMessage(username);
-                if(null != userlogin){
-                    userServices.addOneCount(username); //增加登录错误+1
-                    int c = userServices.userloginMessage(username).getDayLoginError();//每天登录错误次数
-                    if(c<errorFreezing){
-                        map.put("lock","no");
-                    }else{
-                        map.put("lock","yes");
-                    }
                 }
+
             }
         }
 
@@ -221,7 +233,7 @@ public class LoginController {
 
     // 退出登录,session失效
     @RequestMapping("/logOut")
-    public String logOut() {
+    public String logOut(HttpServletRequest request) {
         String projectCode = SSO.getProjectCode();
         Subject subject = SecurityUtils.getSubject();
         //subject.logout();

@@ -36,24 +36,10 @@
 	<script src="../js/jquery.popup.js"></script>
 	<script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--格式化时间.控制input只能输入金额-->
+	<!--封装的方法-->
 	<script src="../js/until.sdk.format.js"></script>
-
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
-
-	<!--弹出框 start-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
 
 </head>
 <body>
@@ -117,8 +103,7 @@
             data:formData,
             async: false,
             error: function(request) {
-                var txt= "出错了";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                windowError("出错了");
             },
             success: function(data) {
                 $("#image").attr("src","/signpic/Pictureshows?id="+data.id);
@@ -320,16 +305,13 @@
     window.operateEvents = {
         'click .RoleOfDel': function (e, value, row, index) {
             var mb_name = row.mb_name;
-
-            var txt= "确定删除"+mb_name+"模板吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定删除"+mb_name+"模板吗？");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var mb_id = row.mb_id;
                 $.get("/mb/deleteRow",{"mb_id":mb_id},function(data){
                     datagrid.bootstrapTable("refresh");
-                    var txt=  "删除成功！";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                    windowSuccess("删除成功！");
                 })
             },false);
 
@@ -342,8 +324,7 @@
         'click .RoleOfStart': function (e, value, row, index) {
             var mb_name = row.mb_name;
 
-            var txt= "确定启用"+mb_name+"模板吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定启用"+mb_name+"模板吗？");
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var mb_id = row.mb_id;
                 $.get("/mb/changeFlag",{"mb_id":mb_id,"mb_flag":'0'},function(data){
@@ -354,8 +335,7 @@
         'click .RoleOfEnd': function (e, value, row, index) {
             var mb_name = row.mb_name;
 
-            var txt= "确定停用"+mb_name+"模板吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定停用"+mb_name+"模板吗？");
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var mb_id = row.mb_id;
                 $.get("/mb/changeFlag",{"mb_id":mb_id,"mb_flag":'1'},function(data){

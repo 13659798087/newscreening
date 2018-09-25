@@ -32,18 +32,10 @@
 <script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
 <script type="text/javascript" src="../js/jquery.ztree.exedit.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
 
 <style>
 	.leftTitle{float: left;width: 7%;text-align: center;}
@@ -146,13 +138,11 @@
         var sp_pic = $("#sp_pic").val();
 
         if (sp_name.trim()==""){
-            var txt= "签名名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("签名名称不能为空！");
             return false;
         }
         if (sp_pic.trim()==""){
-            var txt= "电子签名不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("电子签名不能为空！");
             return false;
         }
 
@@ -160,8 +150,7 @@
             //验证此单位是否已录入此用户
             $.get("/signpic/validateSign",{"sp_name":sp_name},function(data){
                 if(data=='1'){
-                    var txt= "签名已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("签名已存在");
                 }
                 else{
                     var formData = new FormData($( "#uploadFile" )[0]);
@@ -173,8 +162,7 @@
 						data:formData,
 						async: false,
 						error: function(request) {
-                            var txt= "出错了";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                            windowError("出错了");
 						},
 						success: function(data) {
 							$("#image").attr("src","/signpic/Pictureshows?id="+data.id);
@@ -205,8 +193,7 @@
                 data:formData,
                 async: false,
                 error: function(request) {
-                    var txt= "出错了";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                    windowError("出错了");
                 },
                 success: function(data) {
                     $("#image").attr("src","/signpic/Pictureshows?id="+data.id);

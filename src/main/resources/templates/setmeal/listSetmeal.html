@@ -36,24 +36,10 @@
 	<script src="../js/jquery.popup.js"></script>
 	<script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--格式化时间-->
+	<!--封装的方法-->
 	<script src="../js/until.sdk.format.js"></script>
-
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
 
 </head>
 <body>
@@ -288,15 +274,13 @@
     window.operateEvents = {
         'click .RoleOfB': function (e, value, row, index) {
             var s_name = row.s_name;
-            var txt= "确定删除"+s_name+"吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定删除"+s_name+"吗？");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var s_code = row.s_code;
                 $.get("/setmeal/deleteSetmeal",{"s_code":s_code},function(data){
                     datagrid.bootstrapTable("refresh");
-                    var txt=  "删除成功！";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success); //弹出框
+                    windowSuccess("删除成功！");
                 })
             },false);
 

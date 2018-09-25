@@ -31,31 +31,20 @@
 	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
 	<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
 
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
 
 	<style>
 		.leftTitle{float: left;width: 7%;text-align: center;}
 		.inputRight{width: 18%;float: left;}
-
 		.footer{
 			height: 180px;
 			width: 100%;
 			position: fixed;
 			bottom: 0;
 		}
-
 		.pad1{padding: 0px 4px;font-size: 14px;color: white;border-radius: 4px;display: inline-block;
 			margin-left: 0.6%;background-color: #337ab7;cursor: pointer;margin-top: 0.3%;}
 
@@ -165,7 +154,6 @@
 
 
 <SCRIPT type="text/javascript">
-
 
 
     $(document).ready(function(){
@@ -373,13 +361,11 @@
         var roleName = $("#roleName").val();
         var roleMune = $("#sign1").text();
         if (roleName.trim()==""){
-            var txt= "角色名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("角色名称不能为空！");
             return false;
         }
         if (roleMune == ""){
-            var txt= "角色菜单不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("角色菜单不能为空！");
             return false;
         }
 

@@ -27,24 +27,15 @@
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
 
-<!--模态框-->
-<link rel="stylesheet" href="../css/jquery.popup.css" />
-<script src="../js/jquery.popup.js"></script>
-<script src="../js/jquery.popup.dialog.js"></script>
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
 
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--模态框-->
+	<link rel="stylesheet" href="../css/jquery.popup.css" />
+	<script src="../js/jquery.popup.js"></script>
+	<script src="../js/jquery.popup.dialog.js"></script>
 
 <style>
 	.leftTitle{float: left;width: 24%;text-align: right;}
@@ -105,7 +96,7 @@
 
 			<div style="float: left;width: 45%;"  th:if="${type=='a'}">
 				<div class="leftTitle" >密码：</div>
-				<input type="text" name="password" id="password" value="123456" class="form-control inputRight" />
+				<input type="text" name="password" readonly="readonly" id="password" value="123456" class="form-control inputRight" />
 			</div>
 		</div>
 
@@ -247,26 +238,22 @@
         var userId = $("#userId").val();
 
 		if (userName.trim()==""){
-            var txt= "用户名不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("用户名不能为空！");
             return false;
 		}
-        if (password.trim()==""){
-            var txt= "用户名密码不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+       /* if (password.trim()==""){
+            windowPoint("用户名密码不能为空！");
             return false;
-		}
+		}*/
         if (userRole == ""){
-            var txt= "用户角色不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("用户角色不能为空！");
             return false;
 		}
         if (organizationName=="" ){
 		    if( $("#userId").val()=="1" || userId!=""){
                 $("#signForm").submit();
 			}else{
-                var txt= "所属机构不能为空！";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("所属机构不能为空！");
                 return false;
 			}
 		}
@@ -276,8 +263,7 @@
 			var organizationId = $("#organizationId").val();
 			$.get("/userPage/validateUser",{"organizationId":organizationId,"userName":userName},function(data){
 				if(data=='1'){
-                    var txt= "此用户已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("此用户已存在");
 				}
 				else{
                     $("#signForm").submit();

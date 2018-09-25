@@ -21,7 +21,7 @@ public interface OrganizationDao {
     @Update("update organization set isDelete= 1 where id = #{id} ")
     void removeNode(String id);
 
-    @Select("SELECT * from organization where id=#{id} ")
+    @Select("SELECT * from organization where id=#{id} and isDelete = 0 ")
     Organization getOrg(String id);
 
     @Select("SELECT * from organization where isDelete=0 ")

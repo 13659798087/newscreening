@@ -25,31 +25,24 @@
 <script src="../js/jquery.popup.js"></script>
 <script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--格式化时间-->
+	<script src="../js/until.sdk.format.js"></script>
+
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
 
 <style>
 	.leftTitle{float: left;width: 19%;text-align: right;}
 	.inputRight{width: 70%;float: left;}
-
 	.footer{
 		height: 180px;
 		width: 100%;
 		position: fixed;
 		bottom: 0;
 	}
-
 </style>
+
 </head>
 <body>
 
@@ -136,8 +129,7 @@
         var au_name = $("#au_name").val();
 
         if (au_name.trim()==""){
-            var txt= "名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("名称不能为空！");
             return false;
         }
 
@@ -145,8 +137,7 @@
             //验证此单位是否已录入此用户
             $.get("/authUser/validateAuthUser",{"au_name":au_name},function(data){
                 if(data=='1'){
-                    var txt= "医院名称已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("医院名称已存在");
                 }
                 else{
                     $("#signForm").submit();

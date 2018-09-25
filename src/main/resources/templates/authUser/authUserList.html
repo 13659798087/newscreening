@@ -42,19 +42,6 @@
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
 
-    <!--弹出框-->
-    <link rel="stylesheet"  href="../css/xcConfirm.css"/>
-    <script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-    <style type="text/css">
-        /*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-        .xcConfirm .popBox .ttBox {
-            height: 60px;
-            line-height: 30px;
-            padding: 14px 30px;
-            border-bottom: solid 1px #eef0f1;
-        }
-    </style>
-
 </head>
 <body>
 
@@ -98,8 +85,7 @@
             data:formData,
             async: false,
             error: function(request) {
-                var txt= "出错了";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                windowError("出错了");
             },
             success: function(data) {
                 $("#image").attr("src","/signpic/Pictureshows?id="+data.id);
@@ -288,15 +274,13 @@
     window.operateEvents = {
         'click .RoleOfB': function (e, value, row, index) {
 
-            var txt= "确定删除该记录吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定删除该记录吗？");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
 
                 $.get("/authUser/deleteAuthUser",{"au_code":row.au_code},function(data){
                     datagrid.bootstrapTable("refresh");
-                    var txt= "删除成功！";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                    windowSuccess("删除成功！");
                 })
 
             },false);

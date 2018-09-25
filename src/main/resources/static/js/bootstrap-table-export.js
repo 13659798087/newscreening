@@ -1,4 +1,3 @@
-
 /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * extensions: https://github.com/kayalshri/tableExport.jquery.plugin
@@ -6,7 +5,6 @@
 
 (function ($) {
     'use strict';
-    var sprintf = $.fn.bootstrapTable.utils.sprintf;
 
     var TYPE_NAME = {
         json: 'JSON',
@@ -16,21 +14,16 @@
         txt: 'TXT',
         sql: 'SQL',
         doc: 'MS-Word',
-        excel: 'MS-Excel',
-        powerpoint: 'MS-Powerpoint',
+        excel: 'Ms-Excel',
+        powerpoint: 'Ms-Powerpoint',
         pdf: 'PDF'
     };
 
     $.extend($.fn.bootstrapTable.defaults, {
         showExport: false,
-        exportDataType: 'basic', // basic, all, selected
         // 'json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'powerpoint', 'pdf'
         exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel'],
         exportOptions: {}
-    });
-
-    $.extend($.fn.bootstrapTable.defaults.icons, {
-        export: 'glyphicon-export icon-share'
     });
 
     var BootstrapTable = $.fn.bootstrapTable.Constructor,
@@ -49,11 +42,9 @@
             if (!$export.length) {
                 $export = $([
                     '<div class="export btn-group">',
-                        '<button class="btn btn-default' +
-                            sprintf(' btn-%s', this.options.iconSize) +
-                            ' dropdown-toggle" ' +
+                        '<button class="btn btn-default dropdown-toggle" ' +
                             'data-toggle="dropdown" type="button">',
-                            sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.export),
+                            '<i class="glyphicon glyphicon-export icon-share"></i> ',
                             '<span class="caret"></span>',
                         '</button>',
                         '<ul class="dropdown-menu" role="menu">',
@@ -82,30 +73,10 @@
                 });
 
                 $menu.find('li').click(function () {
-                    var type = $(this).data('type'),
-                        doExport = function () {
-                            that.$el.tableExport($.extend({}, that.options.exportOptions, {
-                                type: type,
-                                escape: false
-                            }));
-                        };
-
-                    if (that.options.exportDataType === 'all' && that.options.pagination) {
-                        that.$el.one('load-success.bs.table page-change.bs.table', function () {
-                            doExport();
-                            that.togglePagination();
-                        });
-                        that.togglePagination();
-                    } else if (that.options.exportDataType === 'selected') {
-                        var data = that.getData(),
-                            selectedData = that.getAllSelections();
-
-                        that.load(selectedData);
-                        doExport();
-                        that.load(data);
-                    } else {
-                        doExport();
-                    }
+                    that.$el.tableExport($.extend({}, that.options.exportOptions, {
+                        type: $(this).data('type'),
+                        escape: false
+                    }));
                 });
             }
         }

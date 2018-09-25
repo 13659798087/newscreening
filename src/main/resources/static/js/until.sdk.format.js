@@ -1,3 +1,18 @@
+/*弹出框js，css*/
+document.write("<script language=javascript src='../js/xcConfirm.js'></script>");
+document.write("<link rel='stylesheet'  href='../css/xcConfirm.css'></script>");
+
+//提示框
+var windowPoint = function(txt){
+    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+};
+var windowError = function(txt){
+    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+};
+var windowSuccess = function(txt){
+    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+};
+
 
 /*<![CDATA[*/
 
@@ -59,9 +74,9 @@
     };
 
 
-   /*
-   格式化时间 yyyy-MM-dd HH:mm:ss
-    */
+/*
+格式化时间 yyyy-MM-dd HH:mm:ss
+ */
     var timestampFormat = function(timestamp){
         // 根据 timestamp 值初始化一个 Date 对象
         var tmpDate = new Date(timestamp);
@@ -97,6 +112,8 @@
          +(tmpDate.getMonth()+1)+"-"
          +tmpDate.getDate();
    }
+
+
 
 
 /*

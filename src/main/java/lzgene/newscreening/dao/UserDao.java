@@ -40,7 +40,7 @@ public interface UserDao {
             "SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*,o.name, (SELECT '['+r.roleName+']' FROM userRole ur " +
             "left join  role r  on ur.roleId=r.roleId " +
             "and ur.userId=u.userId  FOR xml path ('') ) listRole " +
-            "from userinfo u left join organization o on u.organizationId=o.id where 1=1 " +
+            "from userinfo u left join organization o on u.organizationId=o.id and o.isDelete=0  where 1=1 " +
             "<if test='userName !=null &amp;&amp; userName !=\"\"'> and userName like '%${userName}%' </if>"+
             "<if test='organizationName !=null &amp;&amp; organizationName !=\"\"'> and o.name like '%${organizationName}%' </if>"+
             ")AS t WHERE  t.num BETWEEN #{pageNo} AND #{pageSize} </script> ")
@@ -55,7 +55,7 @@ public interface UserDao {
             "SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*,o.name, (SELECT '['+r.roleName+']' FROM userRole ur " +
             "left join  role r  on ur.roleId=r.roleId " +
             "and ur.userId=u.userId  FOR xml path ('') ) listRole " +
-            "from userinfo u left join organization o on u.organizationId=o.id where 1=1 " +
+            "from userinfo u left join organization o on u.organizationId=o.id and o.isDelete=0 where 1=1 " +
             "<if test='userName !=null &amp;&amp; userName !=\"\"'> and userName like '%${userName}%' </if>"+
             "<if test='organizationName !=null &amp;&amp; organizationName !=\"\"'> and o.name like '%${organizationName}%' </if>"+
             ")AS t </script> ")

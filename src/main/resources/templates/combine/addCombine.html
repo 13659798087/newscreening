@@ -17,29 +17,19 @@
 <script src="../js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
-	<!-- 引入vue.js -->
-	<script type='text/javascript'   src='../js/vue.min.js' ></script>
-
-	<!--格式化时间.控制input只能输入金额-->
-	<script src="../js/until.sdk.format.js"></script>
+<!-- 引入vue.js -->
+<script type='text/javascript'   src='../js/vue.min.js' ></script>
 
 <!--模态框-->
 <link rel="stylesheet" href="../css/jquery.popup.css" />
 <script src="../js/jquery.popup.js"></script>
 <script src="../js/jquery.popup.dialog.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--格式化时间.控制input只能输入金额-->
+	<script src="../js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='../css/table.height.css'/>
+
 
 <style>
 	.leftTitle{float: left;width: 19%;text-align: right;}
@@ -162,9 +152,7 @@
 
 <script>
 
-
     $(function(){
-
         var sign = $("#sign").val();
         if("edit"==sign){
             $(".centerEdit").show();
@@ -236,19 +224,16 @@
 		var c_rpt_title = $("#c_rpt_title").val();
 
         if (c_code.trim()==""){
-            var txt= "代码不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("代码不能为空！");
             return false;
         }
 		if (c_name.trim()==""){
-            var txt= "组别名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("组别名称不能为空！");
             return false;
 		}
 
         if (c_rpt=="" || c_rpt==null){
-            var txt= "报表名称不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("报表名称不能为空！");
             return false;
         }
 
@@ -256,8 +241,7 @@
 			//验证此单位是否已录入此用户
 			$.get("/combine/validateCombine",{"c_code":c_code,"type":1},function(data){
 				if(data=='1'){
-                    var txt= "此组别已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("此组别已存在");
 				}
 				else{
                     $("#signForm").submit();
@@ -268,8 +252,7 @@
         else if(hide_code!=""){//编辑
             $.get("/combine/validateCombine",{"c_code":c_code,"type":2},function(data){
                 if(data=='2'){
-                    var txt= "此组别已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("此组别已存在");
 				}
                 else{
                     $("#signForm").submit();

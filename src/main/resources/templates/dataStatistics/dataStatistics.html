@@ -39,8 +39,7 @@
 
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
-	<!--格式化时间-->
-	<script src="../js/until.sdk.format.js"></script>
+
 
 
 	<!--ztree的css、js -->
@@ -48,21 +47,11 @@
 	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
 	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
 
+
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
 
 	<style>
 		.fixed-table-body {height: 300px;}
@@ -282,25 +271,19 @@
     function query() {
         debugger;
         if(querySrc==""){
-			//alert("请选择要查询的统计信息");
-            var txt= "请选择要查询的统计信息";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请选择要查询的统计信息");
 			return false
 		}
         var oDate1 = new Date( $("#c_a_date1").val() );
         var oDate2 = new Date( $("#c_a_date2").val() );
         if(oDate1!="" && oDate2!="" ){
             if( oDate1.getTime() > oDate2.getTime() ){
-                //alert("开始时间不能小于截止时间");
-                var txt= "开始时间不能小于截止时间";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("开始时间不能小于截止时间");
                 return false;
             }
         }
         if( $("#c_a_date1").val().trim()=="" &&  $("#c_a_date2").val().trim()!="" || $("#c_a_date1").val().trim()!="" &&  $("#c_a_date2").val().trim()=="" ){
-            //alert("请输入日期范围");
-            var txt= "请输入日期范围";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请输入日期范围");
             return false;
         }
 		if(querySrc!=""){
@@ -393,9 +376,7 @@
             var oDate1 = new Date(); //获取当前时间
             var oDate2 = new Date(date);//控件选中的时间
             if(oDate1.getTime() > oDate2.getTime()){
-                //alert("活动开始时间不能小于当前时间！");
-                var txt= "活动开始时间不能小于当前时间！";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("活动开始时间不能小于当前时间！");
                 $("#endTime").val($("#egoTime").val());
             }else{
                 $.get("/sign/endTime",{"securitycheckSignId":securitycheckSignId,"endTime":date},function(data){ })

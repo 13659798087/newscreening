@@ -49,27 +49,11 @@
 
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
-	<!--格式化时间-->
-	<script src="../js/until.sdk.format.js"></script>
 
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
-
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-
-		.butClass {padding: 6px 10px;margin-left: 3% !important;width: 115px;}
-	</style>
 
 	<style>
 		.fixed-table-body {height: 290px;}
@@ -88,7 +72,7 @@
 			margin-top: 0px;
 			margin-bottom: 3px;
 		}
-
+		.butClass {padding: 6px 10px;margin-left: 3% !important;width: 115px;}
 		body,td,th {font-family: Verdana, Arial, Helvetica, sans-serif;}
 
 		.creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
@@ -299,8 +283,7 @@
 
         var allSelect = $("#table").bootstrapTable('getSelections');
         if (allSelect.length == 0) {
-            var txt=  "请选择要打印的信息！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm); //弹出框
+            windowPoint("请选择要打印的信息！");
         } else {
             var dpArray = [];
             var wcArray = [];
@@ -350,8 +333,7 @@
                 str+='{' + dpjyArray[0].split(":")[1] + '}';
             }
 
-            var txt= "将打开 "+str+num+" 个窗口";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("将打开 "+str+num+" 个窗口");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var authorHospital = parent.window.authorHospital();
@@ -391,7 +373,7 @@
 
         var allSelect= $("#table").bootstrapTable('getSelections');
         if(allSelect.length==0){
-            window.wxc.xcConfirm("请选择要下载的信息！", window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请选择要下载的信息！");
         }else{
             var array = [];
             $.each(allSelect,function(index,e){
@@ -766,13 +748,14 @@
 
         if(oDate1!="" && oDate2!="" ){
             if( oDate1.getTime() > oDate2.getTime() ){
-                alert("开始时间不能小于截止时间");
+                windowPoint("开始时间不能小于截止时间");
                 return false;
             }
         }
 
         if($("#c_a_date1").val()!="" && $("#c_a_date2").val()=="" || $("#c_a_date1").val()=="" && $("#c_a_date2").val()!=""){
             alert("请同时输入开始时间和结束时间");
+            windowPoint("开始时间不能小于截止时间");
             return false;
 		}
 

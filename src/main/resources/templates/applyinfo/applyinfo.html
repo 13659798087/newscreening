@@ -39,22 +39,9 @@
 
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
-	<!--格式化时间-->
+
+	<!--封装的方法-->
 	<script src="../js/until.sdk.format.js"></script>
-
-	<!--弹出框 start-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
-
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
 
@@ -278,7 +265,6 @@
         $.get("/applicationStatistics/getListHospital",{},function(data){
             map.listHospital=data;
         });
-
 
         var heights=window.innerHeight;
         //数据列表
@@ -706,14 +692,12 @@
         var oDate2 = new Date( $("#a_lr_date2").val() );
         if(oDate1!="" && oDate2!="" ){
 			if( oDate1.getTime() > oDate2.getTime() ){
-                var txt= "开始时间不能小于截止时间";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("开始时间不能小于截止时间");
                 return false;
 			}
 		}
         datagrid.bootstrapTable("refresh",{pageNumber:1});
     }
-
 
 	//重置
     function reset(){
@@ -731,10 +715,9 @@
     function deleteSelect(){
         var a= $("#table").bootstrapTable('getSelections');
         if(a.length==0){
-            window.wxc.xcConfirm("请选择要删除的信息！", window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请选择要删除的信息");
         }else{
-
-            window.wxc.xcConfirm("确定删除勾选的录入信息吗？", window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定删除勾选的录入信息吗？");
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 $(a).each(function(i,e){
                     if( e.a_flag == "1"){

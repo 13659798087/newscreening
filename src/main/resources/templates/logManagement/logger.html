@@ -50,26 +50,15 @@
 	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
 	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
-
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='../js/vue.min.js' ></script>
-	<!--格式化时间-->
-	<script src="../js/until.sdk.format.js"></script>
 
+
+	<!--封装的方法-->
+	<script src="../js/until.sdk.format.js"></script>
 	<!--封装的样式-->
 	<link rel='stylesheet'   href='../css/table.height.css'/>
+
 
 	<!--控制table和分页的高度-->
 	<style>
@@ -430,11 +419,9 @@
 
             var a = $("#table").bootstrapTable("getSelections");
             if(a.length==0){
-                var txt= "请选择要删除的信息";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("请选择要删除的信息");
             }else{
-                var txt= "确定删除所选记录吗？";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("确定删除所选记录吗？");
 
                 document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                     var array = [];
@@ -443,8 +430,7 @@
                     });
                     $.get("/logManagement/deleteLog",{"list":array.toString()},function(data){
                         datagrid.bootstrapTable("refresh");
-                        var txt= "删除成功！";
-                        window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                        windowSuccess("删除成功！");
                     })
                 },false);
             }
@@ -461,14 +447,12 @@
         var oDate2 = new Date( $("#c_a_date2").val() );
         if(oDate1!="" && oDate2!="" ){
             if( oDate1.getTime() > oDate2.getTime() ){
-                var txt= "开始时间不能小于截止时间";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("开始时间不能小于截止时间");
                 return false;
             }
         }
         if($("#c_a_date1").val()!="" && $("#c_a_date2").val()=="" || $("#c_a_date1").val()=="" && $("#c_a_date2").val()!=""){
-            var txt= "请同时输入开始时间和结束时间";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请同时输入开始时间和结束时间");
             return false;
         }
         datagrid.bootstrapTable("refresh",{pageNumber:1});

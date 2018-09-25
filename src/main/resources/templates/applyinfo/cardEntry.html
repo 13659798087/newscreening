@@ -28,93 +28,15 @@
     <!--格式化时间-->
     <script src="../js/until.sdk.format.js"></script>
 
-    <!--弹出框 start-->
-    <link rel="stylesheet"  href="../css/xcConfirm.css"/>
-    <script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-    <style type="text/css">
-        /*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-        .xcConfirm .popBox .ttBox {
-            height: 60px;
-            line-height: 30px;
-            padding: 14px 30px;
-            border-bottom: solid 1px #eef0f1;
-        }
-    </style>
+    <!--封装的样式-->
+    <link rel='stylesheet'   href='../css/table.height.css'/>
 
+    <link rel='stylesheet'   href='../css/cardEntry.css'/>
 
-    <style>
-        .top8{display: inline-block;width: 10%;min-width:90px;}
-        .top7{margin-left: 1%;margin-top:0.5%;width: 95%;display:inline-block;height: 28px;line-height: 28px;min-width: 400px;}
-        .top1{margin-left: 1%;margin-top:0.5%;width: 31%;display:inline-block;height: 28px;line-height: 28px;min-width: 200px;}
-        .top2{display: inline-block;width: 32%;min-width: 90px;}
-        .top3{display: inline-block;width:52%;min-width: 50px;}
-        .top4{position: relative;}
-
-        .pad24{width: 20%;margin-left: 10%;}
-        select {height: 28px;line-height: 28px;}
-        input,select {border:0;border-bottom:1px solid black;padding: 1px 5px;background-color: white;}
-
-    </style>
-
-
-    <style type="text/css">
-        .div-wrap{
-            position: relative;
-            width: 52%;
-            display: inline-block;
-        }
-        .select-wrap{
-            overflow: hidden;
-            margin-left: 100px;
-            width: 18px;
-        }
-        .deptSelect{
-            margin-left: -100px;
-            border:0;
-            border-bottom:1px solid black;
-            width: 100% !important;
-            height: 28px !important;
-        }
-        .deptInput{
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            border: none;
-            width: 85%;
-            height: 26px;
-        }
-    </style>
-
-    <style>
-        .out-div {
-            color: #FFFFFF;
-            font-size: 16px;
-            line-height: 26px;
-            display: inline-block;
-            height: 26px;
-            width: 120px;
-            text-align: center;
-            border-radius: 5px;
-            margin-left: 32px;
-            vertical-align: top;
-            background-color: maroon;
-        }
-        .arrow {
-            width: 0px;
-            height: 0px;
-            border-top: 5px solid transparent;
-            border-right: 10px solid;
-            border-bottom: 10px solid transparent;
-            position: absolute;
-            margin-left: -8px;
-            margin-top: 5px;
-            border-right-color: maroon;
-        }
-    </style>
 
 </head>
-<body>
-<div id="app" >
+<body >
+<div id="app" style="position:relative;">
 
     <form action="" id="formApplication" > <!--style="position: relative;"-->
 
@@ -129,7 +51,6 @@
 
         <div style="min-width: 610px;">
 
-
             <div class="top1">
                 <div class="top2">录入日期：</div>
                 <input type="text"  placeholder="yyyymmdd" id="a_lr_date" readonly="readonly" class="hhm-dateInputer top3" name="a_lr_date" />
@@ -139,7 +60,6 @@
                 <div class="top2">送检单位：</div>
                 <input type="text"  class="top3" id="a_hospital" name="a_hospital" readonly="readonly" />
             </div>
-
 
             <div class="top1 top4" >
                 <div class="top2">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</div>
@@ -522,8 +442,8 @@
             }
             $(e).val(y+"-"+m+"-"+d);
         }else if( date!="" && 1 < date.length < 8  ){
-            var txt= "请输入正确的日期格式yyyyMMdd";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("请输入正确的日期格式yyyyMMdd");
+            return false;
         }
     }
 
@@ -569,14 +489,12 @@
 
         $("#createApplication").click(function(){
             if( $("#a_barcode").val()=="" ){
-                var txt= "条码号不能为空";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("条码号不能为空");
                 $("#a_barcode").focus();
                 return false;
             }
             else if($("#a_barcode").val().length!=barcodeLen){
-                var txt= "请输入"+barcodeLen+"位条码号";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                windowPoint("请输入"+barcodeLen+"位条码号");
                 $("#a_barcode").focus();
                 return false;
             }
@@ -584,32 +502,27 @@
             else{
                 $.get("/applyinfo/validateBarcode",{"a_barcode":$("#a_barcode").val()},function(data){
                     if(data=="1" && $("#a_id").val()==''){
-                        var txt= "已存在该条码号";
-                        window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                        windowPoint("已存在该条码号");
                         $("#a_barcode").focus();
                         return false;
                     }else{
                         if( $("#selectSetmeal").val() =="" || $("#selectSetmeal").val()==null ){
-                            var txt= "检测项目不能为空！";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("检测项目不能为空！");
                             return false;
                         }
                         if( $("#a_name").val() =="" || $("#a_name").val()==null ){
-                            var txt= "姓名不能为空！";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("姓名不能为空！");
                             $("#a_name").focus();
                             return false;
                         }
                         if( $("#a_sex").val() =="" || $("#a_sex").val()==null ){
-                            var txt= "性别不能为空！";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("性别不能为空！");
                             return false;
                         }
 
 
                         if( $("#a_sample_date").val() =="" || $("#a_sample_date").val()==null ){
-                            var txt= "采样日期不能为空！";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("采样日期不能为空！");
                             $("#a_sample_date").focus();
                             return false;
                         }
@@ -626,13 +539,11 @@
                             var timestamp2 = (new Date()).getTime();//当前时间戳
 
                             if(timestamp1>timestamp2){
-                                var txt= "采样时间不能大于当前时间";
-                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                windowPoint("采样时间不能大于当前时间");
                                 return false;
                             }
                             if( timestamp2-timestamp1 > sampleDateValidation*86400000){
-                                var txt= "输入的时间不能小于系统配置的录入时间";
-                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                windowPoint("输入的时间不能小于系统配置的录入时间");
                                 return false;
                             }
 
@@ -642,8 +553,7 @@
                             var timestamp1=new Date().getTime();//当前时间
                             var timestamp2=new Date( $("#a_bithday").val() ).getTime();//录入的出生日期
                             if(timestamp2>timestamp1){
-                                var txt= "出生日期不能大于当前时间";
-                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                windowPoint("出生日期不能大于当前时间");
                                 $("#a_bithday").focus();
                                 return false;
                             }
@@ -653,22 +563,19 @@
                             var timestamp1=new Date().getTime();//当前时间
                             var timestamp2=new Date( $("#a_sample_date").val() ).getTime();//录入的出生日期
                             if(timestamp2>timestamp1){
-                                var txt= "采样日期不能大于当前时间";
-                                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                windowPoint("采样日期不能大于当前时间");
                                 $("#a_sample_date").focus();
                                 return false;
                             }
                         }
 
                         if($("#a_tel1").val().trim()!=""){var phone1 =  $("#a_tel1").val();if( phone1[0]!=1 || phone1.length!=11){
-                            var txt= "请输入正确的联系方法电话1";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("请输入正确的联系方法电话1");
                             $("#a_tel1").focus();
                             return false;}
                         }
                         if($("#a_tel2").val().trim()!=""){var phone2 =  $("#a_tel2").val();if( phone2[0]!=1 || phone2.length!=11){
-                            var txt= "请输入正确的联系方法电话2";
-                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            windowPoint("请输入正确的联系方法电话2");
                             $("#a_tel2").focus();
                             return false;
                         }
@@ -773,8 +680,7 @@
                                 success: function(data) {
                                     window.location.reload();
                                     parent.window.query();//调用父窗口的方法
-                                    var txt= "修改成功";
-                                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                                    windowPoint("修改成功");
                                 }
                             });
                         }

@@ -23,11 +23,11 @@ public class SSO {
     }
 
     public static String getDataCode() {
-        return "ycfy,gzfy";//登录带的code,不同筛查中心带的code不同
+        return "ycfy,gzfy,test";//登录带的code,不同筛查中心带的code不同
     }
 
     public static String getDataName() {
-        return "lzcqwsycfy,lzcqwsgzfy";//数据库名
+        return "lzcqwsycfy,lzcqwsgzfy,lzcqwstest";//数据库名
     }
 
     public static String getDataIp() {
