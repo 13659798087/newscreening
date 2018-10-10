@@ -87,16 +87,9 @@
 				<input type="text"  name="userName" id="userName" th:value="${userName}" class="form-control inputRight" />
 			</div>
 
-			<div style="float: left;width: 45%;" th:if="${type=='e'}">
-				<div  class="leftTitle" >登录错误次数(天)：</div>
-				<input type="text"  name="dayLoginError"  id="dayLoginError"   class="form-control inputRight2"
-					   th:value="${dayLoginError}=='null'?0:${dayLoginError}"  />
-				<span class="resetError" th:if="${dayLoginError!='0'}" >重置</span>
-			</div>
-
-			<div style="float: left;width: 45%;"  th:if="${type=='a'}">
+			<div style="float: left;width: 45%;"  >
 				<div class="leftTitle" >密码：</div>
-				<input type="text" name="password" readonly="readonly" id="password" value="123456" class="form-control inputRight" />
+				<input type="text" name="password"  id="password"  value="123456" class="form-control inputRight" />
 			</div>
 		</div>
 
@@ -152,6 +145,15 @@
 			</div>
 		</div>
 
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;" th:if="${type=='e'}">
+				<div  class="leftTitle" >登录错误次数(天)：</div>
+				<input type="text"  name="dayLoginError"  id="dayLoginError"   class="form-control inputRight2"
+					   th:value="${dayLoginError}=='null'?0:${dayLoginError}"  />
+				<span class="resetError" th:if="${dayLoginError!='0'}" >重置</span>
+			</div>
+		</div>
+
 
 		<br/><br/><br/>
 		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
@@ -180,12 +182,15 @@
             $(".centerAdd").fadeOut(3000);
 		}
 
+
         $(".resetError").click(function(){
             $("#dayLoginError").val("0");
         });
 
 	    if( $(".edit").attr("id")=='e' ){
+
             $("#password").val(  $("#hidPassword").val() );
+
             var userId = $("#userId").val();
             $.get("/userPage/getRoleByUserId",{"userId":userId},function(data){
                 map.yesRole = data;

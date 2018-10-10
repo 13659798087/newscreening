@@ -1,4 +1,3 @@
-
 /*
  * 使用说明:
  * window.wxc.Pop(popHtml, [type], [options])

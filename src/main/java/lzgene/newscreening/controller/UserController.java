@@ -122,7 +122,7 @@ public class UserController {
                           String userId,String dayLoginError,String sign){
 
         model.addAttribute("userName",userName);
-        //model.addAttribute("password",password);
+        model.addAttribute("password",password);
         model.addAttribute("organizationId",organizationId);
         model.addAttribute("userId",userId);
         model.addAttribute("dayLoginError",dayLoginError);

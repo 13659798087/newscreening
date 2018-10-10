@@ -42,9 +42,9 @@
 	<link rel='stylesheet'   href='../css/table.height.css'/>
 
 </head>
-<body>
+<body style="width:100%;height:100%;" >
 
-	  <div class="tableDiv">
+	  <div class="tableDiv" style="overflow-x: auto;">
 		  <div id="toolbar" class="btn-group">
 			  <div class="queryList" style="margin-top:1.2%;width:150%;">
 
@@ -70,7 +70,7 @@
 				  </button>
 			  </div>
 		  </div>
-		  <table  class="table table-striped" id="table"  ></table>
+		  <table  class="table table-striped" id="table"  style="width: 100%;"></table>
 	  </div>
 
 </body>
@@ -99,6 +99,7 @@
     var objDialog;
 
     $(function () {
+
         var heights=window.innerHeight;
         //数据列表
         datagrid = $('#table');
@@ -119,7 +120,8 @@
             searchAlign: "right",//查询框对齐方式
             queryParamsType: "undefined",//查询参数组织方式
             sortOrder:"asc",
-           // showToggle:true,//视图切换
+            showToggle:true,
+            // showToggle:true,//视图切换
 
             //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
             //设置为limit可以获取limit, offset, search, sort, order

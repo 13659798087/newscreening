@@ -1,3 +1,4 @@
+/*
 package lzgene.newscreening;
 
 import org.junit.Test;
@@ -119,3 +120,4 @@ public class PhoneTest {
 	}
 
 }
+*/

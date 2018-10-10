@@ -1,5 +1,4 @@
-
-/**
+/** 
  * jQuery plugin 'dialog' v.1.0.0
  * Copyright (©) by Konstantin Kachurenko <konstantin.kachurenko@gmail.com>
  * The MIT License (MIT) http://opensource.org/licenses/MIT

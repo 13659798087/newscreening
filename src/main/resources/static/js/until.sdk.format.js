@@ -13,6 +13,17 @@ var windowSuccess = function(txt){
     window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
 };
 
+/*
+var navigatoUserAgent = function(){
+
+    if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        alert("手机");
+    } else {
+        alert("电脑");
+    }
+
+}*/
+
 
 /*<![CDATA[*/
 
@@ -60,23 +71,25 @@ var windowSuccess = function(txt){
         // 根据 timestamp 值初始化一个 Date 对象
         var tmpDate = new Date(timestamp);
         // 用于当数字小于 10 是自动在首位填充 0
-        function firstHolder(num){
+       /* function firstHolder(num){
             if(num<10){
                 num = '0'+num;
             }
             return num;
         }
         // 按格式填充数据
+
         return tmpDate.getFullYear()+"-"
             +firstHolder(tmpDate.getMonth()+1)+"-"
             +firstHolder(tmpDate.getDate())
-            ;
+            ;*/
+        return  tmpDate.substr(0,10);
     };
 
 
-/*
-格式化时间 yyyy-MM-dd HH:mm:ss
- */
+   /*
+   格式化时间 yyyy-MM-dd HH:mm:ss
+    */
     var timestampFormat = function(timestamp){
         // 根据 timestamp 值初始化一个 Date 对象
         var tmpDate = new Date(timestamp);
@@ -112,8 +125,6 @@ var windowSuccess = function(txt){
          +(tmpDate.getMonth()+1)+"-"
          +tmpDate.getDate();
    }
-
-
 
 
 /*

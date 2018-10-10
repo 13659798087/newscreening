@@ -1,5 +1,3 @@
-
-
 /*jshint asi:true, expr:true */
 /**
  * Plugin Name: Combo Select

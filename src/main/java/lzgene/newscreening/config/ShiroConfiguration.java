@@ -25,15 +25,16 @@ public class ShiroConfiguration {
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
         bean.setLoginUrl("/login/login");
+        //bean.setUnauthorizedUrl("/login/login");
         bean.setSuccessUrl("/login/index");
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
         //filterChainDefinitionMap.put("/login/**", "anon");
 
-        filterChainDefinitionMap.put("/login/login", "anon");
+        //filterChainDefinitionMap.put("/login/login", "anon");
         filterChainDefinitionMap.put("/login/createCode", "anon");//验证
         filterChainDefinitionMap.put("/login/loginValidate", "anon");//验证
-        filterChainDefinitionMap.put("/login/index", "anon");//验证
+        //filterChainDefinitionMap.put("/login/index", "anon");//验证
         filterChainDefinitionMap.put("/login/getLoginMessage", "anon");//验证
 
         filterChainDefinitionMap.put("/logout*","anon");
@@ -46,9 +47,31 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/Content/**","anon");
         filterChainDefinitionMap.put("/fonts/**","anon");
 
-        filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/*.*", "authc");
+        /*anon:匿名拦截器，即不需要登录即可访问；一般用于静态资源过滤
+        authc:如果没有登录会跳到相应的登录页面登录
+        user:用户拦截器，用户已经身份验证/记住我登录的都可*/
+
+        filterChainDefinitionMap.put("/", "authc");//
+
+        //filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
+        /*filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/*.*", "authc");*/
+
+
+        filterChainDefinitionMap.put("/home/**", "authc");
+        filterChainDefinitionMap.put("/combine/**", "authc");
+        filterChainDefinitionMap.put("/setmeal/**", "authc");
+        filterChainDefinitionMap.put("/mb/**", "authc");
+        filterChainDefinitionMap.put("/menu/**", "authc");
+        filterChainDefinitionMap.put("/organization/**", "authc");
+        filterChainDefinitionMap.put("/reportQuery/**", "authc");
+        filterChainDefinitionMap.put("/role/**", "authc");
+        filterChainDefinitionMap.put("/sendApplication/**", "authc");
+        filterChainDefinitionMap.put("/signpic/**", "authc");
+        filterChainDefinitionMap.put("/dataStatistics/**", "authc");
+        filterChainDefinitionMap.put("/config/**", "authc");
+        filterChainDefinitionMap.put("/authUser/**", "authc");
+
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }

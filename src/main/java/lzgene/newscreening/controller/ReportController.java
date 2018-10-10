@@ -42,9 +42,20 @@ public class ReportController {
     @Value("${filePath}")
     private String filePath;
 
+
+    @RequestMapping("/pcAndPhone")
+    public String pcAndPhone(){
+        return "reportQuery/pcAndPhone";
+    }
+
     @RequestMapping("/report")
     public String report(){
         return "reportQuery/report";
+    }
+
+    @RequestMapping("/phoneReport")
+    public String phoneReport(){
+        return "reportQuery/phoneReport";
     }
 
     @RequestMapping("/reportManage")
@@ -67,7 +78,7 @@ public class ReportController {
         response.setContentType("application/pdf; charset=UTF-8");
         OutputStream out = response.getOutputStream();
         byte[] b = new byte[512];
-        if( in!=null ){
+            if( in!=null ){
             while ((in.read(b))!=-1) {
                 out.write(b);
             }

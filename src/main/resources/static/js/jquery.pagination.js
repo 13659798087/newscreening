@@ -1,4 +1,3 @@
-
 /**
  * This jQuery plugin displays pagination links inside the selected elements.
  *

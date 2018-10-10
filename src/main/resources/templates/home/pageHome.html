@@ -55,19 +55,23 @@
     </script>
 
     <style>
-        .divTop {height: 34px;line-height: 34px;margin-top: 0.5%;width: 1000px;}
+        .divTop {height: 34px;line-height: 34px;margin-top: 0.5%;width:100%;}
         .top_01 {border: 3px solid #DBDBDB;border-radius: 8px;}
         .top_02 {display: inline-block;float: left;}
         .inputLeg {display: inline-block;width: 200px;}
-        .noData{position: absolute;margin-left: 450px;top: 220px;font-size: 20px;}
+        .noData{position: absolute;margin-left:45%;top: 220px;font-size: 20px;}
 
         .creatZtree_1 {width: 100% !important;height:100% !important;border: none !important;overflow: auto !important;background:none !important;} /*//!important*/
 
         a {text-decoration:none;}
         body {
             font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-            font-size: 14px;
+          /* font-size: 14px;*/
         }
+
+        .canvasWidth {width:95%;height:350px;}
+        canvas{height: 95%;height: 300px;}
+        center{height: auto}
     </style>
 
 </head>
@@ -78,20 +82,18 @@
 
     <div class="top_01" ><!--报告信息按年份统计-->
         <center>
-            <div class="divTop" >
-                <div class="top_02">
-                    <span>年份：</span>
-                    <input type="text"  id="yearDate_03"  class="form-control inputLeg" />
-                </div>
-                <div class="top_02" style="margin-left: 3%;">
-                    <span>单位：</span>
-                    <!-- <select  id="hospital_03"  class="form-control inputLeg" >
-                         <option value="">请选择</option>
-                         <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
-                     </select>-->
 
+            <div class="divTop" >
+
+                <div class="top_02" style="width: 30%;">
+                    <span>年份:</span>
+                    <input type="text"  id="yearDate_03"  class="form-control inputLeg" style="width: 55%;" />
+                </div>
+
+                <div class="top_02" style="width:32%;">
+                    <span>单位:</span>
                     <div class="dropdown" style="display: inline-block;">
-                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" style="width: 100%;text-align: left" type="button" id="hospital_03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             请选择
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -102,38 +104,44 @@
                             </li>
                         </ul>
                     </div>
-
                 </div>
-                <button  class="btn btn-default"  onclick="reset_03()"  style="float: right;">
-                    <span class="glyphicon glyphicon-refresh"></span> 重置
-                </button>
-                <button   class="btn btn-default"  onclick="query_03()" style="float: right;margin-right: 1%;">
-                    <span class="glyphicon glyphicon-search"></span> 查询
-                </button>
+
+                <div style="width: 17%;display: inline-block;float: right;text-align: left;">
+                    <button  class="btn btn-default"  onclick="reset_03()">
+                        <span class="glyphicon glyphicon-refresh"></span> 重置
+                    </button>
+                </div>
+                <div style="width: 2%;display: inline-block;float: right;">
+                   &nbsp;
+                </div>
+
+                <div style="width:17%;display: inline-block;float: right;text-align: right;">
+                    <button   class="btn btn-default"  onclick="query_03()" >
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                </div>
+
             </div>
             <br/>
-            <div id="reportYear" style="width: 1000px;height:400px;position: relative;" ></div>
+            <div id="reportYear" class="canvasWidth" style="position: relative;" ></div>
         </center>
     </div>
+
 
     <div class="top_01" ><!--报告信息按组别统计-->
         <center>
             <div class="divTop" >
                 <div class="top_02">
                     <span>日期：</span>
-                    <input type="text"  id="yearDate_041"  class="form-control inputLeg"   />
+                    <input type="text"  id="yearDate_041"  class="form-control inputLeg" style="width: 35%;"  />
                     ~
-                    <input type="text"  id="yearDate_042"  class="form-control inputLeg"   />
+                    <input type="text"  id="yearDate_042"  class="form-control inputLeg" style="width: 35%;"  />
                 </div>
-                <div  class="top_02"  style="margin-left: 3%;">
+                <div  class="top_02" style="margin-left: 5%;">
                     <span>单位：</span>
-                    <!--<select  id="hospital_04"  class="form-control inputLeg" >
-                        <option value="">请选择</option>
-                        <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
-                    </select>-->
-
                     <div class="dropdown" style="display: inline-block;">
-                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" style="width:100%;text-align: left" type="button"
+                                id="hospital_04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             请选择
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -146,36 +154,40 @@
                     </div>
 
                 </div>
-                <button  class="btn btn-default"  onclick="reset_04()"  style="float: right;">
-                    <span class="glyphicon glyphicon-refresh"></span> 重置
-                </button>
-                <button   class="btn btn-default"  onclick="query_04()" style="float: right;margin-right: 1%;">
-                    <span class="glyphicon glyphicon-search"></span> 查询
-                </button>
+                <div style="width: 19%;display: inline-block;float: right;text-align: left;margin-right: 4%;">
+                    <button  class="btn btn-default"  onclick="reset_04()"  >
+                        <span class="glyphicon glyphicon-refresh"></span> 重置
+                    </button>
+                </div>
+                <div style="width: 2%;display: inline-block;float: right;">
+                    &nbsp;
+                </div>
+
+                <div style="width:19%;display: inline-block;float: right;text-align: right;">
+                    <button   class="btn btn-default"  onclick="query_04()" >
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                </div>
+
             </div>
             <br/>
-            <div id="reportCombine" style="width: 1000px;height:400px;"></div>
+            <div id="reportCombine" class="canvasWidth" ></div>
         </center>
     </div>
 
 
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
     <div class="top_01" >  <!--申请信息按年份统计-->
         <center>
             <div class="divTop" >
-                <div class="top_02">
-                    <span>年份：</span>
-                    <input type="text"  id="yearDate_01"  class="form-control inputLeg" />
+                <div class="top_02" style="width: 30%;">
+                    <span>年份:</span>
+                    <input type="text"  id="yearDate_01"  class="form-control inputLeg" style="width: 55%;" />
                 </div>
-                <div class="top_02" style="margin-left: 3%;">
-                    <span>单位：</span>
-                    <!--<select  id="hospital_01"  class="form-control inputLeg" >
-                        <option value="">请选择</option>
-                        <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
-                    </select>-->
-
+                <div class="top_02"  style="width:32%;">
+                    <span>单位:</span>
                     <div class="dropdown" style="display: inline-block;">
-                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" style="width: 100%;text-align: left" type="button" id="hospital_01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             请选择
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -190,15 +202,24 @@
 
                 </div>
 
-                <button  class="btn btn-default"  onclick="reset_01()"  style="float: right;">
-                    <span class="glyphicon glyphicon-refresh"></span> 重置
-                </button>
-                <button   class="btn btn-default"  onclick="query_01()" style="float: right;margin-right: 1%;">
-                    <span class="glyphicon glyphicon-search"></span> 查询
-                </button>
+                <div style="width: 17%;display: inline-block;float: right;text-align: left;">
+                    <button  class="btn btn-default"  onclick="reset_01()" >
+                        <span class="glyphicon glyphicon-refresh"></span> 重置
+                    </button>
+                </div>
+                <div style="width: 2%;display: inline-block;float: right;">
+                    &nbsp;
+                </div>
+                <div style="width:17%;display: inline-block;float: right;text-align: right;">
+                    <button   class="btn btn-default"  onclick="query_01()" >
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                </div>
+
+
             </div>
             <br/>
-            <div id="mainYear" style="width: 1000px;height:400px;position: relative;"></div>
+            <div id="mainYear" class="canvasWidth"  style="position: relative;"></div>
         </center>
     </div>
 
@@ -207,19 +228,14 @@
             <div class="divTop" >
                 <div class="top_02">
                     <span>日期：</span>
-                    <input type="text"  id="yearDate_021"  class="form-control inputLeg"   />
+                    <input type="text"  id="yearDate_021"  class="form-control inputLeg"  style="width: 35%;" />
                     ~
-                    <input type="text"  id="yearDate_022"  class="form-control inputLeg"   />
+                    <input type="text"  id="yearDate_022"  class="form-control inputLeg"  style="width: 35%;" />
                 </div>
-                <div  class="top_02"  style="margin-left: 3%;">
+                <div  class="top_02"  style="margin-left: 5%;">
                     <span>单位：</span>
-                    <!-- <select  id="hospital_02"  class="form-control inputLeg" >
-                         <option value="">请选择</option>
-                         <option v-for="h in listHospital" :value="h.name" >{{h.name}}</option>
-                     </select>-->
-
                     <div class="dropdown" style="display: inline-block;">
-                        <button class="btn btn-default dropdown-toggle" style="width: 200px;text-align: left" type="button" id="hospital_02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" style="width:100%;text-align: left"  type="button" id="hospital_02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             请选择
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -232,23 +248,32 @@
                     </div>
 
                 </div>
-                <button  class="btn btn-default"  onclick="reset_02()"  style="float: right;">
-                    <span class="glyphicon glyphicon-refresh"></span> 重置
-                </button>
-                <button   class="btn btn-default"  onclick="query_02()" style="float: right;margin-right: 1%;">
-                    <span class="glyphicon glyphicon-search"></span> 查询
-                </button>
+
+                <div style="width: 19%;display: inline-block;float: right;text-align: left;margin-right: 4%;">
+                    <button  class="btn btn-default"  onclick="reset_02()"  >
+                        <span class="glyphicon glyphicon-refresh"></span> 重置
+                    </button>
+                </div>
+                <div style="width: 2%;display: inline-block;float: right;">
+                    &nbsp;
+                </div>
+                <div style="width:19%;display: inline-block;float: right;text-align: right;">
+                    <button   class="btn btn-default"  onclick="query_02()" >
+                        <span class="glyphicon glyphicon-search"></span> 查询
+                    </button>
+                </div>
+
             </div>
             <br/>
-            <div id="mainSetmeal" style="width: 1000px;height:400px;"></div>
+            <div id="mainSetmeal"  class="canvasWidth" ></div>
         </center>
     </div>
-
 
 </div>
 </body>
 
 <script type="text/javascript">
+
 
     var map={
         message: '',
@@ -312,6 +337,8 @@
 
     var hop = 0;
     $(function(){
+
+
         $("#hospital_01,#hospital_02,#hospital_03,#hospital_04").click(function(event){
             // alert(event.type); // "click"事件
             switch (this.id){
@@ -414,6 +441,7 @@
     var myChart1 = echarts.init(document.getElementById('mainYear'));
     // 显示标题，图例和空的坐标轴
     var year1 = year;
+
     myChart1.setOption({
         title : {
             text: year1+'年申请单信息统计',
@@ -450,7 +478,7 @@
                     position: 'top'
                 }
             },
-            barWidth : 30,//柱图宽度
+            barWidth : 20,//柱图宽度
             data: []
         }]
     });
@@ -571,6 +599,7 @@
     /* 申请单按项目信息统计   start*/
     var setmealChart = echarts.init(document.getElementById('mainSetmeal'));
     // 指定图表的配置项和数据
+
     var option = {
         title : {
             text: year+'年申请单项目统计',
@@ -628,6 +657,7 @@
 
     // 使用刚指定的配置项和数据显示图表。
     setmealChart.setOption(option);
+    setmealChart.setOption(option,window.onresize = setmealChart.resize);
 
     setmealChart.showLoading();    //数据加载完之前先显示一段简单的loading动画
     //var data=[];    //类别数组（实际用来盛放X轴坐标值）
@@ -730,6 +760,7 @@
     var reportYearChart = echarts.init(document.getElementById('reportYear'));
     // 显示标题，图例和空的坐标轴
     var year2 = year;
+    reportYearChart.setOption(option,window.onresize = reportYearChart.resize);
     reportYearChart.setOption({
         title : {
             text: year2+'年报告统计',
@@ -766,7 +797,7 @@
                     position: 'top'
                 }
             },
-            barWidth : 30,//柱图宽度
+            barWidth : 20,//柱图宽度
             data: []
         }]
     });
@@ -883,6 +914,7 @@
 
     /* 报告信息按组别信息统计   start*/
     var reportCombineChart = echarts.init(document.getElementById('reportCombine'));
+    reportCombineChart.setOption(option,window.onresize = reportCombineChart.resize);
     // 指定图表的配置项和数据
     var option = {
         title : {

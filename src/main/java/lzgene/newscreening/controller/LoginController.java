@@ -50,17 +50,20 @@ public class LoginController {
     /**
      * shiro
      */
-    //宜春登录地址：http://localhost:8092
-    //赣州登录地址：http://localhost:8092/login/login?code=gzfy
-    //赣州登录地址：http://localhost:8092?code=gzfy
+    //宜春登录地址：http://localhost:8083
+    //赣州登录地址：http://localhost:8083/login/login?code=gzfy
+    //赣州登录地址：http://localhost:8083?code=gzfy
     @RequestMapping("/login")
     public String login(String code,HttpServletRequest request,Model model) {
+
+        //code = (String) request.getSession().getAttribute("projectCode");
+
         if(code==null){ //为了解决宜春正在用的系统不用更改访问地址为进行的判断
             request.getSession().setAttribute("projectCode","ycfy");
         }else{
             request.getSession().setAttribute("projectCode",code);
         }
-        //request.getSession().setAttribute("projectCode",code);//到时宜春的登录地址还会更改，这个就开出来，前面的if else就注释掉
+
         model.addAttribute("organizationName",organizationServices.organizationName());//筛查中心名称
 
         return view+"login";//返回登录页面
@@ -240,6 +243,9 @@ public class LoginController {
         if (subject.isAuthenticated()) {
             subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
         }
+
+        //request.getSession().invalidate();
+
         return "redirect:login?code="+projectCode;
     }
 

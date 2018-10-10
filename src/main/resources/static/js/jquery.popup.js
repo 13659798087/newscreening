@@ -1,4 +1,3 @@
-
 /**
  * jQuery plugin 'popup' v.1.0.0
  * Copyright (©) by Konstantin Kachurenko <konstantin.kachurenko@gmail.com>

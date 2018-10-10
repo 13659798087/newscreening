@@ -70,8 +70,8 @@
 <input  type="hidden" th:value="${firstPassword}" id="firstPassword"/>
 
 <!-- Site wrapper -->
-<div class="wrapper" style="margin-top:0px;" id="app">
-	<header class="main-header">
+<div class="wrapper" style="margin-top:0px;"  id="app">
+		<header class="main-header">
 		<span class="logo">
 			<span class="logo-lg"><b>联兆产前外送系统</b></span>
 		</span>
@@ -83,13 +83,17 @@
 				<span class="icon-bar"></span>
 			</a>
 
-			<div class="navbar-custom-menu" style="display: inline-block;float: right;">
+			<div class="navbar-custom-menu" style="display: inline-block;float: right;height: 50px;line-height: 50px;">
 				<ul class="nav navbar-nav">
+					<li class="dropdown user user-menu" >
+						<span style="color: white;font-size: 12px;">授权单位:</span>
+						<span style="color: white;font-size: 12px;" th:text="${AuthorizeName}" id="author_hospital"></span>
+					</li>
 					<li class="dropdown user user-menu">
 						<a href="#" class="dropdown-toggle" > <!--data-toggle="dropdown"-->
-							<img src="../img/user.png" class="user-image" alt="User Image">
+							<img src="../img/user.png" style="width: 20px;height: 20px;" class="user-image" alt="User Image">
 							<span class="hidden-xs" id="logo_UserCode"></span>
-							欢迎您：<span th:text="${userName}"></span>
+							<span style="font-size: 12px;">欢迎您:</span><span style="font-size: 12px;" th:text="${userName}"></span>
 						</a>
 						<ul class="dropdown-menu">
 							<li class="user-header" >
@@ -121,13 +125,14 @@
 						</ul>
 					</li>
 					<!-- Control Sidebar Toggle Button -->
+
 				</ul>
 			</div>
 
-			<div style="display: inline-block;float: right;height: 50px;line-height: 50px;
+			<!--<div style="display: inline-block;float: right;height: 50px;line-height: 50px;
 			text-align: right;color: white;margin-right: 3%;">
 				<span>授权单位：</span><span th:text="${AuthorizeName}" id="author_hospital"></span>
-			</div>
+			</div>-->
 
 		</nav>
 	</header>
