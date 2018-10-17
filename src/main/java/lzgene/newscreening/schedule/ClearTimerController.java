@@ -1,6 +1,5 @@
 package lzgene.newscreening.schedule;
 
-import lzgene.newscreening.model.UserInfo;
 import lzgene.newscreening.services.UserServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
