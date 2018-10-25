@@ -92,7 +92,7 @@ public class UserController {
 
         //修改,不可以更改密码
         if(!StringUtils.isEmpty(userId)){
-            userServices.updateUser(userId,userName,dayLoginError,organizationId);
+            userServices.updateUser(userId,userName,password,dayLoginError,organizationId);
             //删除之前的关系后建立
             roleServices.deleteRela(userId);
             sign = "edit";

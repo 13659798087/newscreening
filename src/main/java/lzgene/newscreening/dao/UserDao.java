@@ -24,9 +24,10 @@ public interface UserDao {
     int validateUser(@Param(value = "userName")String userName,@Param(value = "organizationId")String organizationId);
 
 
-    @Update("update userinfo set  userName=#{userName},dayLoginError=#{dayLoginError},organizationId=#{organizationId} where userId=#{userId} ")
+    @Update("update userinfo set userName=#{userName},password=#{password},dayLoginError=#{dayLoginError},organizationId=#{organizationId} where userId=#{userId} ")
     void updateUser(@Param(value = "userId")String userId,
                     @Param(value = "userName")String userName,
+                    @Param(value = "password")String password,
                     @Param(value = "dayLoginError")String dayLoginError,
                     @Param(value = "organizationId")String organizationId);
 

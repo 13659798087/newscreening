@@ -26,8 +26,8 @@ public class UserServices {
         return userDao.validateUser(userName,organizationId);
     }
 
-    public void updateUser(String userId,String userName,String dayLoginError,String organizationId) {
-        userDao.updateUser(userId,userName,dayLoginError,organizationId);
+    public void updateUser(String userId,String userName,String password,String dayLoginError,String organizationId) {
+        userDao.updateUser(userId,userName,password,dayLoginError,organizationId);
     }
 
 
