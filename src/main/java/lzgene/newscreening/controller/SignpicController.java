@@ -5,7 +5,6 @@ import lzgene.newscreening.model.Signpic;
 import lzgene.newscreening.services.SignpicServices;
 import lzgene.newscreening.util.Guid;
 import lzgene.newscreening.util.Paging;
-import lzgene.newscreening.util.SSO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

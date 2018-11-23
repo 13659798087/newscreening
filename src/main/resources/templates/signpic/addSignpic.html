@@ -89,7 +89,7 @@
 				<div class="leftTitle" >电子签名：</div>
 				<input  type="file" name="file" multiple="multiple"  id="sp_pic" />
 				<div style="margin-top: 2%;margin-left: 7%;" >
-					<img id="image" th:src="@{/signpic/Pictureshows(id=${id})}" />
+					<img id="image" th:if="${id!=null}" th:src="@{/signpic/Pictureshows(id=${id})}" />
 				</div>
 			</div>
 		</div>

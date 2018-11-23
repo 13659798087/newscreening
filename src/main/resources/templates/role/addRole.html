@@ -246,7 +246,9 @@
             pn = $("#pn").attr("checked")? "p":"",
             sn = $("#sn").attr("checked")? "s":"",
             // type = { "Y":py + sy, "N":pn + sn};
-            type = { "Y" : "ps", "N" : "ps"};
+
+        	//type = { "Y" : "ps", "N" : "ps"};
+        	type = { "Y" : "p", "N" : "ps"};
         zTree.setting.check.chkboxType = type;
         showCode('setting.check.chkboxType = { "Y" : "' + type.Y + '", "N" : "' + type.N + '" };');
 
